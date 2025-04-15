@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".RoleSelectionActivity">
+
+    <!-- Título de la vista -->
+    <TextView
+        android:id="@+id/roleSelectionTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Selecciona tu rol"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginTop="80dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <!-- Botón para Admin -->
+    <Button
+        android:id="@+id/adminButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Admin"
+        app:layout_constraintTop_toBottomOf="@id/roleSelectionTitle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="40dp" />
+
+    <!-- Botón para Superadmin -->
+    <Button
+        android:id="@+id/superAdminButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Superadmin"
+        app:layout_constraintTop_toBottomOf="@id/adminButton"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- Botón para Taxista -->
+    <Button
+        android:id="@+id/taxistaButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Taxista"
+        app:layout_constraintTop_toBottomOf="@id/superAdminButton"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- Botón para Cliente -->
+    <Button
+        android:id="@+id/clienteButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Cliente"
+        app:layout_constraintTop_toBottomOf="@id/taxistaButton"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="16dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

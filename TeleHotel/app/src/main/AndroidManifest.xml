@@ -13,14 +13,42 @@
         android:theme="@style/Theme.TeleHotel"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.TeleHotel"
             android:exported="true">
+
+            <!-- Intent filter para que sea la actividad principal -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Actividad para la selección de roles (RoleSelectionActivity) -->
+        <activity
+            android:name=".RoleSelectionActivity"
+            android:label="Seleccionar Rol" />
+
+        <!-- Actividad para Admin -->
+        <activity
+            android:name=".admin.AdminActivity"
+            android:label="Admin" />
+
+        <!-- Actividad para Superadmin -->
+        <activity
+            android:name=".superadmin.SuperAdminActivity"
+            android:label="Superadmin" />
+
+        <!-- Actividad para Taxista -->
+        <activity
+            android:name=".taxista.TaxistaActivity"
+            android:label="Taxista" />
+
+        <!-- Actividad para Cliente -->
+        <activity
+            android:name=".cliente.ClienteActivity"
+            android:label="Cliente" />
     </application>
 
 </manifest>

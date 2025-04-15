@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {
@@ -19,50 +20,45 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
 
-        // Inicializar vistas
+        // Vincular vistas con el layout
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         loginButton = findViewById(R.id.loginButton);
         forgotPasswordTextView = findViewById(R.id.forgotPasswordTextView);
         createAccountTextView = findViewById(R.id.createAccountTextView);
 
-        // Acción de inicio de sesión
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Aquí puedes validar las credenciales
-                String email = emailEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
+        // Botón de inicio de sesión
+        loginButton.setOnClickListener(v -> {
+            String email = emailEditText.getText().toString().trim();
+            String password = passwordEditText.getText().toString().trim();
 
-                // Validar el inicio de sesión (esto es solo un ejemplo)
-                if (email.equals("admin@example.com") && password.equals("123")) {
-                    // Si las credenciales son correctas, redirige a RoleSelectionActivity
-                    Intent intent = new Intent(LoginActivity.this, RoleSelectionActivity.class);
-                    startActivity(intent);
-                    finish();  // Finalizar esta actividad para evitar que el usuario regrese al login
-                } else {
-                    // Aquí podrías mostrar un mensaje de error si las credenciales no son correctas
-                    // Por ejemplo, usar un Toast para informar al usuario
-                }
+            // Validación básica de campos
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(LoginActivity.this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Validación simulada de credenciales
+            if (email.equals("admin@example.com") && password.equals("123")) {
+                // Ir a selección de rol
+                Intent intent = new Intent(LoginActivity.this, RoleSelectionActivity.class);
+                startActivity(intent);
+                finish(); // Cierra el login para no volver atrás
+            } else {
+                Toast.makeText(LoginActivity.this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Acción para "Olvidaste la contraseña?"
-        forgotPasswordTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Lógica para manejar "Olvidaste la contraseña"
-                // Puede abrir una nueva actividad o mostrar un cuadro de diálogo
-            }
+        // "¿Olvidaste tu contraseña?"
+        forgotPasswordTextView.setOnClickListener(v -> {
+            // Aquí puedes abrir una actividad para recuperar contraseña
+            Toast.makeText(this, "Función aún no implementada", Toast.LENGTH_SHORT).show();
         });
 
-        // Acción para "Nuevo usuario? Crear una cuenta"
-        createAccountTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Lógica para manejar la creación de una nueva cuenta
-                // Puede abrir una actividad para registrarse
-            }
+        // "¿Nuevo usuario? Crear cuenta"
+        createAccountTextView.setOnClickListener(v -> {
+            // Aquí puedes abrir la actividad de registro
+            Toast.makeText(this, "Función aún no implementada", Toast.LENGTH_SHORT).show();
         });
     }
 }

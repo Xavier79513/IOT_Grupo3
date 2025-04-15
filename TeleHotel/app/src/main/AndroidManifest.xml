@@ -17,12 +17,6 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.TeleHotel"
             android:exported="true">
-
-            <!-- Intent filter para que sea la actividad principal -->
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <!-- Actividad para la selección de roles (RoleSelectionActivity) -->
@@ -49,6 +43,17 @@
         <activity
             android:name=".cliente.ClienteActivity"
             android:label="Cliente" />
+
+        <activity android:name=".SplashActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+
     </application>
 
 </manifest>

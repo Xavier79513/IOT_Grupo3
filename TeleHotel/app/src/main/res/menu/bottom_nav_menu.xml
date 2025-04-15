@@ -5,6 +5,10 @@
         android:icon="@drawable/ic_room"
         android:title="Rooms" />
     <item
+        android:id="@+id/navigation_bookings"
+        android:icon="@drawable/ic_profile"
+        android:title="My Bookings" />
+    <item
         android:id="@+id/navigation_car_booking"
         android:icon="@drawable/ic_car"
         android:title="Car booking" />

@@ -1,8 +1,0 @@
-<resources>
-    <string name="app_name">TeleHotel</string>
-
-    <string name="find_room">Find room</string>
-    <string name="search">Search</string>
-    <string name="where_do_you_want">Where do you want</string>
-
-</resources>

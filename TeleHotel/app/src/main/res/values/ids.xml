@@ -2,4 +2,6 @@
 <resources>
     <item name="logoImageView" type="id" />
     <item name="clienteButton" type="id" />
+    <item name="textView" type="id" />
+    <item name="imageView" type="id" />
 </resources>

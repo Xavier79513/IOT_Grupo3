@@ -46,9 +46,15 @@
         <activity
             android:name=".cliente.ClienteActivity"
             android:label="Cliente" />
-
-
-
+        <activity
+            android:name=".cliente.HotelDetailActivity"
+            android:label="Cliente" />
+        <activity
+            android:name=".cliente.ListaHotel"
+            android:label="Cliente" />
+        <activity
+            android:name=".cliente.OtpActivity"
+            android:label="Cliente" />
     </application>
 
 </manifest>

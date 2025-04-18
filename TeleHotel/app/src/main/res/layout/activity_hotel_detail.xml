@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <!-- Imagen principal del hotel -->
+    <ImageView
+        android:id="@+id/hotelImage"
+        android:layout_width="0dp"
+        android:layout_height="220dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/coast"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Nombre del hotel -->
+    <TextView
+        android:id="@+id/hotelName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Heden Golf"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:paddingStart="16dp"
+        app:layout_constraintBottom_toBottomOf="@id/hotelImage"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- Ubicación -->
+    <TextView
+        android:id="@+id/hotelLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Abidjan, Côte d'Ivoire"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:drawableLeft="@drawable/ic_location"
+        android:drawablePadding="6dp"
+        android:paddingStart="16dp"
+        app:layout_constraintTop_toBottomOf="@id/hotelName"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- Review bar -->
+    <LinearLayout
+        android:id="@+id/reviewBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/review_bar_background"
+        app:layout_constraintTop_toBottomOf="@id/hotelImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Review (106)"
+            android:backgroundTint="#1E88E5"
+            android:textColor="#FFFFFF"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Photo (10)"
+            android:backgroundTint="#E0E0E0"
+            android:textColor="#000000"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Near by (24)"
+            android:backgroundTint="#E0E0E0"
+            android:textColor="#000000"/>
+    </LinearLayout>
+
+    <!-- Descripción -->
+    <TextView
+        android:id="@+id/hotelDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Set in landscaped gardens overlooking the Ébrié lagoon..."
+        android:textSize="14sp"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/reviewBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Iconos de facilidades -->
+    <LinearLayout
+        android:id="@+id/facilitiesLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintTop_toBottomOf="@id/hotelDescription"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Ejemplo de facilidad -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="8dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/wifi"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Free Wi-Fi"
+                android:textSize="12sp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="8dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/breakfast"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Desayuno incluido"
+                android:textSize="12sp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="8dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/gym"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gym"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <!-- Repite bloques como este para gym, breakfast, etc. -->
+
+    </LinearLayout>
+
+    <!-- Sección de ubicación y número -->
+    <TextView
+        android:id="@+id/hotelPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+225 22 48 26 26"
+        android:textSize="14sp"
+        android:drawableLeft="@drawable/phone"
+        android:drawablePadding="6dp"
+        android:paddingStart="16dp"
+        app:layout_constraintTop_toBottomOf="@id/facilitiesLayout"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- Contenedor de check-in/check-out -->
+    <LinearLayout
+        android:id="@+id/checkSection"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/hotelPhone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Aquí puedes incluir DatePickers o campos de texto -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Checkin date y time"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Checkout date y time"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 Adults. 0 Children. 0 room"
+            android:layout_marginTop="8dp"/>
+    </LinearLayout>
+
+    <!-- Botón de reserva -->
+    <Button
+        android:id="@+id/bookNowButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="BOOKING NOW"
+        android:textStyle="bold"
+        android:backgroundTint="#00C853"
+        android:textColor="#FFFFFF"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Menú de navegación inferior (BottomNavigationView) -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_gradient"
+        app:menu="@menu/bottom_nav_menu"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

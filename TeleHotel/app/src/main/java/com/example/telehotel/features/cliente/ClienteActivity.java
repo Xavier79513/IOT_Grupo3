@@ -1,4 +1,4 @@
-package com.example.telehotel.cliente;
+package com.example.telehotel.features.cliente;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,9 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.telehotel.R;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.tabs.TabLayout;
-import android.view.MenuItem;
+
 import android.view.View;
 
 import java.util.List;

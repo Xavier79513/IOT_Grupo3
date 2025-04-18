@@ -1,4 +1,4 @@
-package com.example.telehotel.cliente;
+package com.example.telehotel.features.cliente;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;

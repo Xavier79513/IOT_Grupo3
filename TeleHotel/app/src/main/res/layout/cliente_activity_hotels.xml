@@ -94,11 +94,11 @@
             android:paddingHorizontal="16dp">
 
             <!-- Ejemplo de hotel -->
-            <include layout="@layout/item_hotel" />
-            <include layout="@layout/item_hotel" />
-            <include layout="@layout/item_hotel" />
-            <include layout="@layout/item_hotel" />
-            <include layout="@layout/item_hotel" />
+            <include layout="@layout/cliente_item_hotel" />
+            <include layout="@layout/cliente_item_hotel" />
+            <include layout="@layout/cliente_item_hotel" />
+            <include layout="@layout/cliente_item_hotel" />
+            <include layout="@layout/cliente_item_hotel" />
         </LinearLayout>
     </ScrollView>
 

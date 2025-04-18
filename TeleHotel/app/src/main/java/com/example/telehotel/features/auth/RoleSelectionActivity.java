@@ -1,4 +1,4 @@
-package com.example.telehotel;
+package com.example.telehotel.features.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,10 +6,11 @@ import android.view.View;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.telehotel.admin.AdminActivity;
-import com.example.telehotel.cliente.ClienteActivity;
-import com.example.telehotel.superadmin.SuperAdminActivity;
-import com.example.telehotel.taxista.TaxistaActivity;
+import com.example.telehotel.R;
+import com.example.telehotel.features.admin.AdminActivity;
+import com.example.telehotel.features.cliente.ClienteActivity;
+import com.example.telehotel.features.superadmin.SuperAdminActivity;
+import com.example.telehotel.features.taxista.TaxistaActivity;
 
 public class RoleSelectionActivity extends AppCompatActivity {
 

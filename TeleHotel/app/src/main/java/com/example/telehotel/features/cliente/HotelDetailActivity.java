@@ -1,14 +1,16 @@
-package com.example.telehotel.superadmin;
+package com.example.telehotel.features.cliente;
 
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.telehotel.R;
 
-public class SuperAdminActivity extends AppCompatActivity {
+public class HotelDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_superadmin);  // Usar el layout correspondiente
+        setContentView(R.layout.cliente_activity_hotel_detail); // Asegúrate de tener ese layout
     }
 }
+

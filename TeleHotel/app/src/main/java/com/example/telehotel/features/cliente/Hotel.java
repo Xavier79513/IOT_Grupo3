@@ -1,4 +1,4 @@
-package com.example.telehotel.cliente;
+package com.example.telehotel.features.cliente;
 
 public class Hotel {
     private String nombre;

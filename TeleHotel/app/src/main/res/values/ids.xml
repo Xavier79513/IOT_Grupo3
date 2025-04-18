@@ -4,4 +4,9 @@
     <item name="clienteButton" type="id" />
     <item name="textView" type="id" />
     <item name="imageView" type="id" />
+    <item name="registerEmail" type="id" />
+    <item name="confirmPassword" type="id" />
+    <item name="registerPassword" type="id" />
+    <item name="registerButton" type="id" />
+    <item name="registerTitle" type="id" />
 </resources>

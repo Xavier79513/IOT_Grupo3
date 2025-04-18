@@ -1,4 +1,4 @@
-package com.example.telehotel.cliente;
+package com.example.telehotel.features.cliente;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,7 +28,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
     @NonNull
     @Override
     public HotelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_hotel, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.cliente_item_hotel, parent, false);
         return new HotelViewHolder(view);
     }
 

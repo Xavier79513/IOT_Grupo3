@@ -59,11 +59,36 @@
             android:name=".features.cliente.HotelDetailActivity"
             android:label="Cliente" />
         <activity
-            android:name=".features.cliente.ListaHotel"
-            android:label="Cliente" />
-        <activity
             android:name=".features.cliente.OtpActivity"
             android:label="Cliente" />
+        <activity
+            android:name=".features.cliente.BookingActivity"
+            android:label="Cliente" />
+        <activity
+            android:name=".features.cliente.CercaActivity"
+            android:label="Cliente" />
+        <activity
+            android:name=".features.cliente.FotosActivity"
+            android:label="Cliente" />
+        <activity
+            android:name=".features.cliente.FullscreenPhotoActivity"
+            android:label="Cliente" />
+        <activity
+            android:name=".features.cliente.HotelsActivity"
+            android:label="Cliente" />
+        <activity
+            android:name=".features.cliente.PagoActivity"
+            android:label="Cliente" />
+        <activity
+            android:name=".features.cliente.PagoExitosoActivity"
+            android:label="Cliente" />
+        <activity
+            android:name=".features.cliente.ReservaActivity"
+            android:label="Cliente" />
+        <activity
+            android:name=".features.cliente.PerfilActivity"
+            android:label="Cliente" />
+
     </application>
 
 </manifest>

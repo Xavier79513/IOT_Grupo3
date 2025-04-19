@@ -15,34 +15,42 @@
         android:src="@drawable/coast"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Nombre del hotel -->
-    <TextView
-        android:id="@+id/hotelName"
+    <!-- Contenedor de texto (nombre + ubicación) -->
+    <LinearLayout
+        android:id="@+id/textContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Heden Golf"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
+        android:orientation="horizontal"
         android:paddingStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_vertical"
         app:layout_constraintBottom_toBottomOf="@id/hotelImage"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent">
 
-    <!-- Ubicación -->
-    <TextView
-        android:id="@+id/hotelLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Abidjan, Côte d'Ivoire"
-        android:textColor="#FFFFFF"
-        android:textSize="14sp"
-        android:drawableLeft="@drawable/ic_location"
-        android:drawablePadding="6dp"
-        android:paddingStart="16dp"
-        app:layout_constraintTop_toBottomOf="@id/hotelName"
-        app:layout_constraintStart_toStartOf="parent"/>
+        <TextView
+            android:id="@+id/hotelName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Heden Golf"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:layout_marginEnd="8dp"/>
+
+        <TextView
+            android:id="@+id/hotelLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Abidjan, Côte d'Ivoire"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:drawableLeft="@drawable/ic_location"
+            android:drawablePadding="6dp"/>
+    </LinearLayout>
+
+
 
     <!-- Review bar -->
     <LinearLayout
@@ -58,31 +66,54 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <Button
+            android:id="@+id/reviewButton"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Review (106)"
+            android:text="Reseña (106)"
             android:backgroundTint="#1E88E5"
-            android:textColor="#FFFFFF"/>
-
+            android:textColor="#FFFFFF"
+            android:clickable="true"
+            android:focusable="true"/>
         <Button
+            android:id="@+id/photosButton"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Photo (10)"
+            android:text="Fotos (10)"
             android:backgroundTint="#E0E0E0"
+            android:clickable="true"
+            android:focusable="true"
             android:textColor="#000000"/>
 
         <Button
+            android:id="@+id/nearbyButton"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Near by (24)"
+            android:text="Cerca a(24)"
             android:backgroundTint="#E0E0E0"
+            android:clickable="true"
+            android:focusable="true"
             android:textColor="#000000"/>
     </LinearLayout>
 
     <!-- Descripción -->
+    <TextView
+        android:id="@+id/descriptionHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Descripción del hotel"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingStart="16dp"
+        android:paddingTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/reviewBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Descripción del hotel -->
     <TextView
         android:id="@+id/hotelDescription"
         android:layout_width="0dp"
@@ -90,10 +121,9 @@
         android:text="Set in landscaped gardens overlooking the Ébrié lagoon..."
         android:textSize="14sp"
         android:padding="16dp"
-        app:layout_constraintTop_toBottomOf="@id/reviewBar"
+        app:layout_constraintTop_toBottomOf="@id/descriptionHeader"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
     <!-- Iconos de facilidades -->
     <LinearLayout
         android:id="@+id/facilitiesLayout"
@@ -114,7 +144,6 @@
             android:orientation="vertical"
             android:gravity="center"
             android:padding="8dp">
-
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -215,7 +244,7 @@
         android:id="@+id/bookNowButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="BOOKING NOW"
+        android:text="Reservar ahora"
         android:textStyle="bold"
         android:backgroundTint="#00C853"
         android:textColor="#FFFFFF"

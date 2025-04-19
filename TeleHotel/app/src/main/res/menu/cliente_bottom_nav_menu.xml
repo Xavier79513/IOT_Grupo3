@@ -1,20 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/navigation_rooms"
-        android:icon="@drawable/ic_room"
-        android:title="@string/rooms" />
-    <item
-        android:id="@+id/navigation_bookings"
-        android:icon="@drawable/ic_profile"
-        android:title="@string/my_bookings" />
-    <item
-        android:id="@+id/navigation_car_booking"
-        android:icon="@drawable/ic_car"
-        android:title="@string/car_booking" />
-
-    <item
-        android:id="@+id/navigation_profile"
-        android:icon="@drawable/ic_profile"
-        android:title="@string/my_profile" />
+    <item android:id="@+id/nav_rooms" android:icon="@drawable/room" android:title="Hoteles"/>
+    <item android:id="@+id/nav_car" android:icon="@drawable/car" android:title="Reserva de taxis"/>
+    <item android:id="@+id/nav_profile" android:icon="@drawable/profile" android:title="Perfil"/>
+    <item android:id="@+id/nav_history_reservation" android:icon="@drawable/history_reservation" android:title="Historial de reservas"/>
+    <item android:id="@+id/nav_settings" android:icon="@drawable/settings" android:title="Ajustes"/>
 </menu>

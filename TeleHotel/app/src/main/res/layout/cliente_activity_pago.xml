@@ -1,0 +1,133 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp">
+
+        <TextView
+            android:text="Payment methods"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="16dp">
+
+            <!-- Simulación de logos -->
+            <!--ImageView android:layout_width="50dp" android:layout_height="30dp" android:src="@drawable/ic_visa" />
+            <ImageView android:layout_width="50dp" android:layout_height="30dp" android:src="@drawable/ic_mastercard" android:layout_marginStart="10dp"/>
+            <ImageView android:layout_width="50dp" android:layout_height="30dp" android:src="@drawable/ic_mtn" android:layout_marginStart="10dp"/-->
+
+        </LinearLayout>
+
+        <!-- Tarjeta de datos -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_card"
+            android:padding="20dp"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Card Number"
+                android:textColor="#fff"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="XXXX XXXX XXXX XXXX"
+                android:inputType="number"
+                android:textColor="#fff"
+                android:textColorHint="#ccc"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Card Holder Name"
+                android:layout_marginTop="10dp"
+                android:textColor="#fff"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="John Smith"
+                android:inputType="textPersonName"
+                android:textColor="#fff"
+                android:textColorHint="#ccc"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Expiry Date"
+                        android:textColor="#fff"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="MM/YY"
+                        android:textColor="#fff"
+                        android:textColorHint="#ccc"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="CVV"
+                        android:textColor="#fff"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="123"
+                        android:inputType="number"
+                        android:textColor="#fff"
+                        android:textColorHint="#ccc"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Botón finalizar -->
+        <Button
+            android:id="@+id/finishOrderButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Finish Order"
+            android:textStyle="bold"
+            android:background="@drawable/bg_button_gradient"
+            android:textColor="#fff"/>
+    </LinearLayout>
+</ScrollView>
+

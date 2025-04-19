@@ -166,6 +166,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/nav_gradient"
-        app:menu="@menu/bottom_nav_menu"
+        app:menu="@menu/cliente_bottom_nav_menu"
         app:labelVisibilityMode="labeled"/>
 </LinearLayout>

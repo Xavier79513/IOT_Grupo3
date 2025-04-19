@@ -3,21 +3,18 @@
     <item
         android:id="@+id/navigation_rooms"
         android:icon="@drawable/ic_room"
-        android:title="Rooms" />
+        android:title="@string/rooms" />
     <item
         android:id="@+id/navigation_bookings"
         android:icon="@drawable/ic_profile"
-        android:title="My Bookings" />
+        android:title="@string/my_bookings" />
     <item
         android:id="@+id/navigation_car_booking"
         android:icon="@drawable/ic_car"
-        android:title="Car booking" />
-    <item
-        android:id="@+id/navigation_car_washing"
-        android:icon="@drawable/ic_wash"
-        android:title="Car washing" />
+        android:title="@string/car_booking" />
+
     <item
         android:id="@+id/navigation_profile"
         android:icon="@drawable/ic_profile"
-        android:title="My profile" />
+        android:title="@string/my_profile" />
 </menu>

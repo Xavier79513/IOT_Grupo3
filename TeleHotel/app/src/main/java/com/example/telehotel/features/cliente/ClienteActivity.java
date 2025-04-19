@@ -2,30 +2,27 @@ package com.example.telehotel.features.cliente;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.telehotel.R;
 
-import android.view.View;
-
-import java.util.List;
-
 public class ClienteActivity extends AppCompatActivity {
-
-    RecyclerView recyclerHoteles;
-    List<Hotel> listaHoteles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_signup); // Tu layout principal
+        setContentView(R.layout.cliente_activity_signup); // Tu layout principal}
     }
     public void crearCuenta(View view) {
-        Intent intent = new Intent(ClienteActivity.this, OtpActivity.class);
+        Intent intent = new Intent(ClienteActivity.this, HotelsActivity.class);
         startActivity(intent);
     }
 }
+
+
+
+

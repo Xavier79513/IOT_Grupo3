@@ -31,6 +31,7 @@
             android:name=".features.auth.RegisterActivity"
             android:label="Registrate" />
 
+        <activity android:name=".features.cliente.ClienteMainActivity" />
 
         <!-- Actividad para la selección de roles (RoleSelectionActivity) -->
         <activity
@@ -53,9 +54,6 @@
             android:label="Taxista" />
 
         <!-- Actividad para Cliente -->
-        <activity
-            android:name=".features.cliente.ClienteActivity"
-            android:label="Cliente" />
         <activity
             android:name=".features.cliente.HotelDetailActivity"
             android:label="Cliente" />

@@ -47,15 +47,15 @@ public class HistorialReservaActivity extends AppCompatActivity {
         listaReservas.add(new Reserva("Sunshine Inn", "05 Mar 2025", 125, R.drawable.sample_hotel));
         copiaReservas.addAll(listaReservas);
 
-        /*adapter = new HistorialReservaAdapter(listaReservas, this, reserva -> {
+        adapter = new HistorialReservaAdapter(listaReservas, this, reserva -> {
             // Ir a detalle
-            Intent intent = new Intent(HistorialReservaActivity.this, DetalleReservaActivity.class);
+            Intent intent = new Intent(HistorialReservaActivity.this, HistorialDetalleActivity.class);
             intent.putExtra("reserva", reserva);
             startActivity(intent);
         });
 
         recyclerReservas.setLayoutManager(new LinearLayoutManager(this));
-        recyclerReservas.setAdapter(adapter);*/
+        recyclerReservas.setAdapter(adapter);
 
         // Swipe para eliminar
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {

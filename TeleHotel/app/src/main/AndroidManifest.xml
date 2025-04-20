@@ -92,6 +92,13 @@
         <activity
             android:name=".features.cliente.EditarPerfilActivity"
             android:label="Cliente" />
+        <activity
+            android:name=".features.cliente.HistorialDetalleActivity"
+            android:label="Cliente" />
+        <activity
+            android:name=".features.cliente.HistorialReservaActivity"
+            android:label="Cliente" />
+
 
     </application>
 

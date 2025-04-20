@@ -2,7 +2,9 @@ package com.example.telehotel.data.model;
 
 import android.media.Image;
 
-public class Reserva {
+import java.io.Serializable;
+
+public class Reserva implements Serializable {
     private String nombreHotel;
     private String fechaReserva;
     private double precio;

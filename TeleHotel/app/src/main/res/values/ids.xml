@@ -9,4 +9,12 @@
     <item name="registerPassword" type="id" />
     <item name="registerButton" type="id" />
     <item name="registerTitle" type="id" />
+    <item name="labelNombre" type="id" />
+    <item name="etNombre" type="id" />
+    <item name="labelApellido" type="id" />
+    <item name="etApellido" type="id" />
+    <item name="labelDni" type="id" />
+    <item name="labelCorreo" type="id" />
+    <item name="labelPassword" type="id" />
+    <item name="labelConfirmar" type="id" />
 </resources>

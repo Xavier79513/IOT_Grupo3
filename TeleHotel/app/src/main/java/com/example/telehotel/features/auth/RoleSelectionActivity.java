@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.telehotel.R;
 import com.example.telehotel.features.admin.AdminActivity;
-import com.example.telehotel.features.cliente.ClienteActivity;
+import com.example.telehotel.features.cliente.ClienteMainActivity;
 import com.example.telehotel.features.superadmin.SuperAdminActivity;
 import com.example.telehotel.features.taxista.TaxistaActivity;
 
@@ -81,8 +81,8 @@ public class RoleSelectionActivity extends AppCompatActivity {
     }
 
     private void navigateToClienteView() {
-        // Lógica para navegar a la vista de Cliente
-        Intent intent = new Intent(RoleSelectionActivity.this, ClienteActivity.class);
+        // Lógica para navegar a la nueva actividad principal del cliente
+        Intent intent = new Intent(RoleSelectionActivity.this, ClienteMainActivity.class);
         startActivity(intent);
     }
 }

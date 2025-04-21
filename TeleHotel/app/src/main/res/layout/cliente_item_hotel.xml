@@ -14,6 +14,7 @@
     android:layout_marginHorizontal="12dp">
 
     <ImageView
+        android:id="@+id/hotelImage"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/sample_hotel"
@@ -29,8 +30,8 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:text="Heden golf"
             android:id="@+id/hotelName"
+            android:text="Heden golf"
             android:textStyle="bold"
             android:textColor="#000000"
             android:textSize="14sp"
@@ -38,8 +39,8 @@
             android:layout_height="wrap_content" />
 
         <TextView
-            android:text="⭐ 3.9  Reseñas (200)"
-            android:id="@+id/textViewRating"
+            android:id="@+id/hotelRating"
+            android:text="⭐ 3.9  Reviews (200)"
             android:textSize="12sp"
             android:textColor="#888888"
             android:layout_width="wrap_content"
@@ -47,8 +48,8 @@
             android:layout_marginTop="2dp" />
 
         <TextView
+            android:id="@+id/hotelDescription"
             android:text="Set in landscaped gardens overlooking the …"
-            android:id="@+id/textViewDescripcion"
             android:textSize="12sp"
             android:maxLines="1"
             android:ellipsize="end"
@@ -66,8 +67,8 @@
             android:weightSum="3">
 
             <TextView
+                android:id="@+id/hotelDiscount"
                 android:text="25% OFF"
-                android:id="@+id/textViewDescuento"
                 android:textColor="#F57C00"
                 android:textStyle="bold"
                 android:textSize="12sp"
@@ -76,8 +77,8 @@
                 android:layout_height="wrap_content" />
 
             <TextView
+                android:id="@+id/hotelPrice"
                 android:text="$127"
-                android:id="@+id/textViewPrecio"
                 android:textColor="#000"
                 android:textStyle="bold"
                 android:textSize="12sp"

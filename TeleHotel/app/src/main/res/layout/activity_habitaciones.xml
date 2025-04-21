@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Toolbar negra idéntica -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/black"
+        app:navigationIcon="@drawable/ic_menu"
+        app:navigationIconTint="@android:color/white"
+        app:menu="@menu/menu_hotel_detail"
+        app:contentInsetStartWithNavigation="0dp"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <!-- Botón grande centrado “Agregar Habitación” -->
+    <!-- activity_habitaciones.xml -->
+    <Button
+        android:id="@+id/btnAgregarHabitacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/topAppBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:backgroundTint="@color/purple_200"
+        android:text="Agregar Habitación"
+        android:textColor="@android:color/white"/>
+
+
+    <!-- Scroll con la lista de habitaciones -->
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/btnAgregarHabitacion"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:id="@+id/llHabitacionesContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:divider="?android:attr/listDivider"
+            android:showDividers="middle">
+
+            <!-- Ejemplo de uno o varios ítems -->
+            <include layout="@layout/item_habitacion"/>
+            <include layout="@layout/item_habitacion"/>
+            <include layout="@layout/item_habitacion"/>
+            <include layout="@layout/item_habitacion"/>
+            <include layout="@layout/item_habitacion"/>
+            <include layout="@layout/item_habitacion"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom nav igual que en AdminActivity -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_gradient"
+        app:menu="@menu/admin_bottom_nav_menu"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

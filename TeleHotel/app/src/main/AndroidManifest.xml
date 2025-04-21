@@ -14,45 +14,46 @@
         android:theme="@style/Theme.TeleHotel"
         tools:targetApi="31">
         <activity
+            android:name=".features.admin.PerfilActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin.ReportesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin.ServiciosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin.HabitacionesActivity"
+            android:exported="false" />
+        <activity
             android:name=".features.auth.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.TeleHotel">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".features.auth.ForgotPasswordActivity"
             android:label="Olvidaste tu contraseña" />
-
         <activity
             android:name=".features.auth.RegisterActivity"
-            android:label="Registrate" />
-
-
-        <!-- Actividad para la selección de roles (RoleSelectionActivity) -->
+            android:label="Registrate" /> <!-- Actividad para la selección de roles (RoleSelectionActivity) -->
         <activity
             android:name=".features.auth.RoleSelectionActivity"
-            android:label="Seleccionar Rol" />
-
-        <!-- Actividad para Admin -->
+            android:label="Seleccionar Rol" /> <!-- Actividad para Admin -->
         <activity
             android:name=".features.admin.AdminActivity"
-            android:label="Admin" />
-
-        <!-- Actividad para Superadmin -->
+            android:label="Admin"
+            android:theme="@style/Theme.TeleHotel.Admin" /> <!-- Actividad para Superadmin -->
         <activity
             android:name=".features.superadmin.SuperAdminActivity"
-            android:label="Superadmin" />
-
-        <!-- Actividad para Taxista -->
+            android:label="Superadmin" /> <!-- Actividad para Taxista -->
         <activity
             android:name=".features.taxista.TaxistaActivity"
-            android:label="Taxista" />
-
-        <!-- Actividad para Cliente -->
+            android:label="Taxista" /> <!-- Actividad para Cliente -->
         <activity
             android:name=".features.cliente.ClienteActivity"
             android:label="Cliente" />
@@ -98,8 +99,6 @@
         <activity
             android:name=".features.cliente.HistorialReservaActivity"
             android:label="Cliente" />
-
-
     </application>
 
 </manifest>

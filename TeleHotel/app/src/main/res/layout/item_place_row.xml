@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:src="@drawable/ic_place" />
+
+    <TextView
+        android:id="@+id/tvPlaceName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="4dp"
+        android:text="Plaza San Martín"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"/>
+
+    <TextView
+        android:id="@+id/tvDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="8 min a pie"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"/>
+</LinearLayout>

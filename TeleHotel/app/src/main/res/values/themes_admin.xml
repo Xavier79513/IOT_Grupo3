@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.TeleHotel.Admin"
+        parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- hereda todo tu tema base sin ActionBar -->
+
+        <!-- pinta la status bar de morado (o tu colorPrimary) -->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+
+        <!-- si quisieras iconos claros en la status bar, añade -->
+        <!-- <item name="android:windowLightStatusBar">false</item> -->
+    </style>
+</resources>

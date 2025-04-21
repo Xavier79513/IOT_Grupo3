@@ -51,12 +51,12 @@
             android:drawablePadding="6dp"/>
     </LinearLayout>
 
-    <!-- NUEVA SECCIÓN INSERTADA: Resumen de la reserva -->
+    <!-- SECCIÓN DE RESERVA (ScrollView sin barra inferior) -->
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/hotelImage"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -66,7 +66,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- ROOM INFO -->
+            <!-- Título -->
             <TextView
                 android:text="Información sobre Reserva"
                 android:textStyle="bold"
@@ -157,7 +157,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- CLIENT INFO -->
+            <!-- Información del cliente -->
             <TextView
                 android:text="Información del cliente"
                 android:textStyle="bold"
@@ -167,7 +167,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <!-- Campos del cliente -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -222,8 +221,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-
-            <!-- PROMO CODE -->
+            <!-- Código promocional -->
             <TextView
                 android:text="Código promocional"
                 android:textStyle="bold"
@@ -237,7 +235,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <!-- Confirm Button -->
+            <!-- Botón de confirmación -->
             <Button
                 android:id="@+id/btnConfirmOrder"
                 android:text="Confirmar reserva"
@@ -246,22 +244,6 @@
                 android:textColor="@android:color/white"
                 android:backgroundTint="#3F51B5"
                 android:layout_marginTop="20dp" />
-
         </LinearLayout>
-
     </ScrollView>
-
-    <!-- Menú de navegación inferior (BottomNavigationView) -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/btn_gradient"
-        app:menu="@menu/cliente_bottom_nav_menu"
-        app:labelVisibilityMode="labeled"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
-

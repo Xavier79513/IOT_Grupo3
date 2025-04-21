@@ -12,7 +12,7 @@
         android:layout_height="0dp"
         android:fillViewport="true"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -84,9 +84,7 @@
                     android:layout_height="wrap_content"
                     android:text="Reseña (106)"
                     android:backgroundTint="#1E88E5"
-                    android:textColor="#FFFFFF"
-                    android:clickable="true"
-                    android:focusable="true"/>
+                    android:textColor="#FFFFFF"/>
                 <Button
                     android:id="@+id/photosButton"
                     android:layout_width="0dp"
@@ -94,10 +92,7 @@
                     android:layout_height="wrap_content"
                     android:text="Fotos (10)"
                     android:backgroundTint="#E0E0E0"
-                    android:clickable="true"
-                    android:focusable="true"
                     android:textColor="#000000"/>
-
                 <Button
                     android:id="@+id/nearbyButton"
                     android:layout_width="0dp"
@@ -105,11 +100,10 @@
                     android:layout_height="wrap_content"
                     android:text="Cerca a(24)"
                     android:backgroundTint="#E0E0E0"
-                    android:clickable="true"
-                    android:focusable="true"
                     android:textColor="#000000"/>
             </LinearLayout>
 
+            <!-- Descripción y ubicación -->
             <LinearLayout
                 android:id="@+id/locationInfoSection"
                 android:layout_width="0dp"
@@ -120,7 +114,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
-                <!-- Título -->
                 <TextView
                     android:text="DESCRIPCIÓN DE LA UBICACIÓN"
                     android:textStyle="bold"
@@ -128,7 +121,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-                <!-- Descripción -->
                 <TextView
                     android:layout_marginTop="4dp"
                     android:text="Este hotel de lujo, con arte local contemporáneo y toques arquitectónicos, está situado en unos jardines paisajísticos con vistas a la laguna de Ébrié, a 3 km de la Mezquita de la Riviera y a 17 km del Parque Nacional del Banco."
@@ -136,14 +128,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <!-- Línea divisora -->
                 <View
                     android:layout_marginTop="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#E0E0E0" />
 
-                <!-- Subtítulo -->
                 <TextView
                     android:text="PUNTUACIÓN DE LA UBICACIÓN DEL HOTEL"
                     android:textStyle="bold"
@@ -152,7 +142,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-                <!-- Puntuación con texto -->
                 <LinearLayout
                     android:layout_marginTop="8dp"
                     android:layout_width="match_parent"
@@ -176,26 +165,22 @@
                         android:textColor="#666" />
                 </LinearLayout>
 
-                <!-- Íconos con descripciones -->
                 <LinearLayout
                     android:layout_marginTop="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <!-- Lugar para fotos -->
                     <LinearLayout
                         android:layout_marginTop="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
-
                         <ImageView
                             android:src="@drawable/camera"
                             android:layout_width="24dp"
                             android:layout_height="24dp" />
-
                         <TextView
                             android:text="  Buenos lugares para tomarse fotos"
                             android:layout_width="wrap_content"
@@ -203,19 +188,16 @@
                             android:textSize="14sp" />
                     </LinearLayout>
 
-                    <!-- Transporte público -->
                     <LinearLayout
                         android:layout_marginTop="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
-
                         <ImageView
                             android:src="@drawable/ic_train"
                             android:layout_width="24dp"
                             android:layout_height="24dp" />
-
                         <TextView
                             android:text="  Opciones de transporte público cercanas."
                             android:layout_width="wrap_content"
@@ -223,19 +205,16 @@
                             android:textSize="14sp" />
                     </LinearLayout>
 
-                    <!-- Aeropuerto cercano -->
                     <LinearLayout
                         android:layout_marginTop="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
-
                         <ImageView
                             android:src="@drawable/ic_airport"
                             android:layout_width="24dp"
                             android:layout_height="24dp" />
-
                         <TextView
                             android:text="  Aeropuerto a 15 minutos del hotel"
                             android:layout_width="wrap_content"
@@ -245,10 +224,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-
-
-
-            <!-- Botón de reserva (REPOSICIONADO AL FINAL) -->
+            <!-- Botón de reserva -->
             <Button
                 android:id="@+id/bookNowButton"
                 android:layout_width="0dp"
@@ -262,18 +238,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/btn_gradient"
-        app:menu="@menu/cliente_bottom_nav_menu"
-        app:labelVisibilityMode="labeled"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
-

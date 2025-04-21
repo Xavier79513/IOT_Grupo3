@@ -12,7 +12,7 @@
     <fragment
         android:id="@+id/nav_car"
         android:name="com.example.telehotel.features.cliente.fragments.TaxiReservationFragment"
-        android:label="Reserva Taxi" />
+        android:label="Taxi" />
 
     <fragment
         android:id="@+id/nav_profile"
@@ -28,4 +28,5 @@
         android:id="@+id/nav_settings"
         android:name="com.example.telehotel.features.cliente.fragments.SettingsFragment"
         android:label="Ajustes" />
+    <!-- Agrega más fragments si tienes -->
 </navigation>

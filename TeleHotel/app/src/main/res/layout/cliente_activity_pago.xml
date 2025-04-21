@@ -88,7 +88,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="John Smith"
+                android:hint=""
                 android:inputType="textPersonName"
                 android:textColor="#fff"
                 android:textColorHint="#ccc"/>

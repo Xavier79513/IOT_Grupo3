@@ -48,9 +48,33 @@
             android:name=".features.superadmin.SuperAdminActivity"
             android:label="Superadmin" />
 
-        <!-- Actividad para Taxista -->
+        <!-- Actividad para Taxista (Alejandro) -->
         <activity
             android:name=".features.taxista.TaxistaActivity"
+            android:label="Taxista" />
+        <activity
+            android:name=".features.taxista.TaxistaTodasSolicitudes"
+            android:label="Taxista" />
+        <activity
+            android:name=".features.taxista.TaxistaHistorialActivity"
+            android:label="Taxista" />
+        <activity
+            android:name=".features.taxista.TaxistaHoteles"
+            android:label="Taxista" />
+        <activity
+            android:name=".features.taxista.TaxistaHotelDetalle"
+            android:label="Taxista" />
+        <activity
+            android:name=".features.taxista.TaxistaPerfil"
+            android:label="Taxista" />
+        <activity
+            android:name=".features.taxista.TaxistaStatsActivity"
+            android:label="Taxista" />
+        <activity
+            android:name=".features.taxista.TaxistaViajeAceptadoActivity"
+            android:label="Taxista" />
+        <activity
+            android:name=".features.taxista.TaxistaDetalleViaje"
             android:label="Taxista" />
 
         <!-- Actividad para Cliente -->

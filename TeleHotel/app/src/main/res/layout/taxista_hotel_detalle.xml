@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <!-- Greeting Box -->
+    <TextView
+        android:id="@+id/greetingBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Hotel Los Delfines"
+        android:textColor="#6750A3"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:padding="10dp"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Rating -->
+    <TextView
+        android:id="@+id/textViewRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="⭐ 4.9  Reviews (200)"
+        android:textColor="#888888"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toBottomOf="@id/greetingBox"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Dirección -->
+    <TextView
+        android:id="@+id/textViewDireccion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="San Isidro, Los Eucaliptos 555"
+        android:textColor="#444"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:layout_marginTop="2dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toBottomOf="@id/textViewRating"
+        app:layout_constraintStart_toStartOf="parent" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="10dp"
+        android:background="#CCC"
+        app:layout_constraintTop_toBottomOf="@id/textViewDireccion"
+        app:layout_constraintStart_toStartOf="parent" />
+    <!-- Título: Solicitudes (fuera del ScrollView) -->
+    <TextView
+        android:id="@+id/textViewSolicitudes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Solicitudes"
+        android:textColor="#444"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toBottomOf="@id/textViewDireccion"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- ScrollView con la lista -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/textViewSolicitudes"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/contentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp">
+
+            <LinearLayout
+                android:id="@+id/linearHotelContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+
+                <include layout="@layout/taxista_item_solicitud_usuario" />
+                <include layout="@layout/taxista_item_solicitud_usuario" />
+                <include layout="@layout/taxista_item_solicitud_usuario" />
+                <include layout="@layout/taxista_item_solicitud_usuario" />
+                <include layout="@layout/taxista_item_solicitud_usuario" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Menú inferior -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_gradient"
+        app:menu="@menu/taxista_bottom_nav_menu"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

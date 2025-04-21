@@ -1,7 +1,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/nav_rooms" android:icon="@drawable/room" android:title="Hoteles"/>
-    <item android:id="@+id/nav_car" android:icon="@drawable/car" android:title="Reserva de taxis"/>
-    <item android:id="@+id/nav_profile" android:icon="@drawable/profile" android:title="Perfil"/>
-    <item android:id="@+id/nav_history_reservation" android:icon="@drawable/history_reservation" android:title="Historial de reservas"/>
-    <item android:id="@+id/nav_settings" android:icon="@drawable/notifications" android:title="Notificaciones"/>
+    <item android:id="@+id/nav_rooms"
+        android:icon="@drawable/room"
+        android:title="Hoteles"/>
+    <item android:id="@+id/nav_car"
+        android:icon="@drawable/car"
+        android:title="Taxi"/>
+    <item android:id="@+id/nav_profile"
+        android:icon="@drawable/profile"
+        android:title="Perfil"/>
+    <item android:id="@+id/nav_history_reservation"
+        android:icon="@drawable/history_reservation"
+        android:title="Historial"/>
+    <item android:id="@+id/nav_settings"
+        android:icon="@drawable/notifications"
+        android:title="Notificaciones"/>
 </menu>

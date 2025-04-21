@@ -1,3 +1,4 @@
+package com.example.telehotel.data.model;
 import com.example.telehotel.data.model.Ubicacion;
 
 import java.util.List;

@@ -1,0 +1,63 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_marginVertical="8dp"
+    android:padding="8dp"
+    android:background="@drawable/card_background"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="2dp"
+    android:clipToPadding="false"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:layout_marginHorizontal="12dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:src="@drawable/sample_hotel"
+    android:scaleType="centerCrop"
+    android:background="@drawable/rounded_corners"
+    android:clipToOutline="true" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
+
+        <TextView
+            android:text="Hotel Los Delfines"
+            android:id="@+id/hotelName"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="25sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/textViewRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:text="⭐ 3.9  Reviews (200)"
+            android:textColor="#888888"
+            android:textSize="14sp" />
+
+        <TextView
+            android:text="San Isidro, Los Eucaliptos 555"
+            android:id="@+id/textViewDescripcion"
+            android:textSize="14sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textColor="#444"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

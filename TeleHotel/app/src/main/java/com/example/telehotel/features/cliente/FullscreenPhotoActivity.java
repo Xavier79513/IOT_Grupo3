@@ -1,19 +1,13 @@
 package com.example.telehotel.features.cliente;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.telehotel.R;
+import com.example.telehotel.features.cliente.adapters.FullscreenPhotoAdapter;
 
 import java.util.List;
 

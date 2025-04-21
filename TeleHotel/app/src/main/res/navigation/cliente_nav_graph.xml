@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph_cliente"
+    app:startDestination="@id/nav_rooms">
+
+    <fragment
+        android:id="@+id/nav_rooms"
+        android:name="com.example.telehotel.features.cliente.fragments.RoomsFragment"
+        android:label="Hoteles" />
+
+    <fragment
+        android:id="@+id/nav_car"
+        android:name="com.example.telehotel.features.cliente.fragments.TaxiReservationFragment"
+        android:label="Taxi" />
+
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.example.telehotel.features.cliente.fragments.ProfileFragment"
+        android:label="Perfil" />
+
+    <fragment
+        android:id="@+id/nav_history_reservation"
+        android:name="com.example.telehotel.features.cliente.fragments.ReservationHistoryFragment"
+        android:label="Historial" />
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.example.telehotel.features.cliente.fragments.NotificationsFragment"
+        android:label="Ajustes" />
+    <!-- Agrega más fragments si tienes -->
+</navigation>

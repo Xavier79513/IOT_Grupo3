@@ -35,9 +35,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".features.auth.ForgotPasswordActivity"
             android:label="Olvidaste tu contraseña" />
+
         <activity
             android:name=".features.auth.RegisterActivity"
             android:label="Registrate" /> <!-- Actividad para la selección de roles (RoleSelectionActivity) -->
@@ -55,8 +57,28 @@
             android:name=".features.taxista.TaxistaActivity"
             android:label="Taxista" /> <!-- Actividad para Cliente -->
         <activity
-            android:name=".features.cliente.ClienteActivity"
-            android:label="Cliente" />
+            android:name=".features.taxista.TaxistaHistorialActivity"
+            android:label="Taxista" />
+        <activity
+            android:name=".features.taxista.TaxistaHoteles"
+            android:label="Taxista" />
+        <activity
+            android:name=".features.taxista.TaxistaHotelDetalle"
+            android:label="Taxista" />
+        <activity
+            android:name=".features.taxista.TaxistaPerfil"
+            android:label="Taxista" />
+        <activity
+            android:name=".features.taxista.TaxistaStatsActivity"
+            android:label="Taxista" />
+        <activity
+            android:name=".features.taxista.TaxistaViajeAceptadoActivity"
+            android:label="Taxista" />
+        <activity
+            android:name=".features.taxista.TaxistaDetalleViaje"
+            android:label="Taxista" />
+
+        <!-- Actividad para Cliente -->
         <activity
             android:name=".features.cliente.HotelDetailActivity"
             android:label="Cliente" />
@@ -99,6 +121,8 @@
         <activity
             android:name=".features.cliente.HistorialReservaActivity"
             android:label="Cliente" />
+
+
     </application>
 
 </manifest>

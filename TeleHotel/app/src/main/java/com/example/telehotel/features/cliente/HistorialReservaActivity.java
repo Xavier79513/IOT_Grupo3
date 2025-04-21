@@ -1,6 +1,5 @@
 package com.example.telehotel.features.cliente;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,9 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import android.content.Intent;
 import com.example.telehotel.R;
 import com.example.telehotel.data.model.Reserva;
+import com.example.telehotel.features.cliente.adapters.HistorialReservaAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

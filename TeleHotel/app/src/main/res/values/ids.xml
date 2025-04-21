@@ -17,4 +17,8 @@
     <item name="labelCorreo" type="id" />
     <item name="labelPassword" type="id" />
     <item name="labelConfirmar" type="id" />
+    <item name="hotelRating" type="id" />
+    <item name="hotelDiscount" type="id" />
+    <item name="hotelPrice" type="id" />
+    <item name="fragmentContainer" type="id" />
 </resources>

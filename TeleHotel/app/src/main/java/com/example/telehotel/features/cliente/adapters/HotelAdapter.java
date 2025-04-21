@@ -7,11 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.telehotel.R;
 import com.example.telehotel.features.cliente.Hotel;
-import com.example.telehotel.features.cliente.ReservaActivity;
+import com.example.telehotel.features.cliente.HotelDetailActivity;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
@@ -42,14 +44,12 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
 
         holder.btnBookNow.setOnClickListener(v -> {
             Context context = v.getContext();
-            Intent intent = new Intent(context, ReservaActivity.class);
+            Intent intent = new Intent(context, HotelDetailActivity.class);
             intent.putExtra("hotelName", hotel.getNombre());
-            intent.putExtra("precio", hotel.getPrecio());
-            intent.putExtra("descripcion", hotel.getDescripcion());
             intent.putExtra("rating", hotel.getRating());
+            intent.putExtra("descripcion", hotel.getDescripcion());
+            intent.putExtra("precio", hotel.getPrecio());
             intent.putExtra("descuento", hotel.getDescuento());
-            // Si tienes imagen o más datos, puedes agregarlos aquí también
-
             context.startActivity(intent);
         });
     }

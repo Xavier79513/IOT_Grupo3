@@ -1,5 +1,6 @@
 package com.example.telehotel.features.cliente.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.telehotel.R;
 import com.example.telehotel.features.cliente.Hotel;
+import com.example.telehotel.features.cliente.HotelDetailActivity;
 import com.example.telehotel.features.cliente.adapters.HotelAdapter;
 
 import java.util.ArrayList;
@@ -25,7 +27,6 @@ public class RoomsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        // Este método infla el layout fragment_rooms.xml
         return inflater.inflate(R.layout.cliente_fragment_rooms, container, false);
     }
 

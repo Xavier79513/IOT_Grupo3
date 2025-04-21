@@ -1,24 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#FFFFFF"
+    tools:context=".features.cliente.HotelDetailActivity">
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:fillViewport="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#FFFFFF">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
             <!-- Imagen principal del hotel -->
             <ImageView
@@ -283,19 +275,18 @@
                     android:id="@+id/btnCheckIn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
                     android:background="@drawable/border"
                     android:clickable="true"
                     android:focusable="true"
-                    android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="12dp">
+                    android:padding="12dp"
+                    android:gravity="center_vertical" >
 
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:contentDescription="Calendar"
-                        android:src="@drawable/ic_calendar" />
+                        android:src="@drawable/ic_calendar"
+                        android:contentDescription="Calendar" />
 
                     <TextView
                         android:id="@+id/txtCheckIn"
@@ -307,15 +298,6 @@
                 </LinearLayout>
 
                 <!-- Check-out -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="Check-out"
-                    android:textColor="#000"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
                 <LinearLayout
                     android:id="@+id/btnCheckOut"
                     android:layout_width="match_parent"
@@ -334,6 +316,7 @@
                         android:contentDescription="Calendar"
                         android:src="@drawable/ic_calendar" />
 
+                    <!-- AGREGA ESTE -->
                     <TextView
                         android:id="@+id/txtCheckOut"
                         android:layout_width="wrap_content"
@@ -383,22 +366,19 @@
             </LinearLayout>
 
             <!-- Botón de reserva (REPOSICIONADO AL FINAL) -->
-            <Button
-                android:id="@+id/bookNowButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:backgroundTint="#4658B4"
-                android:text="Reservar ahora"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/checkSection" />
+        <Button
+            android:id="@+id/bookNowButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:backgroundTint="#4658B4"
+            android:text="Reservar ahora"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/checkSection"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

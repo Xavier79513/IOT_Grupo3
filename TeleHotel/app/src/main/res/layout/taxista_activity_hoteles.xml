@@ -125,7 +125,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"/>
                 <include
-                    android:id="@+id/itemHotel3"
+                    android:id="@+id/itemHotel4"
                     layout="@layout/taxista_item_hotel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

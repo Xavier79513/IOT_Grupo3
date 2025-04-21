@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.telehotel.R;
+import com.example.telehotel.features.cliente.BookingActivity;
 import com.example.telehotel.features.cliente.Hotel;
 import com.example.telehotel.features.cliente.HotelDetailActivity;
 import com.google.android.material.button.MaterialButton;
@@ -44,7 +45,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
 
         holder.btnBookNow.setOnClickListener(v -> {
             Context context = v.getContext();
-            Intent intent = new Intent(context, HotelDetailActivity.class);
+            Intent intent = new Intent(context, BookingActivity.class);
             intent.putExtra("hotelName", hotel.getNombre());
             intent.putExtra("rating", hotel.getRating());
             intent.putExtra("descripcion", hotel.getDescripcion());

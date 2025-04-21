@@ -5,21 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    tools:context=".features.cliente.ReservaActivity">
-
-    <!-- TOOLBAR con flecha de regreso -->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_arrow_back"
-        app:titleTextColor="@android:color/white" />
+    tools:context=".features.cliente.CercaActivity"
+    android:background="#FFFFFF">
 
     <!-- Imagen principal del hotel -->
     <ImageView
@@ -28,19 +15,19 @@
         android:layout_height="220dp"
         android:scaleType="centerCrop"
         android:src="@drawable/coast"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Contenedor de texto (nombre + ubicación) -->
     <LinearLayout
         android:id="@+id/textContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="16dp"
         android:layout_marginBottom="16dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
         app:layout_constraintBottom_toBottomOf="@id/hotelImage"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -48,31 +35,30 @@
             android:id="@+id/hotelName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
             android:text="Bristol Marriot Hotel Royale"
-            android:textColor="#FFFFFF"
             android:textSize="22sp"
-            android:textStyle="bold" />
-
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="4dp"/>
         <TextView
             android:id="@+id/hotelLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_location"
-            android:drawablePadding="6dp"
             android:text="Bristol, Inglaterra"
             android:textColor="#FFFFFF"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:drawableLeft="@drawable/ic_location"
+            android:drawablePadding="6dp"/>
     </LinearLayout>
 
-    <!-- ScrollView para contenido -->
+    <!-- NUEVA SECCIÓN INSERTADA: Resumen de la reserva -->
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/hotelImage"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/hotelImage">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -82,12 +68,12 @@
 
             <!-- ROOM INFO -->
             <TextView
+                android:text="Información sobre Reserva"
+                android:textStyle="bold"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="8dp"
-                android:text="Información sobre Reserva"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:paddingBottom="8dp"/>
 
             <!-- Campos de la reserva -->
             <LinearLayout
@@ -100,150 +86,182 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-
-                    <TextView
+                    <TextView android:text="Número de habitaciones: "
+                        android:textStyle="bold"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Número de habitaciones: "
-                        android:textStyle="bold" />
-
-                    <TextView
+                        android:layout_height="wrap_content" />
+                    <TextView android:text="1"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1" />
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-
-                    <TextView
+                    <TextView android:text="Tipo de habitación: "
+                        android:textStyle="bold"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Tipo de habitación: "
-                        android:textStyle="bold" />
-
-                    <TextView
+                        android:layout_height="wrap_content" />
+                    <TextView android:text="Económica"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Económica" />
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Room: 3 Nights ($127 x 3 = $381)" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Taxes: $25" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="4dp"
-                    android:text="Total: $406"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <!-- GUEST INFO -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="GUEST INFO"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <!-- Campos del cliente -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Nombre: "
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="John Smith Jackson" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Email: "
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="johnsmith@gmail.com" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Número móvil: "
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="+44 698698966" />
-                    </LinearLayout>
+                    android:orientation="horizontal">
+                    <TextView android:text="Días (Noches): "
+                        android:textStyle="bold"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <TextView android:text="3 Noches ($127 x 3 = $381)"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
 
-                <!-- PROMO CODE -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Código promocional"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <EditText
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ingrese código promocional" />
+                    android:orientation="horizontal">
+                    <TextView android:text="Impuestos: "
+                        android:textStyle="bold"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <TextView android:text="$25"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
 
-                <!-- Confirm Order Button -->
-                <Button
-                    android:id="@+id/btnConfirmOrder"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:backgroundTint="#3F51B5"
-                    android:text="Confirm order"
-                    android:textColor="@android:color/white" />
+                    android:orientation="horizontal"
+                    android:paddingTop="4dp">
+                    <TextView android:text="Total: "
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <TextView android:text="$406"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
             </LinearLayout>
+
+            <!-- CLIENT INFO -->
+            <TextView
+                android:text="Información del cliente"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginTop="16dp"
+                android:paddingBottom="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <!-- Campos del cliente -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:text="Nombre: "
+                        android:textStyle="bold"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:text="John Smith Jackson"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:text="Email: "
+                        android:textStyle="bold"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:text="johnsmith@gmail.com"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:text="Número móvil: "
+                        android:textStyle="bold"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:text="+44 698698966"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <!-- PROMO CODE -->
+            <TextView
+                android:text="Código promocional"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:hint="Ingrese código promocional"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!-- Confirm Button -->
+            <Button
+                android:id="@+id/btnConfirmOrder"
+                android:text="Confirmar reserva"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:backgroundTint="#3F51B5"
+                android:layout_marginTop="20dp" />
+
         </LinearLayout>
+
     </ScrollView>
+
+    <!-- Menú de navegación inferior (BottomNavigationView) -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_gradient"
+        app:menu="@menu/cliente_bottom_nav_menu"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+

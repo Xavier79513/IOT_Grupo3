@@ -309,10 +309,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_gradient"
-        app:menu="@menu/taxista_bottom_nav_menu"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:menu="@menu/taxista_bottom_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

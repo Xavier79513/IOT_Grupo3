@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".features.cliente.CercaActivity"
+    tools:context=".CercaActivity"
     android:background="#FFFFFF">
 
     <!-- Imagen principal del hotel -->
@@ -24,7 +24,7 @@
         android:id="@+id/textContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:paddingStart="16dp"
         android:layout_marginBottom="16dp"
         android:gravity="center_vertical"
@@ -35,19 +35,18 @@
             android:id="@+id/hotelName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Heden Golf"
+            android:text="Bristol Marriot Hotel Royale"
             android:textSize="22sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
-            android:layout_marginEnd="8dp"/>
-
+            android:layout_marginBottom="4dp"/>
         <TextView
             android:id="@+id/hotelLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Abidjan, Côte d'Ivoire"
+            android:text="Bristol, Inglaterra"
             android:textColor="#FFFFFF"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:drawableLeft="@drawable/ic_location"
             android:drawablePadding="6dp"/>
     </LinearLayout>
@@ -69,74 +68,179 @@
 
             <!-- ROOM INFO -->
             <TextView
-                android:text="ROOM INFO"
+                android:text="Información sobre Reserva"
                 android:textStyle="bold"
-                android:textSize="16sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView android:text="No. of rooms: 1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView android:text="Room type: Air conditioned"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView android:text="Room: 3 Nights ($127 x 3 = $381)"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView android:text="Taxes: $25"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView android:text="Total: $406"
-                android:textStyle="bold"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="4dp"/>
+                android:paddingBottom="8dp"/>
 
-            <!-- GUEST INFO -->
+            <!-- Campos de la reserva -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView android:text="Número de habitaciones: "
+                        android:textStyle="bold"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <TextView android:text="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView android:text="Tipo de habitación: "
+                        android:textStyle="bold"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <TextView android:text="Económica"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView android:text="Días (Noches): "
+                        android:textStyle="bold"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <TextView android:text="3 Noches ($127 x 3 = $381)"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView android:text="Impuestos: "
+                        android:textStyle="bold"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <TextView android:text="$25"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="4dp">
+                    <TextView android:text="Total: "
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <TextView android:text="$406"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- CLIENT INFO -->
             <TextView
-                android:text="GUEST INFO"
+                android:text="Información del cliente"
                 android:textStyle="bold"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:layout_marginTop="16dp"
+                android:paddingBottom="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <TextView android:text="Name: John Smith"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            <!-- Campos del cliente -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <TextView android:text="Email: johnsmith@gmail.com"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:text="Nombre: "
+                        android:textStyle="bold"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:text="John Smith Jackson"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
 
-            <TextView android:text="Mobile number: +225 698698966"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:text="Email: "
+                        android:textStyle="bold"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:text="johnsmith@gmail.com"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:text="Número móvil: "
+                        android:textStyle="bold"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:text="+44 698698966"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+
 
             <!-- PROMO CODE -->
             <TextView
-                android:text="PROMO CODE"
+                android:text="Código promocional"
                 android:textStyle="bold"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:layout_marginTop="16dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <EditText
-                android:hint="Enter promo code"
+                android:hint="Ingrese código promocional"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <!-- Confirm Order Button -->
+            <!-- Confirm Button -->
             <Button
                 android:id="@+id/btnConfirmOrder"
-                android:text="Confirm order"
+                android:text="Confirmar reserva"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
@@ -144,6 +248,7 @@
                 android:layout_marginTop="20dp" />
 
         </LinearLayout>
+
     </ScrollView>
 
     <!-- Menú de navegación inferior (BottomNavigationView) -->

@@ -20,7 +20,7 @@
             app:tint="#FFFFFF" />
 
         <TextView
-            android:text="THANK YOU"
+            android:text="Muchas gracias"
             android:textColor="#FFFFFF"
             android:textSize="28sp"
             android:textStyle="bold"
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:text="YOUR ORDER IS SUCCESSFUL"
+            android:text="Tu reserva se registró con éxito"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:gravity="center"

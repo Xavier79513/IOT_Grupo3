@@ -9,10 +9,34 @@
         android:layout_height="wrap_content"
         android:padding="20dp">
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/backButton">
+
+            <ImageView
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="Volver"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:text="Realizar pago"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
         <TextView
-            android:text="Payment methods"
-            android:textSize="24sp"
-            android:textStyle="bold"
+            android:text="Ingresas los datos de su tarjeta"
+            android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp" />
@@ -43,7 +67,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Card Number"
+                android:text="Número de tarjeta"
                 android:textColor="#fff"/>
 
             <EditText
@@ -57,7 +81,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Card Holder Name"
+                android:text="Nombre del titular de la tarjeta"
                 android:layout_marginTop="10dp"
                 android:textColor="#fff"/>
 
@@ -84,7 +108,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Expiry Date"
+                        android:text="Fecha de vencimiento"
                         android:textColor="#fff"/>
 
                     <EditText
@@ -124,10 +148,10 @@
             android:id="@+id/finishOrderButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Finish Order"
+            android:text="Finalizar reserva"
             android:textStyle="bold"
-            android:background="@drawable/bg_button_gradient"
-            android:textColor="#fff"/>
+            android:backgroundTint="#90A3BF"
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 </ScrollView>
 

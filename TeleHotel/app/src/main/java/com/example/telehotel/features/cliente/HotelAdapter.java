@@ -1,5 +1,7 @@
 package com.example.telehotel.features.cliente;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +40,16 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         holder.hotelPrice.setText(hotel.getPrecio());
 
         holder.btnBookNow.setOnClickListener(v -> {
-            // Aquí puedes agregar lógica para ir a detalles o iniciar reserva
+            Context context = v.getContext();
+            Intent intent = new Intent(context, ReservaActivity.class);
+            intent.putExtra("hotelName", hotel.getNombre());
+            intent.putExtra("precio", hotel.getPrecio());
+            intent.putExtra("descripcion", hotel.getDescripcion());
+            intent.putExtra("rating", hotel.getRating());
+            intent.putExtra("descuento", hotel.getDescuento());
+            // Si tienes imagen o más datos, puedes agregarlos aquí también
+
+            context.startActivity(intent);
         });
     }
 

@@ -6,26 +6,26 @@
 
     <fragment
         android:id="@+id/nav_rooms"
-        android:name="com.example.telehotel.features.cliente.RoomsFragment"
+        android:name="com.example.telehotel.features.cliente.fragments.RoomsFragment"
         android:label="Hoteles" />
 
     <fragment
         android:id="@+id/nav_car"
-        android:name="com.example.telehotel.features.cliente.TaxiReservationFragment"
+        android:name="com.example.telehotel.features.cliente.fragments.TaxiReservationFragment"
         android:label="Reserva Taxi" />
 
     <fragment
         android:id="@+id/nav_profile"
-        android:name="com.example.telehotel.features.cliente.ProfileFragment"
+        android:name="com.example.telehotel.features.cliente.fragments.ProfileFragment"
         android:label="Perfil" />
 
     <fragment
         android:id="@+id/nav_history_reservation"
-        android:name="com.example.telehotel.features.cliente.ReservationHistoryFragment"
+        android:name="com.example.telehotel.features.cliente.fragments.ReservationHistoryFragment"
         android:label="Historial" />
 
     <fragment
         android:id="@+id/nav_settings"
-        android:name="com.example.telehotel.features.cliente.SettingsFragment"
+        android:name="com.example.telehotel.features.cliente.fragments.SettingsFragment"
         android:label="Ajustes" />
 </navigation>

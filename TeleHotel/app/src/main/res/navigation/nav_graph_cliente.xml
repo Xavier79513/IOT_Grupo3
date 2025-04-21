@@ -6,12 +6,12 @@
 
     <fragment
         android:id="@+id/nav_rooms"
-        android:name="com.example.telehotel.features.cliente.RoomsFragment"
+        android:name="com.example.telehotel.features.cliente.fragments.RoomsFragment"
         android:label="Hoteles" />
 
     <fragment
         android:id="@+id/nav_profile"
-        android:name="com.example.telehotel.features.cliente.ProfileFragment"
+        android:name="com.example.telehotel.features.cliente.fragments.ProfileFragment"
         android:label="Perfil" />
 
     <!-- Agrega más fragments si tienes -->

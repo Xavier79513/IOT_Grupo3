@@ -1,4 +1,4 @@
-package com.example.telehotel.features.cliente;
+package com.example.telehotel.features.cliente.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.telehotel.R;
+import com.example.telehotel.features.cliente.Hotel;
+import com.example.telehotel.features.cliente.adapters.HotelAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 

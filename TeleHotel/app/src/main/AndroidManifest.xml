@@ -98,9 +98,6 @@
             android:name=".features.cliente.FullscreenPhotoActivity"
             android:label="Cliente" />
         <activity
-            android:name=".features.cliente.HotelsActivity"
-            android:label="Cliente" />
-        <activity
             android:name=".features.cliente.PagoActivity"
             android:label="Cliente" />
         <activity

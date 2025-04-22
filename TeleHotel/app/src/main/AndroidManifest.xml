@@ -121,6 +121,7 @@
         <activity
             android:name=".features.cliente.HistorialReservaActivity"
             android:label="Cliente" />
+        <activity android:name=".features.cliente.ClienteMainActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

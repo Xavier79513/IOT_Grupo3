@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">LAB3_20206331</string>
+    <string-array name="categorias_array">
+        <item>General</item>
+        <item>Ciencia</item>
+        <item>Historia</item>
+        <item>Entretenimiento</item>
+    </string-array>
+
+    <string-array name="dificultades_array">
+        <item>Fácil</item>
+        <item>Medio</item>
+        <item>Difícil</item>
+    </string-array>
+
+</resources>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8F3F9"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <!-- Cabecera -->
+    <TextView
+        android:id="@+id/tvTituloJuego"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="¿Listo? Juega!"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:gravity="center"
+        android:layout_marginTop="12dp" />
+
+    <TextView
+        android:id="@+id/tvCategoria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="General Knowledge"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"
+        android:textColor="#444444" />
+
+    <!-- Temporizador -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="#EAF4E7"
+        android:padding="8dp"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:id="@+id/tvTiempo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tiempo restante"
+            android:textStyle="bold"
+            android:textColor="#1B1B1B"
+            android:layout_marginEnd="10dp" />
+
+        <TextView
+            android:id="@+id/tvContador"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@android:drawable/ic_lock_idle_alarm"
+            android:drawablePadding="4dp"
+            android:text="00:12"
+            android:textColor="#1B1B1B" />
+    </LinearLayout>
+
+    <!-- Número de pregunta -->
+    <TextView
+        android:id="@+id/tvProgresoPregunta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pregunta 1/3"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_purple_border"
+        android:padding="8dp"
+        android:textColor="#000000"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Enunciado -->
+    <TextView
+        android:id="@+id/tvPregunta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="What is the largest living species of penguin?"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="#1A1A1A"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Opciones -->
+    <RadioGroup
+        android:id="@+id/rgOpciones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton android:id="@+id/opcion1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Emperor" />
+
+        <RadioButton android:id="@+id/opcion2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gentoo" />
+
+        <RadioButton android:id="@+id/opcion3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="King" />
+
+        <RadioButton android:id="@+id/opcion4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Adele" />
+    </RadioGroup>
+
+    <!-- Botón siguiente -->
+    <Button
+        android:id="@+id/btnSiguiente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Siguiente"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="#2A2ACB"
+        android:textColor="#FFFFFF" />
+</LinearLayout>

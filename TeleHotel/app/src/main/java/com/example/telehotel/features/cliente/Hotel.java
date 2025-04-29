@@ -6,6 +6,7 @@ public class Hotel {
     private String descripcion;
     private String descuento;
     private String precio;
+    private int imagenId;
 
     public Hotel(String hotelPerú, String rating, String $99) {
     }
@@ -20,12 +21,13 @@ public class Hotel {
 
     private String fecha;
 
-    public Hotel(String nombre, String rating, String descripcion, String descuento, String precio) {
+    public Hotel(String nombre, String rating, String descripcion, String descuento, String precio, int imagenId) {
         this.nombre = nombre;
         this.rating = rating;
         this.descripcion = descripcion;
         this.descuento = descuento;
         this.precio = precio;
+        this.imagenId =  imagenId;
     }
 
     // Getters
@@ -34,6 +36,7 @@ public class Hotel {
     public String getDescripcion() { return descripcion; }
     public String getDescuento() { return descuento; }
     public String getPrecio() { return precio; }
+    public int getImagenId() { return  imagenId; }
 
     public String getFechaReserva() {
         return "";

@@ -38,8 +38,12 @@ public class RoomsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         List<Hotel> hoteles = new ArrayList<>();
-        hoteles.add(new Hotel("Hotel Libertador", "⭐ 4.5 Reviews (320)", "En el corazón de Lima", "10% OFF", "$180"));
-        hoteles.add(new Hotel("Hostal San Marcos", "⭐ 3.9 Reviews (150)", "A 2 cuadras de la plaza", "25% OFF", "$90"));
+        hoteles.add(new Hotel("Hotel Libertador", "⭐ 4.5 Reviews (320)", "En el corazón de Lima", "10% OFF", "$180",R.drawable.hotel1));
+        hoteles.add(new Hotel("Hotel London Brigde", "⭐ 3.9 Reviews (150)", "A 2 cuadras de la plaza", "25% OFF", "$90",R.drawable.hotel2));
+        hoteles.add(new Hotel("Hotel Grantley Hall ", "⭐ 3.9 Reviews (150)", "A 2 cuadras de la plaza", "25% OFF", "$90",R.drawable.hotel3));
+        hoteles.add(new Hotel("Hotel London Hilon", "⭐ 3.9 Reviews (150)", "A 2 cuadras de la plaza", "25% OFF", "$90",R.drawable.hotel4));
+        hoteles.add(new Hotel("Hotel Cliveden", "⭐ 3.9 Reviews (150)", "A 2 cuadras de la plaza", "25% OFF", "$90",R.drawable.hotel4));
+
 
         recyclerView.setAdapter(new HotelAdapter(hoteles));
     }

@@ -42,6 +42,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         holder.hotelDescription.setText(hotel.getDescripcion());
         holder.hotelDiscount.setText(hotel.getDescuento());
         holder.hotelPrice.setText(hotel.getPrecio());
+        holder.hotelImage.setImageResource(hotel.getImagenId());
 
         holder.btnBookNow.setOnClickListener(v -> {
             Context context = v.getContext();
@@ -51,6 +52,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
             intent.putExtra("descripcion", hotel.getDescripcion());
             intent.putExtra("precio", hotel.getPrecio());
             intent.putExtra("descuento", hotel.getDescuento());
+            intent.putExtra("imagen",hotel.getImagenId());
             context.startActivity(intent);
         });
     }

@@ -68,7 +68,6 @@
 
             <TextView
                 android:id="@+id/hotelDiscount"
-                android:text="25% OFF"
                 android:textColor="#F57C00"
                 android:textStyle="bold"
                 android:textSize="12sp"
@@ -78,7 +77,6 @@
 
             <TextView
                 android:id="@+id/hotelPrice"
-                android:text="$127"
                 android:textColor="#000"
                 android:textStyle="bold"
                 android:textSize="12sp"

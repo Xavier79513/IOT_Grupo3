@@ -1,0 +1,167 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Buscador -->
+        <EditText
+            android:id="@+id/etCity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Barcelona"
+            android:drawableStart="@android:drawable/ic_menu_search"
+            android:padding="12dp"
+            android:background="@android:drawable/editbox_background_normal"/>
+
+        <!-- Fecha -->
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Seleccionar una fecha"
+            android:drawableStart="@android:drawable/ic_menu_my_calendar"
+            android:padding="12dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:drawable/editbox_background_normal"/>
+
+        <!-- Personas y habitaciones -->
+        <TextView
+            android:id="@+id/tvPeople"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2 habitaciones · 5 adultos · 0 niños"
+            android:drawableStart="@android:drawable/ic_menu_agenda"
+            android:padding="12dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:drawable/editbox_background_normal"/>
+
+        <!-- Botón Buscar -->
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Buscar"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="#0066FF"
+            android:textColor="#FFFFFF"/>
+
+        <!-- Mejores Lugares -->
+
+
+        <!-- Título + Botón VER TODO -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="MEJORES LUGARES"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/btnVerTodoLugares"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VER TODO"
+                android:textColor="#007BFF"
+                android:textSize="14sp"
+                android:paddingStart="8dp"/>
+        </LinearLayout>
+
+        <!-- RecyclerView horizontal -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvLugares"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_marginTop="8dp"
+            android:overScrollMode="never"/>
+
+
+        <!-- Título + Botón VER TODO -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="MEJORES HOTELES"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/btnVerTodoHoteles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VER TODO"
+                android:textColor="#007BFF"
+                android:textSize="14sp"
+                android:paddingStart="8dp"/>
+        </LinearLayout>
+
+        <!-- RecyclerView horizontal -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvHoteles"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_marginTop="8dp"
+            android:overScrollMode="never"/>
+
+
+
+
+        <!-- Título + Botón VER TODO -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="OFERTAS PARA EL FIN DE SEMANA"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/btnVerTodoOfertas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VER TODO"
+                android:textColor="#007BFF"
+                android:textSize="14sp"
+                android:paddingStart="8dp"/>
+        </LinearLayout>
+
+        <!-- RecyclerView horizontal -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvOfertas"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_marginTop="8dp"
+            android:overScrollMode="never"/>
+
+    </LinearLayout>
+</ScrollView>

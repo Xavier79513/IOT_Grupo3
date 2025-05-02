@@ -89,6 +89,9 @@
             android:name=".features.cliente.BookingActivity"
             android:label="Cliente" />
         <activity
+            android:name=".features.cliente.PaginaPrincipal"
+            android:label="Cliente" />
+        <activity
             android:name=".features.cliente.CercaActivity"
             android:label="Cliente" />
         <activity

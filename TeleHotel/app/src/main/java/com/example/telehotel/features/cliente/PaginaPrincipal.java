@@ -1,5 +1,6 @@
 package com.example.telehotel.features.cliente;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.core.util.Pair;
 
@@ -65,7 +66,8 @@ public class PaginaPrincipal extends AppCompatActivity {
                 new HotelesAdapter.HotelItem(R.drawable.hotel1, "Hotel BTH"),
                 new HotelesAdapter.HotelItem(R.drawable.hotel2, "Hotel Westin"),
                 new HotelesAdapter.HotelItem(R.drawable.hotel3, "Hotel DeCameron"),
-                new HotelesAdapter.HotelItem(R.drawable.hotel4, "Hotel Royal Palace")
+                new HotelesAdapter.HotelItem(R.drawable.hotel4, "Hotel Royal Palace"),
+                new HotelesAdapter.HotelItem(R.drawable.hotel5, "Hotel Raval House")
 
         );
         rvHoteles.setAdapter(new HotelesAdapter(hoteles));
@@ -108,8 +110,14 @@ public class PaginaPrincipal extends AppCompatActivity {
         TextView tvPeople = findViewById(R.id.tvPeople);
         tvPeople.setOnClickListener(v -> showPeopleDialog());
 
-        //tvPeople = findViewById(R.id.tvPeople);
-        //tvPeople.setOnClickListener(v -> showPeopleBottomSheet());
+
+        Button btnSearch = findViewById(R.id.btnSearch);
+
+        btnSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(PaginaPrincipal.this, ClienteMainActivity.class);
+            startActivity(intent);
+        });
+
 
 
     }
@@ -173,56 +181,5 @@ public class PaginaPrincipal extends AppCompatActivity {
         dialog.show();
     }
 
-    /*private void showPeopleBottomSheet() {
-        View view = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_people, null);
-        BottomSheetDialog dialog = new BottomSheetDialog(this);
-        dialog.setContentView(view);
-
-        String[] tags = {"Habitaciones", "Adultos", "Niños"};
-        int[] counters = {0, 0, 0};
-        TextView[] tvCounts = new TextView[3];
-
-        for (int i = 0; i < tags.length; i++) {
-            View section = view.findViewWithTag(tags[i]);
-            if (section != null) {
-                TextView tvLabel = section.findViewById(R.id.tvLabel);
-                tvLabel.setText(tags[i]);
-
-                TextView tvCount = section.findViewById(R.id.tvCount);
-                Button btnPlus = section.findViewById(R.id.btnPlus);
-                Button btnMinus = section.findViewById(R.id.btnMinus);
-
-                int index = i;
-                tvCount.setText(String.valueOf(counters[index]));
-                tvCounts[index] = tvCount;
-
-                btnPlus.setOnClickListener(v -> {
-                    counters[index]++;
-                    tvCount.setText(String.valueOf(counters[index]));
-                });
-
-                btnMinus.setOnClickListener(v -> {
-                    if (counters[index] > 0) {
-                        counters[index]--;
-                        tvCount.setText(String.valueOf(counters[index]));
-                    }
-                });
-            }
-        }
-
-        Button btnApply = view.findViewById(R.id.btnApply);
-        Switch switchPets = view.findViewById(R.id.switchPets);
-        TextView tvPeople = findViewById(R.id.tvPeople);
-
-        btnApply.setOnClickListener(v -> {
-            String result = counters[0] + " habitaciones · " +
-                    counters[1] + " adultos · " +
-                    counters[2] + " niños";
-            tvPeople.setText(result);
-            dialog.dismiss();
-        });
-
-        dialog.show();
-    }*/
 
 }

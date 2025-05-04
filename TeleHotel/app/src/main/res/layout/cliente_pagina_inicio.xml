@@ -1,7 +1,14 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <include
+        layout="@layout/encabezado" />
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF">
+
 
     <LinearLayout
         android:orientation="vertical"
@@ -48,7 +55,7 @@
             android:layout_height="wrap_content"
             android:text="Buscar"
             android:layout_marginTop="12dp"
-            android:backgroundTint="#0066FF"
+            android:backgroundTint="#4475BF"
             android:textColor="#FFFFFF"/>
 
         <!-- Mejores Lugares -->
@@ -165,3 +172,4 @@
 
     </LinearLayout>
 </ScrollView>
+</LinearLayout>

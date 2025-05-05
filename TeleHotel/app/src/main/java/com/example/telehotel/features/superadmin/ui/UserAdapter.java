@@ -59,8 +59,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         }
 
         public void bind(User user, OnUserActionListener listener) {
-            txtNombre.setText(user.getNombres() + " " + user.getApellidos());
-            txtCorreo.setText(user.getCorreo());
+            txtNombre.setText(user.getName()); // usar getName() en lugar de getNombres()+getApellidos()
+            txtCorreo.setText(user.getEmail()); // usar getEmail() en lugar de getCorreo()
             txtEstado.setText("Estado: " + user.getEstado());
 
             if ("Activo".equals(user.getEstado())) {

@@ -8,6 +8,7 @@
     <color name="purple_200">#BB86FC</color>
     <!-- Colores base -->
     <color name="black">#000000</color>
+    <color name="gray">#9E9E9E</color> <!-- gris neutral -->
 
     <!-- Verde para el botón "Activar" -->
     <color name="green">#4CAF50</color> <!-- Un verde bonito -->

@@ -51,7 +51,7 @@
             android:label="Admin"
             android:theme="@style/Theme.TeleHotel.Admin" /> <!-- Actividad para Superadmin -->
         <activity
-            android:name=".features.superadmin.SuperAdminActivity"
+            android:name=".features.superadmin.ui.SuperAdminActivity"
             android:label="Superadmin" /> <!-- Actividad para Taxista -->
         <activity
             android:name=".features.taxista.TaxistaActivity"

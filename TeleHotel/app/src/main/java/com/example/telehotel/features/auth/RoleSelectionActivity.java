@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.telehotel.R;
 import com.example.telehotel.features.admin.AdminActivity;
 import com.example.telehotel.features.cliente.ClientePaginaPrincipal;
-import com.example.telehotel.features.superadmin.SuperAdminActivity;
+import com.example.telehotel.features.superadmin.ui.SuperAdminActivity;
 import com.example.telehotel.features.taxista.TaxistaActivity;
 
 public class RoleSelectionActivity extends AppCompatActivity {

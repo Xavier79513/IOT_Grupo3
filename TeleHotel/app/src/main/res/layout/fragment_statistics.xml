@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registrar Administrador de Hotel"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_blue_bright"
+            android:layout_gravity="center"
+            android:paddingBottom="24dp"/>
+
+        <EditText
+            android:id="@+id/editTextNombreAdmin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre completo"
+            android:background="@drawable/edittext_background"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/editTextCorreoAdmin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Correo electrónico"
+            android:background="@drawable/edittext_background"
+            android:textColor="@android:color/black"
+            android:inputType="textEmailAddress"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:id="@+id/editTextTelefonoAdmin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Teléfono"
+            android:background="@drawable/edittext_background"
+            android:textColor="@android:color/black"
+            android:inputType="phone"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:id="@+id/editTextDireccionHotel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Dirección del hotel"
+            android:background="@drawable/edittext_background"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="12dp"/>
+
+        <Button
+            android:id="@+id/btnRegistrarAdminHotel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Registrar Administrador"
+            android:backgroundTint="@android:color/holo_blue_light"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"/>
+
+    </LinearLayout>
+</ScrollView>

@@ -92,7 +92,7 @@
             android:name=".features.cliente.BookingActivity"
             android:label="Cliente" />
         <activity
-            android:name=".features.cliente.PaginaPrincipal"
+            android:name=".features.cliente.ClientePaginaPrincipal"
             android:label="Cliente" />
         <activity
             android:name=".features.cliente.CercaActivity"

@@ -10,6 +10,7 @@ import com.example.telehotel.R;
 import com.example.telehotel.data.model.User;
 import com.example.telehotel.features.admin.AdminActivity;
 import com.example.telehotel.features.cliente.ClienteMainActivity;
+import com.example.telehotel.features.cliente.ClientePaginaPrincipal;
 import com.example.telehotel.features.superadmin.SuperAdminActivity;
 import com.example.telehotel.features.taxista.TaxistaActivity;
 
@@ -60,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(new Intent(this, SuperAdminActivity.class));
                         break;
                     case "Cliente":
-                        startActivity(new Intent(this, ClienteMainActivity.class));
+                        startActivity(new Intent(this, ClientePaginaPrincipal.class));
                         break;
                     default:
                         startActivity(new Intent(this, RoleSelectionActivity.class));

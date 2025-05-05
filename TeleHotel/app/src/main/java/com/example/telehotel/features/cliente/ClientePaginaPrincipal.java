@@ -4,10 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.core.util.Pair;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,7 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class PaginaPrincipal extends AppCompatActivity {
+public class ClientePaginaPrincipal extends AppCompatActivity {
 
     TextView tvDate;
     TextView tvPeople;
@@ -114,7 +112,7 @@ public class PaginaPrincipal extends AppCompatActivity {
         Button btnSearch = findViewById(R.id.btnSearch);
 
         btnSearch.setOnClickListener(v -> {
-            Intent intent = new Intent(PaginaPrincipal.this, ClienteMainActivity.class);
+            Intent intent = new Intent(ClientePaginaPrincipal.this, ClienteMainActivity.class);
             startActivity(intent);
         });
 

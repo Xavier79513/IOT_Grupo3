@@ -12,367 +12,367 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-            <!-- Imagen principal del hotel -->
-            <ImageView
-                android:id="@+id/hotelImage"
-                android:layout_width="0dp"
-                android:layout_height="220dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/coast"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <!-- Imagen principal del hotel -->
+        <ImageView
+            android:id="@+id/hotelImage"
+            android:layout_width="0dp"
+            android:layout_height="220dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/coast"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- Contenedor de texto (nombre + ubicación) -->
-            <LinearLayout
-                android:id="@+id/textContainer"
+        <!-- Contenedor de texto (nombre + ubicación) -->
+        <LinearLayout
+            android:id="@+id/textContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@id/hotelImage"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/hotelName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp"
+                android:text="Bristol Marriot Hotel Royale"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/hotelLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_location"
+                android:drawablePadding="6dp"
+                android:text="Bristol, Inglaterra"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Review bar -->
+        <LinearLayout
+            android:id="@+id/reviewBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/review_bar_background"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/hotelImage">
+
+            <Button
+                android:id="@+id/reviewButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#1E88E5"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="Reseña (106)"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/photosButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#E0E0E0"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="Fotos (10)"
+                android:textColor="#000000" />
+
+            <Button
+                android:id="@+id/nearbyButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#E0E0E0"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="Cerca a(24)"
+                android:textColor="#000000" />
+        </LinearLayout>
+
+        <!-- Descripción -->
+        <TextView
+            android:id="@+id/descriptionHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingStart="16dp"
+            android:paddingTop="16dp"
+            android:text="Descripción del hotel"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reviewBar" />
+
+        <!-- Descripción del hotel -->
+        <TextView
+            android:id="@+id/hotelDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Un moderno hotel ubicado frente al mar con vista panorámica, desayuno incluido, wifi gratuito y piscina climatizada para una estadía inolvidable."
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/descriptionHeader" />
+
+        <!-- Iconos de facilidades -->
+        <LinearLayout
+            android:id="@+id/facilitiesLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="12dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/hotelDescription">
+
+            <!-- Facilidades -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="vertical"
-                android:paddingStart="16dp"
-                app:layout_constraintBottom_toBottomOf="@id/hotelImage"
-                app:layout_constraintStart_toStartOf="parent">
+                android:padding="8dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/wifi" />
 
                 <TextView
-                    android:id="@+id/hotelName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:text="Bristol Marriot Hotel Royale"
-                    android:textColor="#FFFFFF"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/hotelLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_location"
-                    android:drawablePadding="6dp"
-                    android:text="Bristol, Inglaterra"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp" />
+                    android:text="Free Wi-Fi"
+                    android:textSize="12sp" />
             </LinearLayout>
 
-            <!-- Review bar -->
             <LinearLayout
-                android:id="@+id/reviewBar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/review_bar_background"
-                android:gravity="center"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/hotelImage">
-
-                <Button
-                    android:id="@+id/reviewButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="#1E88E5"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:text="Reseña (106)"
-                    android:textColor="#FFFFFF" />
-
-                <Button
-                    android:id="@+id/photosButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="#E0E0E0"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:text="Fotos (10)"
-                    android:textColor="#000000" />
-
-                <Button
-                    android:id="@+id/nearbyButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="#E0E0E0"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:text="Cerca a(24)"
-                    android:textColor="#000000" />
-            </LinearLayout>
-
-            <!-- Descripción -->
-            <TextView
-                android:id="@+id/descriptionHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingStart="16dp"
-                android:paddingTop="16dp"
-                android:text="Descripción del hotel"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/reviewBar" />
+                android:orientation="vertical"
+                android:padding="8dp">
 
-            <!-- Descripción del hotel -->
-            <TextView
-                android:id="@+id/hotelDescription"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="Un moderno hotel ubicado frente al mar con vista panorámica, desayuno incluido, wifi gratuito y piscina climatizada para una estadía inolvidable."
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/descriptionHeader" />
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/piscina" />
 
-            <!-- Iconos de facilidades -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Piscina"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
             <LinearLayout
-                android:id="@+id/facilitiesLayout"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/breakfast" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Desayuno incluido"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/gym" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gym"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Sección de ubicación y número -->
+        <LinearLayout
+            android:id="@+id/contactSection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/facilitiesLayout">
+
+            <TextView
+                android:id="@+id/hotelPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/phone"
+                android:drawablePadding="6dp"
+                android:text="+44 712 0099"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/hotelLocation2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_location"
+                android:drawablePadding="6dp"
+                android:text="Bristol, Inglaterra"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Contenedor de check-in/check-out -->
+        <LinearLayout
+            android:id="@+id/checkSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:orientation="vertical"
+            android:padding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/contactSection">
+
+            <!-- Check-in -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Check-in"
+                android:textColor="#000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/btnCheckIn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:gravity="center_vertical" >
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_calendar"
+                    android:contentDescription="Calendar" />
+
+                <TextView
+                    android:id="@+id/txtCheckIn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="Selecciona fecha"
+                    android:textColor="#555" />
+            </LinearLayout>
+
+            <!-- Check-out -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Check-out"
+                android:textColor="#000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+            <LinearLayout
+                android:id="@+id/btnCheckOut"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:layout_marginBottom="12dp"
-                android:gravity="center"
+                android:background="@drawable/border"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/hotelDescription">
+                android:padding="12dp">
 
-                <!-- Facilidades -->
-                <LinearLayout
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="Calendar"
+                    android:src="@drawable/ic_calendar" />
+
+                <!-- AGREGA ESTE -->
+                <TextView
+                    android:id="@+id/txtCheckOut"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/wifi" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Free Wi-Fi"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/piscina" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Piscina"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/breakfast" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Desayuno incluido"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/gym" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Gym"
-                        android:textSize="12sp" />
-                </LinearLayout>
+                    android:layout_marginStart="12dp"
+                    android:text="Selecciona fecha"
+                    android:textColor="#555" />
             </LinearLayout>
 
-            <!-- Sección de ubicación y número -->
-            <LinearLayout
-                android:id="@+id/contactSection"
+            <!-- Adultos/Niños/Habitaciones -->
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingStart="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/facilitiesLayout">
+                android:layout_marginTop="12dp"
+                android:text="Personas"
+                android:textColor="#000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/hotelPhone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/phone"
-                    android:drawablePadding="6dp"
-                    android:text="+44 712 0099"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/hotelLocation2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_location"
-                    android:drawablePadding="6dp"
-                    android:text="Bristol, Inglaterra"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <!-- Contenedor de check-in/check-out -->
             <LinearLayout
-                android:id="@+id/checkSection"
-                android:layout_width="0dp"
+                android:id="@+id/btnGuests"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
-                android:orientation="vertical"
-                android:padding="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/contactSection">
+                android:layout_marginTop="4dp"
+                android:background="@drawable/border"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="12dp">
 
-                <!-- Check-in -->
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="Guests"
+                    android:src="@drawable/person" />
+
                 <TextView
+                    android:id="@+id/txtGuests"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Check-in"
-                    android:textColor="#000"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:layout_marginStart="12dp"
+                    android:text="0 Adultos. 0 Niños. 0 Habitaciones"
+                    android:textColor="#555" />
 
-                <LinearLayout
-                    android:id="@+id/btnCheckIn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:orientation="horizontal"
-                    android:padding="12dp"
-                    android:gravity="center_vertical" >
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_calendar"
-                        android:contentDescription="Calendar" />
-
-                    <TextView
-                        android:id="@+id/txtCheckIn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:text="Selecciona fecha"
-                        android:textColor="#555" />
-                </LinearLayout>
-
-                <!-- Check-out -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Check-out"
-                    android:textColor="#000"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-                <LinearLayout
-                    android:id="@+id/btnCheckOut"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:background="@drawable/border"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="12dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:contentDescription="Calendar"
-                        android:src="@drawable/ic_calendar" />
-
-                    <!-- AGREGA ESTE -->
-                    <TextView
-                        android:id="@+id/txtCheckOut"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:text="Selecciona fecha"
-                        android:textColor="#555" />
-                </LinearLayout>
-
-                <!-- Adultos/Niños/Habitaciones -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="Personas"
-                    android:textColor="#000"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:id="@+id/btnGuests"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:background="@drawable/border"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="12dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:contentDescription="Guests"
-                        android:src="@drawable/person" />
-
-                    <TextView
-                        android:id="@+id/txtGuests"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:text="0 Adultos. 0 Niños. 0 Habitaciones"
-                        android:textColor="#555" />
-
-                </LinearLayout>
             </LinearLayout>
+        </LinearLayout>
 
-            <!-- Botón de reserva (REPOSICIONADO AL FINAL) -->
+        <!-- Botón de reserva (REPOSICIONADO AL FINAL) -->
         <Button
             android:id="@+id/bookNowButton"
             android:layout_width="0dp"

@@ -10,9 +10,9 @@
     <string name="my_profile">Mi perfil</string>
 
     <string-array name="amenities_options">
-        <item>Amenities</item>
-        <item>Pool</item>
-        <item>Wi‑Fi</item>
+        <item>Gym</item>
+        <item>Piscina</item>
+        <item>Wi‑Fi gratis</item>
     </string-array>
 
     <string-array name="filter_options">

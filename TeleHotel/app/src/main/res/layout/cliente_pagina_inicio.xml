@@ -136,7 +136,7 @@
 
 
         <!-- Título + Botón VER TODO -->
-        <LinearLayout
+        <!--LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -160,7 +160,7 @@
                 android:textColor="#007BFF"
                 android:textSize="14sp"
                 android:paddingStart="8dp"/>
-        </LinearLayout>
+        </LinearLayout-->
 
         <!-- RecyclerView horizontal -->
         <androidx.recyclerview.widget.RecyclerView

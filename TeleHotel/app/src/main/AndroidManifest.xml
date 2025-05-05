@@ -66,6 +66,9 @@
             android:name=".features.taxista.TaxistaHotelDetalle"
             android:label="Taxista" />
         <activity
+            android:name=".features.taxista.TaxistaTodasSolicitudes"
+            android:label="Taxista" />
+        <activity
             android:name=".features.taxista.TaxistaPerfil"
             android:label="Taxista" />
         <activity

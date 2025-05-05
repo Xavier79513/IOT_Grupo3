@@ -26,7 +26,7 @@
         android:id="@+id/profileImage"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/user2"
+        android:src="@drawable/user1"
     android:scaleType="centerCrop"
     android:layout_marginTop="20dp"
     android:background="@drawable/circle_background_perfil"

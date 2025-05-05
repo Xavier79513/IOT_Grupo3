@@ -14,12 +14,13 @@
     android:layout_marginHorizontal="12dp">
 
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:src="@drawable/sample_hotel"
-    android:scaleType="centerCrop"
-    android:background="@drawable/rounded_corners"
-    android:clipToOutline="true" />
+        android:scaleType="centerCrop"
+        android:background="@drawable/rounded_corners"
+        android:clipToOutline="true" />
 
     <LinearLayout
         android:orientation="vertical"

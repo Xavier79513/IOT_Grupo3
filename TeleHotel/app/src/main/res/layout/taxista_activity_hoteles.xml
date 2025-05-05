@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="#FFFFFF">
 
     <!-- Greeting Box -->
@@ -16,7 +16,6 @@
         android:textSize="40sp"
         android:textStyle="bold"
         android:padding="12dp"
-
         android:elevation="4dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,13 +38,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
-
             <!-- Buscador -->
             <EditText
+                android:id="@+id/searchBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Search"
+                android:hint="Buscar hotel"
                 android:drawableStart="@android:drawable/ic_menu_search"
                 android:padding="12dp"
                 android:layout_marginTop="12dp"
@@ -54,6 +52,7 @@
 
             <!-- Filtros -->
             <LinearLayout
+                android:id="@+id/filterContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -63,6 +62,7 @@
 
                 <!-- Spinner 1 -->
                 <Spinner
+                    android:id="@+id/spinner1"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="48dp"
@@ -73,6 +73,7 @@
 
                 <!-- Spinner 2 -->
                 <Spinner
+                    android:id="@+id/spinner2"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="48dp"
@@ -84,6 +85,7 @@
 
                 <!-- Spinner 3 -->
                 <Spinner
+                    android:id="@+id/spinner3"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="48dp"
@@ -93,46 +95,15 @@
                     android:gravity="center" />
             </LinearLayout>
 
-
-
-            <!-- Lista de hoteles -->
-            <LinearLayout
-                android:id="@+id/linearHotelContainer"
-                android:orientation="vertical"
+            <!-- Lista dinámica de hoteles -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewHoteles"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="16dp">
-
-                <!-- Incluir item_hotel.xml como un elemento dentro de la lista -->
-                <include
-                    android:id="@+id/itemHotel1"
-                    layout="@layout/taxista_item_hotel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"/>
-
-                <include
-                    android:id="@+id/itemHotel2"
-                    layout="@layout/taxista_item_hotel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"/>
-
-                <include
-                    android:id="@+id/itemHotel3"
-                    layout="@layout/taxista_item_hotel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"/>
-                <include
-                    android:id="@+id/itemHotel4"
-                    layout="@layout/taxista_item_hotel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"/>
-
-            </LinearLayout>
-
+                android:paddingHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/filterContainer"
+                tools:listitem="@layout/taxista_item_hotel" />
 
         </LinearLayout>
     </ScrollView>

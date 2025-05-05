@@ -18,6 +18,9 @@ public class Reserva implements Serializable {
     private String[] alimentos; // Ejemplo: {"Bagels with turkey and bacon", "Sandwich"}
     private double[] preciosAlimentos; // Ejemplo: {10.0, 5.0}
 
+
+    private ServicioTaxi servicioTaxi;
+
     public Reserva(String nombreHotel, String fechaReserva, double precio, int imagen) {
         this.nombreHotel = nombreHotel;
         this.fechaReserva = fechaReserva;
@@ -26,11 +29,64 @@ public class Reserva implements Serializable {
 
     }
 
+    public Reserva() {
+
+    }
+
+    public void setNombreHotel(String nombreHotel) {
+        this.nombreHotel = nombreHotel;
+    }
+
+    public void setFechaReserva(String fechaReserva) {
+        this.fechaReserva = fechaReserva;
+    }
+
+    public void setAlimentos(String[] alimentos) {
+        this.alimentos = alimentos;
+    }
+
+    public void setImagen(int imagen) {
+        this.imagen = imagen;
+    }
+
+    public void setTax(double tax) {
+        this.tax = tax;
+    }
+
+    public void setFechaCheckout(String fechaCheckout) {
+        this.fechaCheckout = fechaCheckout;
+    }
+
+    public void setFechaCheckin(String fechaCheckin) {
+        this.fechaCheckin = fechaCheckin;
+    }
+
+    public void setCantidadHabitaciones(int cantidadHabitaciones) {
+        this.cantidadHabitaciones = cantidadHabitaciones;
+    }
+
+    public void setNinos(int ninos) {
+        this.ninos = ninos;
+    }
+
+    public void setAdultos(int adultos) {
+        this.adultos = adultos;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
+
+    public void setPreciosAlimentos(double[] preciosAlimentos) {
+        this.preciosAlimentos = preciosAlimentos;
+    }
+
     // Getters
     public String getNombreHotel() {
         return nombreHotel;
     }
-    public int getImage(){
+
+    public int getImage() {
         return imagen;
     }
 
@@ -84,6 +140,14 @@ public class Reserva implements Serializable {
             total += precio;
         }
         return total;
+    }
+
+    public ServicioTaxi getServicioTaxi() {
+        return servicioTaxi;
+    }
+
+    public void setServicioTaxi(ServicioTaxi servicioTaxi) {
+        this.servicioTaxi = servicioTaxi;
     }
 
     public double getServiceTax() {

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/vista_sin_taxi"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#F5F5F5"
+        android:padding="0dp">
+
+        <!-- Cabecera (mantiene el estilo solicitado) -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#003580"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/tvTitulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TeleHotel"
+                android:textColor="#FFFFFF"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:layout_centerInParent="true" />
+
+            <ImageView
+                android:id="@+id/ivLogout"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/logout"
+                android:contentDescription="Cerrar sesión"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
+
+        <!-- Contenido -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="24dp">
+
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/ic_car"
+                android:contentDescription="Taxi"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Aún no has agregado el servicio de taxi a tu reserva."
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Podrás contar con un recojo seguro desde el aeropuerto al hotel."
+                android:textColor="#555555"
+                android:textSize="14sp"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:layout_marginBottom="24dp" />
+
+            <Button
+                android:id="@+id/btn_agregar_taxi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Agregar servicio de taxi"
+                android:backgroundTint="#003580"
+                android:textColor="#FFFFFF"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

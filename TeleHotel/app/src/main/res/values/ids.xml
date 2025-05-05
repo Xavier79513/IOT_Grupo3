@@ -21,4 +21,7 @@
     <item name="hotelDiscount" type="id" />
     <item name="hotelPrice" type="id" />
     <item name="fragmentContainer" type="id" />
+    <item name="tv_title" type="id" />
+    <item name="tv_modelo" type="id" />
+    <item name="action_taxiFragment_to_hotelesFragment" type="id" />
 </resources>

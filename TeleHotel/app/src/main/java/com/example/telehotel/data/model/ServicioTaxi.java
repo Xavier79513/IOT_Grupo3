@@ -94,4 +94,5 @@ public class ServicioTaxi {
     public void setQrCodigo(String qrCodigo) {
         this.qrCodigo = qrCodigo;
     }
+
 }

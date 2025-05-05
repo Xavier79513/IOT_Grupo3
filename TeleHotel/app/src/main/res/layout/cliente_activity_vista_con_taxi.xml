@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Título -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tu servicio de taxi"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Datos del conductor -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="3dp"
+            android:layout_marginBottom="16dp"
+            android:background="#FFFFFF">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/txtNombreConductor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Conductor: Aún no asignado"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtVehiculo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vehículo: -"
+                    android:layout_marginTop="4dp" />
+
+                <TextView
+                    android:id="@+id/txtPlaca"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Placa: -"
+                    android:layout_marginTop="2dp" />
+
+                <TextView
+                    android:id="@+id/txtAeropuerto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Aeropuerto: Jorge Chávez"
+                    android:layout_marginTop="6dp" />
+
+                <TextView
+                    android:id="@+id/txtHoraLlegada"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hora estimada: 08:30 AM" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Imagen QR -->
+        <ImageView
+            android:id="@+id/qrReserva"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:src="@drawable/qr_placeholder"
+            android:layout_marginBottom="24dp"
+            android:contentDescription="Código QR para el taxista" />
+
+        <!-- Botón de asignación de conductor -->
+        <Button
+            android:id="@+id/btnAsignarConductor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Solicitar conductor"
+            android:backgroundTint="#00A8E8"
+            android:textColor="#FFF"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Botón para cambiar conductor -->
+        <Button
+            android:id="@+id/btnCambiarConductor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cambiar conductor"
+            android:backgroundTint="#FF9800"
+            android:textColor="#FFF"
+            android:layout_marginBottom="12dp"
+            android:visibility="gone" />
+
+        <!-- Botón para llamar (opcional) -->
+        <Button
+            android:id="@+id/btnLlamarConductor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Llamar al conductor"
+            android:backgroundTint="#4CAF50"
+            android:textColor="#FFF"
+            android:layout_marginBottom="24dp"
+            android:visibility="gone" />
+    </LinearLayout>
+</ScrollView>

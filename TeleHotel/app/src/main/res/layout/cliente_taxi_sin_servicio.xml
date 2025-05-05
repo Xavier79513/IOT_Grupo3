@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <LinearLayout
         android:id="@+id/vista_sin_taxi"
         android:layout_width="match_parent"
@@ -10,7 +11,7 @@
         android:background="#F5F5F5"
         android:padding="0dp">
 
-        <!-- Cabecera (mantiene el estilo solicitado) -->
+        <!-- Cabecera -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -1,5 +1,6 @@
 package com.example.telehotel.features.cliente.fragments;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -77,8 +78,10 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
 
             // Configurar botón dentro de la vista inflada
             vistaPersonalizada.findViewById(R.id.btn_agregar_taxi).setOnClickListener(v -> {
-                // Abre flujo para agregar servicio de taxi
+                Intent intent = new Intent(requireContext(), com.example.telehotel.features.cliente.AgregarTaxiActivity.class);
+                startActivity(intent);
             });
+
 
             // Configurar ícono de logout si lo deseas
             vistaPersonalizada.findViewById(R.id.ivLogout).setOnClickListener(v -> {

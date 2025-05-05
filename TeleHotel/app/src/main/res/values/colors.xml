@@ -6,4 +6,16 @@
     <color name="blue_dark">#002D40</color>
     <color name="white">#FFFFFF</color>
     <color name="purple_200">#BB86FC</color>
+    <!-- Colores base -->
+    <color name="black">#000000</color>
+
+    <!-- Verde para el botón "Activar" -->
+    <color name="green">#4CAF50</color> <!-- Un verde bonito -->
+
+    <!-- Rojo para el botón "Desactivar" -->
+    <color name="red">#F44336</color> <!-- Un rojo vivo -->
+
+    <!-- Si quieres puedes agregar más tonos personalizados -->
+    <color name="green_disabled">#A5D6A7</color> <!-- Verde clarito para desactivado -->
+    <color name="red_disabled">#EF9A9A</color> <!-- Rojo clarito para desactivado -->
 </resources>

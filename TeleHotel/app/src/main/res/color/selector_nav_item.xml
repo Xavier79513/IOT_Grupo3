@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Color cuando el ítem está seleccionado -->
+    <item android:color="@color/green" android:state_checked="true" />
+
+    <!-- Color cuando el ítem NO está seleccionado -->
+    <item android:color="@color/gray" android:state_checked="false" />
+
+</selector>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backend"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Imagen de perfil opcional -->
+        <ImageView
+            android:id="@+id/imageProfile"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_user_placeholder"
+            android:background="@drawable/circle_background"
+            android:scaleType="centerCrop"
+            android:layout_marginTop="32dp"/>
+
+        <!-- Nombre del usuario -->
+        <TextView
+            android:id="@+id/textUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Super Admin"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp"/>
+
+        <!-- Correo del usuario -->
+        <TextView
+            android:id="@+id/textUserEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="superadmin@example.com"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Botón Cerrar Sesión -->
+        <Button
+            android:id="@+id/buttonLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cerrar sesión"
+            android:backgroundTint="@android:color/holo_red_light"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:layout_marginTop="40dp"/>
+
+    </LinearLayout>
+</ScrollView>

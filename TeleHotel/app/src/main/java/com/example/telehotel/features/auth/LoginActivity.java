@@ -8,7 +8,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.telehotel.R;
 import com.example.telehotel.data.model.User;
-import com.example.telehotel.features.auth.RoleSelectionActivity;
+import com.example.telehotel.features.admin.AdminActivity;
+import com.example.telehotel.features.cliente.ClienteMainActivity;
+import com.example.telehotel.features.superadmin.SuperAdminActivity;
+import com.example.telehotel.features.taxista.TaxistaActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -29,7 +32,6 @@ public class LoginActivity extends AppCompatActivity {
         forgotPasswordTextView = findViewById(R.id.forgotPasswordTextView);
         createAccountTextView = findViewById(R.id.createAccountTextView);
 
-        // ViewModel
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
         loginButton.setOnClickListener(v -> {
@@ -45,7 +47,26 @@ public class LoginActivity extends AppCompatActivity {
             if (success) {
                 User user = authViewModel.getCurrentUser();
                 Toast.makeText(this, "Bienvenido " + user.getName(), Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, RoleSelectionActivity.class));
+
+                // Redirigir según el rol del usuario
+                switch (user.getRole()) {
+                    case "Taxista":
+                        startActivity(new Intent(this, TaxistaActivity.class));
+                        break;
+                    case "Admin":
+                        startActivity(new Intent(this, AdminActivity.class));
+                        break;
+                    case "SuperAdmin":
+                        startActivity(new Intent(this, SuperAdminActivity.class));
+                        break;
+                    case "Cliente":
+                        startActivity(new Intent(this, ClienteMainActivity.class));
+                        break;
+                    default:
+                        startActivity(new Intent(this, RoleSelectionActivity.class));
+                        break;
+                }
+
                 finish();
             } else {
                 Toast.makeText(this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();

@@ -3,10 +3,9 @@ package com.example.telehotel.features.taxista;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.telehotel.R;
+import com.example.telehotel.features.auth.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class TaxistaPerfil extends AppCompatActivity {
@@ -14,7 +13,7 @@ public class TaxistaPerfil extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.taxista_editar_perfil);
+        setContentView(R.layout.taxista_editar_perfil); // Asegúrate de que este es el archivo correcto
 
         setupBottomNavigation();
         setupButtons();
@@ -31,15 +30,27 @@ public class TaxistaPerfil extends AppCompatActivity {
     }
 
     private void setupButtons() {
-        Button btnGuardar = findViewById(R.id.btnGuardar);
-        Button btnCancelar = findViewById(R.id.btnCancelar);
+        // Verifica que el ID coincida con el de tu XML
+        Button btnChangePassword = findViewById(R.id.btnChangePassword);
+        Button btnLogout = findViewById(R.id.btnLogout);
 
-        btnGuardar.setOnClickListener(v -> navigateToInicio());
-        btnCancelar.setOnClickListener(v -> navigateToInicio());
+        if (btnChangePassword != null) {
+            btnChangePassword.setOnClickListener(v -> navigateToHome());
+        }
+
+        if (btnLogout != null) {
+            btnLogout.setOnClickListener(v -> navigateToLogin());
+        }
     }
 
-    private void navigateToInicio() {
-        Intent intent = new Intent(TaxistaPerfil.this, TaxistaActivity.class);
+    private void navigateToHome() {
+        Intent intent = new Intent(TaxistaPerfil.this, TaxistaActivity.class); // Cambia HomeActivity por la clase de inicio
+        startActivity(intent);
+        finish();
+    }
+
+    private void navigateToLogin() {
+        Intent intent = new Intent(TaxistaPerfil.this, LoginActivity.class); // Cambia LoginActivity por la clase de login
         startActivity(intent);
         finish();
     }

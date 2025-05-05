@@ -19,7 +19,7 @@ public class AuthViewModel extends ViewModel {
     }
 
     public boolean register(String email, String name, String password) {
-        User user = new User(null, email, name);
+        User user = new User(null, email, name, null);
         return authRepository.register(user, password);
     }
 

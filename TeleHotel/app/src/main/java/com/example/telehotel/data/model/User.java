@@ -5,7 +5,7 @@ public class User {
     private String uid;
     private String email;
     private String name;
-
+    private String role;
     private String estado;
     private String nombres;
     private String apellidos;
@@ -22,10 +22,19 @@ public class User {
     public User() {
     } // Requerido por Firebase
 
-    public User(String uid, String email, String name) {
+    public User(String uid, String email, String name, String role) {
         this.uid = uid;
         this.email = email;
         this.name = name;
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getUid() {

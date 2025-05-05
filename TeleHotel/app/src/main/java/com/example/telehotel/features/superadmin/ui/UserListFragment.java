@@ -43,8 +43,8 @@ public class UserListFragment extends Fragment implements UserAdapter.OnUserActi
     private void loadUsers() {
         userList = new ArrayList<>();
         // Aquí cargas los usuarios reales de Firestore o lo que uses.
-        userList.add(new User("1", "correo1@example.com", "Nombre1"));
-        userList.add(new User("2", "correo2@example.com", "Nombre2"));
+        userList.add(new User("1", "correo1@example.com", "Nombre1","cliente"));
+        userList.add(new User("2", "correo2@example.com", "Nombre2","cliente"));
         userList.get(0).setEstado("Activo");
         userList.get(1).setEstado("Inactivo");
     }

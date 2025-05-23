@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/nav_rooms"
-        android:name="com.example.telehotel.features.cliente.fragments.RoomsFragment"
+        android:name="com.example.telehotel.features.cliente.fragments.HotelsFragment"
         android:label="Hoteles" />
 
     <fragment

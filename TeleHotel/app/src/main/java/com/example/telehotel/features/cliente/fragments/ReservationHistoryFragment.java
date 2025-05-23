@@ -19,12 +19,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.telehotel.R;
+import com.example.telehotel.data.model.Hotel;
 import com.example.telehotel.data.model.Reserva;
 import com.example.telehotel.features.cliente.adapters.HistorialReservaAdapter;
 import com.example.telehotel.features.cliente.HistorialDetalleActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ReservationHistoryFragment extends Fragment {
@@ -57,14 +60,14 @@ public class ReservationHistoryFragment extends Fragment {
         btnBack = view.findViewById(R.id.btnBack);
 
         // Datos de ejemplo
-        listaReservas.add(new Reserva("Hotel Paraíso", "12 Abr 2025", 125, R.drawable.sample_hotel));
-        listaReservas.add(new Reserva("Luna Resort", "05 Mar 2025", 125, R.drawable.sample_hotel));
-        listaReservas.add(new Reserva("Sunshine Inn", "05 Mar 2025", 125, R.drawable.sample_hotel));
+        //listaReservas.add(new Reserva("Hotel Paraíso", "12 Abr 2025", 125, R.drawable.sample_hotel));
+        //listaReservas.add(new Reserva("Luna Resort", "05 Mar 2025", 125, R.drawable.sample_hotel));
+        //listaReservas.add(new Reserva("Sunshine Inn", "05 Mar 2025", 125, R.drawable.sample_hotel));
         copiaReservas.addAll(listaReservas);
 
         adapter = new HistorialReservaAdapter(listaReservas, getContext(), reserva -> {
             Intent intent = new Intent(getActivity(), HistorialDetalleActivity.class);
-            intent.putExtra("reserva", reserva);
+            intent.putExtra("reserva", (CharSequence) reserva);
             startActivity(intent);
         });
 
@@ -97,12 +100,17 @@ public class ReservationHistoryFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
             }
+            Map<String, Hotel> mapaHotelesPorId = new HashMap<>();
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String filtro = s.toString().toLowerCase();
+
                 List<Reserva> filtradas = copiaReservas.stream()
-                        .filter(r -> r.getNombreHotel().toLowerCase().contains(filtro))
+                        .filter(r -> {
+                            Hotel hotel = mapaHotelesPorId.get(r.getHotelId());
+                            return hotel != null && hotel.getNombre().toLowerCase().contains(filtro);
+                        })
                         .collect(Collectors.toList());
 
                 listaReservas.clear();

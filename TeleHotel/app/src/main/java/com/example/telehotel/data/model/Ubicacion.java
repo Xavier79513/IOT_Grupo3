@@ -1,14 +1,27 @@
 package com.example.telehotel.data.model;
 
+import java.time.LocalDateTime;
+
 public class Ubicacion {
     private String direccion;
-    private double lat;
-    private double lng;
-
+    private String ciudad;
+    private String pais;
+    private Double latitud;
+    private Double longitud;
+    private LocalDateTime timestamp;
+    //timestamp puede que en firebase sea string
     public Ubicacion(String direccion, double lat, double lng) {
         this.direccion = direccion;
-        this.lat = lat;
-        this.lng = lng;
+        this.latitud = lat;
+        this.longitud = lng;
+    }
+    public Ubicacion(String direccion, String ciudad, String pais, Double latitud, Double longitud) {
+        this.direccion = direccion;
+        this.ciudad = ciudad;
+        this.pais = pais;
+        this.latitud = latitud;
+        this.longitud = longitud;
+        this.timestamp = LocalDateTime.now();
     }
 
     public String getDireccion() {
@@ -19,20 +32,44 @@ public class Ubicacion {
         this.direccion = direccion;
     }
 
-    public double getLat() {
-        return lat;
+    public LocalDateTime getTimestamp() {
+        return timestamp;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 
-    public double getLng() {
-        return lng;
+    public Double getLatitud() {
+        return latitud;
     }
 
-    public void setLng(double lng) {
-        this.lng = lng;
+    public void setLatitud(Double latitud) {
+        this.latitud = latitud;
+    }
+
+    public String getCiudad() {
+        return ciudad;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
+    }
+
+    public String getPais() {
+        return pais;
+    }
+
+    public void setPais(String pais) {
+        this.pais = pais;
+    }
+
+    public Double getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(Double longitud) {
+        this.longitud = longitud;
     }
 }
 

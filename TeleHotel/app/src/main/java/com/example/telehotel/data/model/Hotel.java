@@ -1,19 +1,41 @@
 package com.example.telehotel.data.model;
-import com.example.telehotel.data.model.Ubicacion;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Hotel {
+
     private String id;
     private String nombre;
+    private String descripcion;
     private Ubicacion ubicacion;
+
     private List<String> imagenes;
     private List<String> servicios;
-    private List<String> lugaresCercanos;
+    private List<LugarCercano> lugaresCercanos;
+
     private String administradorId;
     private String estado;
 
-    public Hotel(String id, String nombre, Ubicacion ubicacion, List<String> imagenes, List<String> servicios, List<String> lugaresCercanos, String administradorId, String estado) {
+    private Double montoMinimoTaxi;
+    private Boolean permiteReservas;
+    private String horaCheckIn;
+    private String horaCheckOut;
+
+    public Hotel() {
+        // Valores por defecto
+        this.permiteReservas = true;
+        this.horaCheckIn = "14:00";
+        this.horaCheckOut = "11:00";
+        this.imagenes = new ArrayList<>();
+        this.servicios = new ArrayList<>();
+        this.lugaresCercanos = new ArrayList<>();
+    }
+
+    public Hotel(String id, String nombre, Ubicacion ubicacion, List<String> imagenes, List<String> servicios,
+                 List<LugarCercano> lugaresCercanos, String administradorId, String estado,
+                 String descripcion, Double montoMinimoTaxi, Boolean permiteReservas,
+                 String horaCheckIn, String horaCheckOut) {
         this.id = id;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
@@ -22,69 +44,51 @@ public class Hotel {
         this.lugaresCercanos = lugaresCercanos;
         this.administradorId = administradorId;
         this.estado = estado;
+        this.descripcion = descripcion;
+        this.montoMinimoTaxi = montoMinimoTaxi;
+        this.permiteReservas = permiteReservas;
+        this.horaCheckIn = horaCheckIn;
+        this.horaCheckOut = horaCheckOut;
     }
 
-    public String getId() {
-        return id;
-    }
+    // Getters y Setters
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
-    public Ubicacion getUbicacion() {
-        return ubicacion;
-    }
+    public Ubicacion getUbicacion() { return ubicacion; }
+    public void setUbicacion(Ubicacion ubicacion) { this.ubicacion = ubicacion; }
 
-    public void setUbicacion(Ubicacion ubicacion) {
-        this.ubicacion = ubicacion;
-    }
+    public List<String> getImagenes() { return imagenes; }
+    public void setImagenes(List<String> imagenes) { this.imagenes = imagenes; }
 
-    public List<String> getImagenes() {
-        return imagenes;
-    }
+    public List<String> getServicios() { return servicios; }
+    public void setServicios(List<String> servicios) { this.servicios = servicios; }
 
-    public void setImagenes(List<String> imagenes) {
-        this.imagenes = imagenes;
-    }
+    public List<LugarCercano> getLugaresCercanos() { return lugaresCercanos; }
+    public void setLugaresCercanos(List<LugarCercano> lugaresCercanos) { this.lugaresCercanos = lugaresCercanos; }
 
-    public List<String> getServicios() {
-        return servicios;
-    }
+    public String getAdministradorId() { return administradorId; }
+    public void setAdministradorId(String administradorId) { this.administradorId = administradorId; }
 
-    public void setServicios(List<String> servicios) {
-        this.servicios = servicios;
-    }
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
 
-    public List<String> getLugaresCercanos() {
-        return lugaresCercanos;
-    }
+    public Double getMontoMinimoTaxi() { return montoMinimoTaxi; }
+    public void setMontoMinimoTaxi(Double montoMinimoTaxi) { this.montoMinimoTaxi = montoMinimoTaxi; }
 
-    public void setLugaresCercanos(List<String> lugaresCercanos) {
-        this.lugaresCercanos = lugaresCercanos;
-    }
+    public Boolean getPermiteReservas() { return permiteReservas; }
+    public void setPermiteReservas(Boolean permiteReservas) { this.permiteReservas = permiteReservas; }
 
-    public String getAdministradorId() {
-        return administradorId;
-    }
+    public String getHoraCheckIn() { return horaCheckIn; }
+    public void setHoraCheckIn(String horaCheckIn) { this.horaCheckIn = horaCheckIn; }
 
-    public void setAdministradorId(String administradorId) {
-        this.administradorId = administradorId;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
+    public String getHoraCheckOut() { return horaCheckOut; }
+    public void setHoraCheckOut(String horaCheckOut) { this.horaCheckOut = horaCheckOut; }
 }

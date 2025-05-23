@@ -42,15 +42,15 @@ public class HistorialReservaActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
 
         // Datos de ejemplo
-        listaReservas.add(new Reserva("Hotel Paraíso", "12 Abr 2025", 125, R.drawable.sample_hotel));
-        listaReservas.add(new Reserva("Luna Resort", "05 Mar 2025", 125, R.drawable.sample_hotel));
-        listaReservas.add(new Reserva("Sunshine Inn", "05 Mar 2025", 125, R.drawable.sample_hotel));
+        //listaReservas.add(new Reserva("Hotel Paraíso", "12 Abr 2025", 125, R.drawable.sample_hotel));
+        //listaReservas.add(new Reserva("Luna Resort", "05 Mar 2025", 125, R.drawable.sample_hotel));
+        //listaReservas.add(new Reserva("Sunshine Inn", "05 Mar 2025", 125, R.drawable.sample_hotel));
         copiaReservas.addAll(listaReservas);
 
         adapter = new HistorialReservaAdapter(listaReservas, this, reserva -> {
             // Ir a detalle
             Intent intent = new Intent(HistorialReservaActivity.this, HistorialDetalleActivity.class);
-            intent.putExtra("reserva", reserva);
+            //intent.putExtra("reserva", reserva);
             startActivity(intent);
         });
 
@@ -83,7 +83,7 @@ public class HistorialReservaActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String filtro = s.toString().toLowerCase();
                 List<Reserva> filtradas = copiaReservas.stream()
-                        .filter(r -> r.getNombreHotel().toLowerCase().contains(filtro))
+                        .filter(r -> r.getHotelId().toLowerCase().contains(filtro))
                         .collect(Collectors.toList());
 
                 listaReservas.clear();

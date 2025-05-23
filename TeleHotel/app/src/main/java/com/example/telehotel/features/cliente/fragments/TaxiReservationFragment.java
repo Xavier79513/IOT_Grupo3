@@ -19,11 +19,15 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.telehotel.R;
 import com.example.telehotel.data.model.Reserva;
 import com.example.telehotel.data.model.ServicioTaxi;
+import com.example.telehotel.data.model.SolicitudTaxi;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class TaxiReservationFragment extends Fragment implements OnMapReadyCallback {
 
@@ -65,7 +69,7 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
             vistaSinReserva.setVisibility(View.VISIBLE);
             vistaSinTaxi.setVisibility(View.GONE);
             vistaConTaxi.setVisibility(View.GONE);
-        } else if (reserva.getServicioTaxi() == null) {
+        } else if (reserva.getSolicitudTaxi() == null) {
             vistaSinReserva.setVisibility(View.GONE);
             vistaSinTaxi.setVisibility(View.VISIBLE);
             vistaConTaxi.setVisibility(View.GONE);
@@ -92,9 +96,9 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
             vistaSinTaxi.setVisibility(View.GONE);
             vistaConTaxi.setVisibility(View.VISIBLE);
 
-            ServicioTaxi taxi = reserva.getServicioTaxi();
-            ((TextView) view.findViewById(R.id.tv_title)).setText("Taxi reservado para " + reserva.getNombreHotel());
-            generarCodigoQR(taxi.getQrCodigo());
+            SolicitudTaxi taxi = reserva.getSolicitudTaxi();
+            ((TextView) view.findViewById(R.id.tv_title)).setText("Taxi reservado para ");
+            //generarCodigoQR(taxi.getQrCodigo());
 
             // Puedes mostrar más info como el modelo del auto si tienes un TextView con id correspondiente
             // ((TextView) view.findViewById(R.id.tv_modelo)).setText("Modelo: " + taxi.getModelo());
@@ -107,10 +111,21 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
 
     private Reserva obtenerReservaActual() {
         Reserva reserva = new Reserva();
-        reserva.setNombreHotel("Hotel Royal Inka");
-        reserva.setFechaCheckin("2025-05-05");
-        reserva.setFechaCheckout("2025-05-07");
-        reserva.setServicioTaxi(null); // Simula que NO tiene taxi
+
+        reserva.id = "reserva123";
+        reserva.clienteId = "cliente456";
+        reserva.hotelId = "hotel789"; // Debe coincidir con un ID válido en tu colección de hoteles
+        reserva.habitacionId = "hab101";
+        reserva.fechaEntrada = LocalDate.of(2025, 5, 5);
+        reserva.fechaSalida = LocalDate.of(2025, 5, 7);
+        reserva.montoTotal = 250.0;
+        reserva.estado = "CONFIRMADA";
+        reserva.fechaReserva = LocalDateTime.now();
+
+        // Sin taxi asignado (null o vacío)
+        reserva.solicitudTaxi = new SolicitudTaxi();
+        reserva.solicitudTaxi.setSolicitado(false);
+
         return reserva;
     }
 

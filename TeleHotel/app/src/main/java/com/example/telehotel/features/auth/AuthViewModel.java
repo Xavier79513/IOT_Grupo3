@@ -1,33 +1,33 @@
 package com.example.telehotel.features.auth;
 
 import androidx.lifecycle.ViewModel;
-import com.example.telehotel.data.model.User;
+import com.example.telehotel.data.model.Usuario;
 import com.example.telehotel.data.repository.AuthRepository;
 
 public class AuthViewModel extends ViewModel {
 
     private final AuthRepository authRepository = new AuthRepository();
-    private User currentUser;
+    private Usuario currentUsuario;
 
     public boolean login(String email, String password) {
-        User user = authRepository.login(email, password);
-        if (user != null) {
-            currentUser = user;
+        Usuario usuario = authRepository.login(email, password);
+        if (usuario != null) {
+            currentUsuario = usuario;
             return true;
         }
         return false;
     }
 
     public boolean register(String email, String name, String password) {
-        User user = new User(null, email, name, null);
-        return authRepository.register(user, password);
+        Usuario usuario = new Usuario(null, email, name, null);
+        return authRepository.register(usuario, password);
     }
 
     public boolean recoverPassword(String email) {
         return authRepository.recoverPassword(email);
     }
 
-    public User getCurrentUser() {
-        return currentUser;
+    public Usuario getCurrentUser() {
+        return currentUsuario;
     }
 }

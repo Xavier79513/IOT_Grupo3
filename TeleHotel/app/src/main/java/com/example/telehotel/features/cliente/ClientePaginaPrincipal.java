@@ -7,18 +7,22 @@ import androidx.core.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.telehotel.core.FirebaseUtil;
+import com.example.telehotel.features.cliente.adapters.HotelAdapter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.example.telehotel.R;
-import com.example.telehotel.features.cliente.adapters.HotelesAdapter;
 import com.example.telehotel.features.cliente.adapters.LugaresAdapter;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -60,15 +64,25 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
         RecyclerView rvHoteles = findViewById(R.id.rvHoteles);
         rvHoteles.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        List<HotelesAdapter.HotelItem> hoteles = Arrays.asList(
-                new HotelesAdapter.HotelItem(R.drawable.hotel1, "Hotel BTH"),
-                new HotelesAdapter.HotelItem(R.drawable.hotel2, "Hotel Westin"),
-                new HotelesAdapter.HotelItem(R.drawable.hotel3, "Hotel DeCameron"),
-                new HotelesAdapter.HotelItem(R.drawable.hotel4, "Hotel Royal Palace"),
-                new HotelesAdapter.HotelItem(R.drawable.hotel5, "Hotel Raval House")
+        List<com.example.telehotel.data.model.Hotel> listaHoteles = new ArrayList<>();
+        HotelAdapter hotelAdapter = new HotelAdapter(listaHoteles);
+        rvHoteles.setAdapter(hotelAdapter);
 
-        );
-        rvHoteles.setAdapter(new HotelesAdapter(hoteles));
+        FirebaseUtil.getFirestore()
+                .collection("hoteles")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    listaHoteles.clear();
+                    for (DocumentSnapshot doc : querySnapshot) {
+                        com.example.telehotel.data.model.Hotel hotel = doc.toObject(com.example.telehotel.data.model.Hotel.class);
+                        if (hotel != null) listaHoteles.add(hotel);
+                    }
+                    hotelAdapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Error al cargar hoteles", Toast.LENGTH_SHORT).show()
+                );
+
 
         // RECYCLER VIEW OFERTAS
         /*RecyclerView rvOfertas = findViewById(R.id.rvOfertas);

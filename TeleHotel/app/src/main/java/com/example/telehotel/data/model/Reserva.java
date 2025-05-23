@@ -3,158 +3,142 @@ package com.example.telehotel.data.model;
 import android.media.Image;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Reserva implements Serializable {
-    private String nombreHotel;
-    private String fechaReserva;
-    private double precio;
-    private int adultos;
-    private int ninos;
-    private int cantidadHabitaciones;
-    private String fechaCheckin;
-    private String fechaCheckout;
-    private double tax;
-    private int imagen;
-    private String[] alimentos; // Ejemplo: {"Bagels with turkey and bacon", "Sandwich"}
-    private double[] preciosAlimentos; // Ejemplo: {10.0, 5.0}
-
-
-    private ServicioTaxi servicioTaxi;
-
-    public Reserva(String nombreHotel, String fechaReserva, double precio, int imagen) {
-        this.nombreHotel = nombreHotel;
-        this.fechaReserva = fechaReserva;
-        this.precio = precio;
-        this.imagen = imagen;
-
-    }
+public class Reserva {
+    public String id;
+    public String clienteId;
+    public String hotelId;
+    public String habitacionId;
+    public LocalDate fechaEntrada;
+    public LocalDate fechaSalida;
+    public List<ServicioAdicional> serviciosAdicionales = new ArrayList<>();
+    public Double montoTotal;
+    public String estado;
+    public LocalDateTime fechaReserva;
+    public String tarjetaUltimosDigitos;
+    public String tipoTarjeta;
+    public DatosCheckout checkout;
+    public SolicitudTaxi solicitudTaxi;
 
     public Reserva() {
-
+        this.fechaReserva = LocalDateTime.now();
+        this.solicitudTaxi = new SolicitudTaxi();
     }
 
-    public void setNombreHotel(String nombreHotel) {
-        this.nombreHotel = nombreHotel;
+    public String getId() {
+        return id;
     }
 
-    public void setFechaReserva(String fechaReserva) {
-        this.fechaReserva = fechaReserva;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setAlimentos(String[] alimentos) {
-        this.alimentos = alimentos;
+    public String getClienteId() {
+        return clienteId;
     }
 
-    public void setImagen(int imagen) {
-        this.imagen = imagen;
+    public void setClienteId(String clienteId) {
+        this.clienteId = clienteId;
     }
 
-    public void setTax(double tax) {
-        this.tax = tax;
+    public String getHabitacionId() {
+        return habitacionId;
     }
 
-    public void setFechaCheckout(String fechaCheckout) {
-        this.fechaCheckout = fechaCheckout;
+    public void setHabitacionId(String habitacionId) {
+        this.habitacionId = habitacionId;
     }
 
-    public void setFechaCheckin(String fechaCheckin) {
-        this.fechaCheckin = fechaCheckin;
+    public String getHotelId() {
+        return hotelId;
     }
 
-    public void setCantidadHabitaciones(int cantidadHabitaciones) {
-        this.cantidadHabitaciones = cantidadHabitaciones;
+    public void setHotelId(String hotelId) {
+        this.hotelId = hotelId;
     }
 
-    public void setNinos(int ninos) {
-        this.ninos = ninos;
+    public LocalDate getFechaEntrada() {
+        return fechaEntrada;
     }
 
-    public void setAdultos(int adultos) {
-        this.adultos = adultos;
+    public void setFechaEntrada(LocalDate fechaEntrada) {
+        this.fechaEntrada = fechaEntrada;
     }
 
-    public void setPrecio(double precio) {
-        this.precio = precio;
+    public Double getMontoTotal() {
+        return montoTotal;
     }
 
-    public void setPreciosAlimentos(double[] preciosAlimentos) {
-        this.preciosAlimentos = preciosAlimentos;
+    public void setMontoTotal(Double montoTotal) {
+        this.montoTotal = montoTotal;
     }
 
-    // Getters
-    public String getNombreHotel() {
-        return nombreHotel;
+    public LocalDate getFechaSalida() {
+        return fechaSalida;
     }
 
-    public int getImage() {
-        return imagen;
+    public void setFechaSalida(LocalDate fechaSalida) {
+        this.fechaSalida = fechaSalida;
     }
 
-    public String getFechaReserva() {
+    public List<ServicioAdicional> getServiciosAdicionales() {
+        return serviciosAdicionales;
+    }
+
+    public void setServiciosAdicionales(List<ServicioAdicional> serviciosAdicionales) {
+        this.serviciosAdicionales = serviciosAdicionales;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public LocalDateTime getFechaReserva() {
         return fechaReserva;
     }
 
-    public double getPrecio() {
-        return precio;
+    public void setFechaReserva(LocalDateTime fechaReserva) {
+        this.fechaReserva = fechaReserva;
     }
 
-    public int getAdultos() {
-        return adultos;
+    public String getTarjetaUltimosDigitos() {
+        return tarjetaUltimosDigitos;
     }
 
-    public int getNinos() {
-        return ninos;
+    public void setTarjetaUltimosDigitos(String tarjetaUltimosDigitos) {
+        this.tarjetaUltimosDigitos = tarjetaUltimosDigitos;
     }
 
-    public int getCantidadHabitaciones() {
-        return cantidadHabitaciones;
+    public String getTipoTarjeta() {
+        return tipoTarjeta;
     }
 
-    public String getFechaCheckin() {
-        return fechaCheckin;
+    public void setTipoTarjeta(String tipoTarjeta) {
+        this.tipoTarjeta = tipoTarjeta;
     }
 
-    public String getFechaCheckout() {
-        return fechaCheckout;
+    public DatosCheckout getCheckout() {
+        return checkout;
     }
 
-    public double getTax() {
-        return tax;
+    public void setCheckout(DatosCheckout checkout) {
+        this.checkout = checkout;
     }
 
-    public String[] getAlimentos() {
-        return alimentos;
+    public SolicitudTaxi getSolicitudTaxi() {
+        return solicitudTaxi;
     }
 
-    public double[] getPreciosAlimentos() {
-        return preciosAlimentos;
+    public void setSolicitudTaxi(SolicitudTaxi solicitudTaxi) {
+        this.solicitudTaxi = solicitudTaxi;
     }
 
-    public double getTotalReserva() {
-        return precio + tax;
-    }
-
-    public double getTotalComida() {
-        double total = 0;
-        for (double precio : preciosAlimentos) {
-            total += precio;
-        }
-        return total;
-    }
-
-    public ServicioTaxi getServicioTaxi() {
-        return servicioTaxi;
-    }
-
-    public void setServicioTaxi(ServicioTaxi servicioTaxi) {
-        this.servicioTaxi = servicioTaxi;
-    }
-
-    public double getServiceTax() {
-        return 2.0; // puedes modificarlo si varía
-    }
-
-    public double getTotalGeneral() {
-        return getTotalComida() + getServiceTax();
-    }
 }

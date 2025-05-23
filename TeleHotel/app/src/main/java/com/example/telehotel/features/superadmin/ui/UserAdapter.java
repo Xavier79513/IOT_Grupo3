@@ -9,22 +9,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.telehotel.R;
-import com.example.telehotel.data.model.User;
+import com.example.telehotel.data.model.Usuario;
 import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
 
-    private List<User> userList;
+    private List<Usuario> usuarioList;
     private OnUserActionListener listener;
 
-    public UserAdapter(List<User> userList, OnUserActionListener listener) {
-        this.userList = userList;
+    public UserAdapter(List<Usuario> usuarioList, OnUserActionListener listener) {
+        this.usuarioList = usuarioList;
         this.listener = listener;
     }
 
     public interface OnUserActionListener {
-        void onActivateClick(User user);
-        void onDeactivateClick(User user);
+        void onActivateClick(Usuario usuario);
+        void onDeactivateClick(Usuario usuario);
     }
 
     @NonNull
@@ -36,13 +36,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
-        User user = userList.get(position);
-        holder.bind(user, listener);
+        Usuario usuario = usuarioList.get(position);
+        holder.bind(usuario, listener);
     }
 
     @Override
     public int getItemCount() {
-        return userList.size();
+        return usuarioList.size();
     }
 
     static class UserViewHolder extends RecyclerView.ViewHolder {
@@ -58,12 +58,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             btnDesactivar = itemView.findViewById(R.id.btnDesactivar);
         }
 
-        public void bind(User user, OnUserActionListener listener) {
-            txtNombre.setText(user.getName()); // usar getName() en lugar de getNombres()+getApellidos()
-            txtCorreo.setText(user.getEmail()); // usar getEmail() en lugar de getCorreo()
-            txtEstado.setText("Estado: " + user.getEstado());
+        public void bind(Usuario usuario, OnUserActionListener listener) {
+            txtNombre.setText(usuario.getName()); // usar getName() en lugar de getNombres()+getApellidos()
+            txtCorreo.setText(usuario.getEmail()); // usar getEmail() en lugar de getCorreo()
+            txtEstado.setText("Estado: " + usuario.getEstado());
 
-            if ("Activo".equals(user.getEstado())) {
+            if ("Activo".equals(usuario.getEstado())) {
                 btnActivar.setEnabled(false);
                 btnActivar.setAlpha(0.5f);
                 btnDesactivar.setEnabled(true);
@@ -77,8 +77,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                 btnActivar.setBackgroundColor(Color.GREEN);
             }
 
-            btnActivar.setOnClickListener(v -> listener.onActivateClick(user));
-            btnDesactivar.setOnClickListener(v -> listener.onDeactivateClick(user));
+            btnActivar.setOnClickListener(v -> listener.onActivateClick(usuario));
+            btnDesactivar.setOnClickListener(v -> listener.onDeactivateClick(usuario));
         }
     }
 }

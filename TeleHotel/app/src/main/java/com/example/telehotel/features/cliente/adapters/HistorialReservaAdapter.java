@@ -12,8 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.telehotel.R;
+import com.example.telehotel.data.model.Hotel;
 import com.example.telehotel.data.model.Reserva;
 
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HistorialReservaAdapter extends RecyclerView.Adapter<HistorialReservaAdapter.ReservaViewHolder> {
@@ -39,19 +42,43 @@ public class HistorialReservaAdapter extends RecyclerView.Adapter<HistorialReser
         return new ReservaViewHolder(view);
     }
 
+    ArrayList<Hotel> listaHotelesDisponibles = new ArrayList<>();
+    private String obtenerNombreHotelPorId(String hotelId) {
+        for (Hotel h : listaHotelesDisponibles) { // Asegúrate de tener esta lista cargada antes
+            if (h.getId().equals(hotelId)) {
+                return h.getNombre();
+            }
+        }
+        return null;
+    }
+
     @Override
     public void onBindViewHolder(@NonNull ReservaViewHolder holder, int position) {
         Reserva reserva = reservas.get(position);
-        holder.nombreHotel.setText(reserva.getNombreHotel());
-        holder.precio.setText("$" + reserva.getPrecio());
-        holder.fechaReserva.setText("Booked on : " + reserva.getFechaReserva());
 
+        // Mostrar nombre del hotel: necesitas obtenerlo con hotelId
+        String hotelName = obtenerNombreHotelPorId(reserva.getHotelId());
+        holder.nombreHotel.setText(hotelName != null ? hotelName : "Hotel desconocido");
+
+        // Mostrar monto total
+        holder.precio.setText("$" + String.format("%.2f", reserva.getMontoTotal()));
+
+        // Formatear fecha de reserva
+        if (reserva.getFechaReserva() != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
+            holder.fechaReserva.setText("Booked on: " + reserva.getFechaReserva().format(formatter));
+        } else {
+            holder.fechaReserva.setText("Fecha desconocida");
+        }
+
+        // Acción al pulsar el botón
         holder.btnBookAgain.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onItemClick(reserva);
             }
         });
     }
+
 
     @Override
     public int getItemCount() {

@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.telehotel.R;
-import com.example.telehotel.data.model.User;
+import com.example.telehotel.data.model.Usuario;
 import com.example.telehotel.features.admin.AdminActivity;
 import com.example.telehotel.features.cliente.ClientePaginaPrincipal;
 import com.example.telehotel.features.superadmin.ui.SuperAdminActivity;
@@ -45,11 +45,11 @@ public class LoginActivity extends AppCompatActivity {
 
             boolean success = authViewModel.login(email, password);
             if (success) {
-                User user = authViewModel.getCurrentUser();
-                Toast.makeText(this, "Bienvenido " + user.getName(), Toast.LENGTH_SHORT).show();
+                Usuario usuario = authViewModel.getCurrentUser();
+                Toast.makeText(this, "Bienvenido " + usuario.getName(), Toast.LENGTH_SHORT).show();
 
                 // Redirigir según el rol del usuario
-                switch (user.getRole()) {
+                switch (usuario.getRole()) {
                     case "Taxista":
                         startActivity(new Intent(this, TaxistaActivity.class));
                         break;

@@ -8,8 +8,11 @@ public class Ubicacion {
     private String pais;
     private Double latitud;
     private Double longitud;
-    private LocalDateTime timestamp;
+    private String timestamp;
     //timestamp puede que en firebase sea string
+    // Falta esto:
+    public Ubicacion() {}
+
     public Ubicacion(String direccion, double lat, double lng) {
         this.direccion = direccion;
         this.latitud = lat;
@@ -21,7 +24,7 @@ public class Ubicacion {
         this.pais = pais;
         this.latitud = latitud;
         this.longitud = longitud;
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = LocalDateTime.now().toString();
     }
 
     public String getDireccion() {
@@ -32,11 +35,11 @@ public class Ubicacion {
         this.direccion = direccion;
     }
 
-    public LocalDateTime getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 

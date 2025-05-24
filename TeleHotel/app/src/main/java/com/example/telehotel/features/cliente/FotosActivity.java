@@ -46,7 +46,7 @@ public class FotosActivity extends AppCompatActivity {
         reviewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(FotosActivity.this, BookingActivity.class);
+                Intent intent = new Intent(FotosActivity.this, HotelDetailActivity.class);
                 startActivity(intent);
             }
         });

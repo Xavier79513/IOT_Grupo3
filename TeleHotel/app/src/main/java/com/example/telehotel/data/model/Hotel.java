@@ -19,14 +19,10 @@ public class Hotel {
 
     private Double montoMinimoTaxi;
     private Boolean permiteReservas;
-    private String horaCheckIn;
-    private String horaCheckOut;
 
     public Hotel() {
         // Valores por defecto
         this.permiteReservas = true;
-        this.horaCheckIn = "14:00";
-        this.horaCheckOut = "11:00";
         this.imagenes = new ArrayList<>();
         this.servicios = new ArrayList<>();
         this.lugaresCercanos = new ArrayList<>();
@@ -47,8 +43,6 @@ public class Hotel {
         this.descripcion = descripcion;
         this.montoMinimoTaxi = montoMinimoTaxi;
         this.permiteReservas = permiteReservas;
-        this.horaCheckIn = horaCheckIn;
-        this.horaCheckOut = horaCheckOut;
     }
 
     // Getters y Setters
@@ -86,9 +80,4 @@ public class Hotel {
     public Boolean getPermiteReservas() { return permiteReservas; }
     public void setPermiteReservas(Boolean permiteReservas) { this.permiteReservas = permiteReservas; }
 
-    public String getHoraCheckIn() { return horaCheckIn; }
-    public void setHoraCheckIn(String horaCheckIn) { this.horaCheckIn = horaCheckIn; }
-
-    public String getHoraCheckOut() { return horaCheckOut; }
-    public void setHoraCheckOut(String horaCheckOut) { this.horaCheckOut = horaCheckOut; }
 }

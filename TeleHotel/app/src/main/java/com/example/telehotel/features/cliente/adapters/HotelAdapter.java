@@ -1,6 +1,7 @@
 package com.example.telehotel.features.cliente.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.telehotel.R;
 import com.example.telehotel.data.model.Hotel;
+import com.example.telehotel.features.cliente.HotelDetailActivity;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
@@ -50,10 +52,20 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
                     .into(holder.hotelImage);
         }
 
-        holder.btnBookNow.setOnClickListener(v -> {
+        holder.itemView.setOnClickListener(v -> {
             Context context = v.getContext();
-            // TODO: abrir BookingActivity o HotelDetailActivity
+            Intent intent = new Intent(context, HotelDetailActivity.class);
+            intent.putExtra("hotelNombre", hotel.getNombre());
+            intent.putExtra("descripcion", hotel.getDescripcion());
+            intent.putExtra("precio", hotel.getMontoMinimoTaxi());
+            intent.putExtra("horaCheckIn", hotel.getHoraCheckIn());
+            intent.putExtra("horaCheckOut", hotel.getHoraCheckOut());
+            if (hotel.getImagenes() != null && !hotel.getImagenes().isEmpty()) {
+                intent.putExtra("imagenUrl", hotel.getImagenes().get(0));
+            }
+            context.startActivity(intent);
         });
+
     }
 
     @Override

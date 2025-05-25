@@ -1,5 +1,18 @@
 <resources>
     <string name="app_name" translatable="false">TeleHotel</string>
+    <!-- Login Screen -->
+    <string name="app_logo_description">Logo de la aplicación TeleHotel</string>
+    <string name="welcome_title">Bienvenido a TeleHotel</string>
+    <string name="welcome_subtitle">Por favor, ingresa tus credenciales y disfruta de la experiencia.</string>
+    <string name="login_title">Inicio de sesión</string>
+    <string name="email_hint">Correo electrónico</string>
+    <string name="password_hint">Contraseña</string>
+    <string name="login_button">Iniciar sesión</string>
+    <string name="forgot_password">¿Olvidaste la contraseña?</string>
+    <string name="create_account">¿Nuevo usuario? Crear una cuenta</string>
+
+
+
 
     <string name="find_room">Find room</string>
     <string name="search">Search</string>

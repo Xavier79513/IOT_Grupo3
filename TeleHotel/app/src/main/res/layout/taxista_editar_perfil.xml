@@ -152,7 +152,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            app:icon="@drawable/ic_lock"
+            app:icon="@drawable/ic_lock2"
             app:iconPadding="8dp"
             android:text="Cambiar contraseña"/>
 

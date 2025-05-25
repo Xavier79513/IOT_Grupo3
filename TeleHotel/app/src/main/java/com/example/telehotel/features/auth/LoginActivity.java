@@ -62,9 +62,6 @@ public class LoginActivity extends AppCompatActivity {
                     case "Cliente":
                         startActivity(new Intent(this, ClientePaginaPrincipal.class));
                         break;
-                    default:
-                        startActivity(new Intent(this, RoleSelectionActivity.class));
-                        break;
                 }
 
                 finish();

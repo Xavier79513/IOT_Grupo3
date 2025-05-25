@@ -61,7 +61,7 @@ public class TaxistaHoteles extends AppCompatActivity {
                 ),
                 "admin01", "ACTIVO",
                 "Hotel elegante con vista al club de golf.",
-                25.0, true, "14:00", "11:00"
+                25.0, true, "14:00", "11:00", "+51 123 456 789"
         ));
 
         hoteles.add(new Hotel(
@@ -75,7 +75,7 @@ public class TaxistaHoteles extends AppCompatActivity {
                 ),
                 "admin02", "ACTIVO",
                 "Ideal para viajeros de negocios en Surco.",
-                20.0, true, "14:00", "11:00"
+                20.0, true, "14:00", "11:00", "+51 123 456 789"
         ));
 
         hoteles.add(new Hotel(
@@ -89,7 +89,7 @@ public class TaxistaHoteles extends AppCompatActivity {
                 ),
                 "admin03", "ACTIVO",
                 "Cerca de atractivos turísticos y vida nocturna.",
-                22.5, true, "14:00", "11:00"
+                22.5, true, "14:00", "11:00", "+51 123 456 789"
         ));
 
         hoteles.add(new Hotel(
@@ -103,7 +103,7 @@ public class TaxistaHoteles extends AppCompatActivity {
                 ),
                 "admin04", "ACTIVO",
                 "Relajación y negocios en un solo lugar.",
-                18.0, true, "14:00", "11:00"
+                18.0, true, "14:00", "11:00", "+51 123 456 789"
         ));
 
         hoteles.add(new Hotel(
@@ -117,7 +117,7 @@ public class TaxistaHoteles extends AppCompatActivity {
                 ),
                 "admin05", "ACTIVO",
                 "Vista panorámica al océano Pacífico.",
-                30.0, true, "14:00", "11:00"
+                30.0, true, "14:00", "11:00", "+51 123 456 789"
         ));
 
 

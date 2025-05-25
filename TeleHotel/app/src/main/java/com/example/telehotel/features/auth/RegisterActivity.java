@@ -1,8 +1,12 @@
 package com.example.telehotel.features.auth;
 
+import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -74,20 +78,22 @@ public class RegisterActivity extends AppCompatActivity {
         if (password.matches(".*[!@#\\$%\\^&\\*].*")) fuerza += 20;
 
         pbPasswordStrength.setProgress(fuerza);
+
         if (fuerza < 40) {
             tvPasswordStrength.setText("Débil");
-            tvPasswordStrength.setTextColor(getColor(R.color.error_color));
-            pbPasswordStrength.setProgressTintList(getColorStateList(R.color.error_color));
+            tvPasswordStrength.setTextColor(Color.parseColor("#F44336")); // rojo (colorError)
+            pbPasswordStrength.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#F44336")));
         } else if (fuerza < 70) {
             tvPasswordStrength.setText("Media");
-            tvPasswordStrength.setTextColor(getColor(R.color.warning_color));
-            pbPasswordStrength.setProgressTintList(getColorStateList(R.color.warning_color));
+            tvPasswordStrength.setTextColor(Color.parseColor("#FF9800")); // naranja (warningColor)
+            pbPasswordStrength.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#FF9800")));
         } else {
             tvPasswordStrength.setText("Fuerte");
-            tvPasswordStrength.setTextColor(getColor(R.color.success_color));
-            pbPasswordStrength.setProgressTintList(getColorStateList(R.color.success_color));
+            tvPasswordStrength.setTextColor(Color.parseColor("#4CAF50")); // verde (successColor)
+            pbPasswordStrength.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50")));
         }
     }
+
 
     private boolean validarCampos() {
         if (etNombre.getText().toString().isEmpty() ||

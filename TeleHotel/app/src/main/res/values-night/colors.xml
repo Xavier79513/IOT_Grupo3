@@ -1,66 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primaryColor">#00BFAE</color>
-    <color name="secondaryColor">#004D40</color>
-    <color name="backgroundColor">#121212</color>
-    <color name="blue_dark">#002D40</color>
-    <color name="white">#121212</color>
-    <color name="black">#FFFFFF</color>
-    <color name="gray">#9E9E9E</color>
-    <color name="green">#4CAF50</color>
-    <color name="red">#F44336</color>
-    <color name="purple_200">#BB86FC</color>
-    <color name="green_disabled">#A5D6A7</color>
-    <color name="red_disabled">#EF9A9A</color>
-    <color name="colorPrimary">#00BFAE</color>
+    <!-- Base Material 3 -->
+    <color name="colorPrimary">#004D40</color>
     <color name="colorOnPrimary">#121212</color>
+    <color name="colorSecondary">#00BFAE</color>
+    <color name="colorOnSecondary">#FFFFFF</color>
+    <color name="colorBackground">#121212</color>
+    <color name="colorOnBackground">#FFFFFF</color>
     <color name="colorSurface">#121212</color>
-    <color name="colorSurfaceVariant">#F4F4F4</color>
+    <color name="colorSurfaceVariant">#1E1E1E</color>
     <color name="colorOnSurface">#FFFFFF</color>
-    <color name="colorOnSurfaceVariant">#444444</color>
-    <color name="primary_light">#4DDED4</color>
-    <color name="primary_dark">#00897B</color>
-    <color name="primary_variant">#26A69A</color>
-    <color name="text_primary">#FFFFFF</color>
-    <color name="text_secondary">#757575</color>
-    <color name="text_hint">#BDBDBD</color>
-    <color name="text_disabled">#9E9E9E</color>
-    <color name="text_on_primary">#FFFFFF</color>
-    <color name="success_color">#4CAF50</color>
-    <color name="success_light">#81C784</color>
-    <color name="warning_color">#FF9800</color>
-    <color name="warning_light">#FFB74D</color>
-    <color name="error_color">#F44336</color>
-    <color name="error_light">#E57373</color>
-    <color name="info_color">#2196F3</color>
-    <color name="info_light">#64B5F6</color>
-    <color name="background_primary">#121212</color>
-    <color name="background_secondary">#121212</color>
-    <color name="surface_elevated">#121212</color>
-    <color name="surface_overlay">#121212</color>
-    <color name="divider_color">#E0E0E0</color>
-    <color name="border_color">#CCCCCC</color>
-    <color name="border_focused">#00BFAE</color>
-    <color name="password_weak">#F44336</color>
-    <color name="password_medium">#FF9800</color>
-    <color name="password_strong">#4CAF50</color>
-    <color name="overlay_light">#33000000</color>
-    <color name="overlay_medium">#66000000</color>
-    <color name="overlay_dark">#99000000</color>
-    <color name="primary_alpha_20">#3300BFAE</color>
-    <color name="primary_alpha_50">#8000BFAE</color>
-    <color name="button_disabled">#E0E0E0</color>
-    <color name="button_pressed">#00897B</color>
-    <color name="icon_primary">#FFFFFF</color>
-    <color name="icon_secondary">#9E9E9E</color>
-    <color name="icon_disabled">#BDBDBD</color>
-    <color name="icon_on_primary">#FFFFFF</color>
-    <color name="card_background">#121212</color>
-    <color name="card_shadow">#1F000000</color>
-    <color name="selection_color">#263238</color>
-    <color name="ripple_color">#33FFFFFF</color>
-    <color name="dark_background">#121212</color>
-    <color name="dark_surface">#1E1E1E</color>
-    <color name="dark_text_primary">#FFFFFF</color>
+    <color name="colorOnSurfaceVariant">#CCCCCC</color>
+    <color name="colorError">#F44336</color>
+    <color name="colorOnError">#FFFFFF</color>
+
+    <!-- Texto -->
+    <color name="textPrimary">#FFFFFF</color>
+    <color name="textSecondary">#B3FFFFFF</color>
+    <color name="textHint">#BDBDBD</color>
+    <color name="textDisabled">#9E9E9E</color>
+    <color name="textOnPrimary">#FFFFFF</color>
     <color name="dark_text_secondary">#B3FFFFFF</color>
+
+    <!-- Estados y feedback -->
+    <color name="successColor">#4CAF50</color>
+    <color name="successLight">#81C784</color>
+    <color name="warningColor">#FF9800</color>
+    <color name="warningLight">#FFB74D</color>
+    <color name="errorLight">#E57373</color>
+    <color name="infoColor">#2196F3</color>
+    <color name="infoLight">#64B5F6</color>
+
+    <!-- Extras -->
+    <color name="primaryLight">#4DDED4</color>
+    <color name="primaryDark">#00897B</color>
+
+    <!-- Íconos -->
+    <color name="iconPrimary">#FFFFFF</color>
+    <color name="iconSecondary">#9E9E9E</color>
+    <color name="iconDisabled">#BDBDBD</color>
+    <color name="iconOnPrimary">#FFFFFF</color>
+
+    <!-- Botones -->
+    <color name="buttonDisabled">#E0E0E0</color>
+    <color name="buttonPressed">#00897B</color>
+
+    <!-- UI -->
+    <color name="cardBackground">#1E1E1E</color>
+    <color name="dividerColor">#444444</color>
+    <color name="borderColor">#CCCCCC</color>
+    <color name="borderFocused">#00BFAE</color>
+
+    <!-- Overlay y ripple -->
+    <color name="overlayLight">#33000000</color>
+    <color name="overlayMedium">#66000000</color>
+    <color name="overlayDark">#99000000</color>
+    <color name="rippleColor">#33FFFFFF</color>
+    <color name="selectionColor">#263238</color>
+
+    <!-- Password strength -->
+    <color name="passwordWeak">#F44336</color>
+    <color name="passwordMedium">#FF9800</color>
+    <color name="passwordStrong">#4CAF50</color>
+
+
+    <!-- Extras -->
+    <color name="primaryColor">#00BFAE</color> <!-- Alias para compatibilidad -->
+    <color name="purple_200">#BB86FC</color>
+    <color name="green">#4CAF50</color>
+    <color name="gray">#9E9E9E</color>
+    <color name="red">#F44336</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="backgroundColor">#FAFAFA</color>
 </resources>

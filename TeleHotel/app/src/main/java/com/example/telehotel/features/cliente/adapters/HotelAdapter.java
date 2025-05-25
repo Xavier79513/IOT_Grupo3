@@ -2,6 +2,7 @@ package com.example.telehotel.features.cliente.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,16 +54,13 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
 
         holder.itemView.setOnClickListener(v -> {
             Context context = v.getContext();
+            String hotelId = hotel.getId();
+            Log.d("HotelAdapter", "Click en hotel: " + hotel.getNombre() + " (ID: " + hotelId + ")");
+
             Intent intent = new Intent(context, HotelDetailActivity.class);
-            intent.putExtra("hotelNombre", hotel.getNombre());
-            intent.putExtra("descripcion", hotel.getDescripcion());
-            intent.putExtra("precio", hotel.getMontoMinimoTaxi());
-            if (hotel.getImagenes() != null && !hotel.getImagenes().isEmpty()) {
-                intent.putExtra("imagenUrl", hotel.getImagenes().get(0));
-            }
+            intent.putExtra("hotelId", hotelId);
             context.startActivity(intent);
         });
-
     }
 
     @Override

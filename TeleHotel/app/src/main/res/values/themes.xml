@@ -1,20 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <style name="Theme.TeleHotel" parent="Theme.Material3.DayNight">
+        <!-- Configuración de ventana -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
-        <!-- Colores principales -->
-        <item name="colorPrimary">@color/primaryColor</item>
+        <!-- Colores base -->
+        <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+
+        <!-- Fondo y superficies -->
+        <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="colorOnBackground">@color/colorOnBackground</item>
         <item name="colorSurface">@color/colorSurface</item>
         <item name="colorSurfaceVariant">@color/colorSurfaceVariant</item>
         <item name="colorOnSurface">@color/colorOnSurface</item>
         <item name="colorOnSurfaceVariant">@color/colorOnSurfaceVariant</item>
 
-        <!-- Necesario para que funcione ?attr/colorBackground -->
-        <item name="colorOnBackground">@color/black</item>
+        <!-- Texto (atributos estándar de Android + Material 3) -->
+        <item name="android:textColorPrimary">@color/m3_dark_default_color_primary_text</item>
+        <item name="android:textColorPrimaryInverse">@color/m3_default_color_primary_text</item>
+        <item name="android:textColorSecondary">@color/m3_dark_default_color_secondary_text</item>
+        <item name="android:textColorSecondaryInverse">@color/m3_default_color_secondary_text</item>
+        <item name="android:textColorTertiary">@color/m3_dark_default_color_secondary_text</item>
+        <item name="android:textColorTertiaryInverse">@color/m3_default_color_secondary_text</item>
+        <item name="android:textColorPrimaryDisableOnly">@color/m3_dark_primary_text_disable_only</item>
+        <item name="android:textColorPrimaryInverseDisableOnly">@color/m3_primary_text_disable_only</item>
+        <item name="android:textColorHint">@color/m3_dark_hint_foreground</item>
+        <item name="android:textColorHintInverse">@color/m3_hint_foreground</item>
+        <item name="android:textColorHighlight">@color/m3_dark_highlighted_text</item>
+        <item name="android:textColorHighlightInverse">@color/m3_highlighted_text</item>
+        <item name="android:textColorLink">?attr/colorPrimary</item>
+        <item name="android:textColorLinkInverse">?attr/colorPrimaryInverse</item>
+        <item name="android:textColorAlertDialogListItem">@color/m3_dark_default_color_primary_text</item>
 
-        <!-- Opcional -->
-        <item name="android:statusBarColor">@color/backgroundColor</item>
+        <!-- Estados -->
+        <item name="colorError">@color/colorError</item>
+        <item name="colorOnError">@color/colorOnError</item>
+
+
+        <!-- UI específica -->
+        <item name="dividerColor">@color/dividerColor</item>
+
+        <!-- Transparencias -->
+
+        <!-- Ripple y selección -->
+        <item name="rippleColor">@color/rippleColor</item>
+
+        <!-- Barra de estado -->
+        <item name="android:statusBarColor">@color/colorBackground</item>
     </style>
+
 </resources>

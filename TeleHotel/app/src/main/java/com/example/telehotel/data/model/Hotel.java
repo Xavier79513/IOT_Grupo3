@@ -19,19 +19,16 @@ public class Hotel {
 
     private Double montoMinimoTaxi;
     private Boolean permiteReservas;
+    private String telefono;
 
     public Hotel() {
-        // Valores por defecto
-        this.permiteReservas = true;
-        this.imagenes = new ArrayList<>();
-        this.servicios = new ArrayList<>();
-        this.lugaresCercanos = new ArrayList<>();
+        // Constructor vacío requerido por Firestore
     }
 
     public Hotel(String id, String nombre, Ubicacion ubicacion, List<String> imagenes, List<String> servicios,
                  List<LugarCercano> lugaresCercanos, String administradorId, String estado,
                  String descripcion, Double montoMinimoTaxi, Boolean permiteReservas,
-                 String horaCheckIn, String horaCheckOut) {
+                 String horaCheckIn, String horaCheckOut, String telefono) {
         this.id = id;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
@@ -43,9 +40,18 @@ public class Hotel {
         this.descripcion = descripcion;
         this.montoMinimoTaxi = montoMinimoTaxi;
         this.permiteReservas = permiteReservas;
+        this.telefono = telefono;
     }
 
     // Getters y Setters
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }

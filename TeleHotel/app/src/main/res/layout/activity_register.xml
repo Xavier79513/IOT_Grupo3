@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="?attr/colorSurfaceVariant">
+    android:background="@color/colorBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -30,13 +30,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="24dp"
+                android:background="@color/colorPrimary"
                 android:gravity="center">
 
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:src="@drawable/ic_person_add"
-                    android:tint="?attr/colorOnPrimary"
                     android:layout_marginBottom="12dp" />
 
                 <TextView
@@ -82,8 +82,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Nombres"
                     app:startIconDrawable="@drawable/ic_person"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    app:startIconTint="?attr/colorPrimary">
+                    app:startIconTint="?attr/colorPrimary"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etNombre"
@@ -99,10 +99,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Apellidos"
+                    android:layout_marginTop="16dp"
                     app:startIconDrawable="@drawable/ic_person"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     app:startIconTint="?attr/colorPrimary"
-                    android:layout_marginTop="16dp">
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etApellido"
@@ -118,12 +118,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="DNI"
-                    app:startIconDrawable="@drawable/ic_badge"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    app:startIconTint="?attr/colorPrimary"
                     android:layout_marginTop="16dp"
+                    app:startIconDrawable="@drawable/ic_badge"
+                    app:startIconTint="?attr/colorPrimary"
                     app:helperText="8 dígitos"
-                    app:helperTextTextColor="?attr/colorOnSurfaceVariant">
+                    app:helperTextTextColor="?attr/colorOnSurfaceVariant"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etDni"
@@ -140,10 +140,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Correo electrónico"
+                    android:layout_marginTop="16dp"
                     app:startIconDrawable="@drawable/ic_email"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     app:startIconTint="?attr/colorPrimary"
-                    android:layout_marginTop="16dp">
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etEmail"
@@ -159,12 +159,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Contraseña"
+                    android:layout_marginTop="16dp"
                     app:startIconDrawable="@drawable/ic_lock2"
                     app:endIconMode="password_toggle"
-                    app:endIconTint="?attr/colorPrimary"
                     app:startIconTint="?attr/colorPrimary"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_marginTop="16dp">
+                    app:endIconTint="?attr/colorPrimary"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etPassword"
@@ -198,7 +198,7 @@
                         android:layout_marginStart="8dp"
                         android:textStyle="bold"
                         android:textSize="12sp"
-                        android:textColor="@color/error_color" />
+                        android:textColor="?attr/colorError" />
                 </LinearLayout>
 
                 <ProgressBar
@@ -208,19 +208,19 @@
                     android:layout_height="4dp"
                     android:max="100"
                     android:progress="0"
-                    android:progressTint="@color/error_color" />
+                    android:progressTint="?attr/colorError" />
 
                 <!-- Confirmar contraseña -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Confirmar contraseña"
+                    android:layout_marginTop="16dp"
                     app:startIconDrawable="@drawable/ic_lock_check"
                     app:endIconMode="password_toggle"
-                    app:endIconTint="?attr/colorPrimary"
                     app:startIconTint="?attr/colorPrimary"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_marginTop="16dp">
+                    app:endIconTint="?attr/colorPrimary"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etConfirmPassword"
@@ -235,8 +235,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_marginTop="24dp"
+                    android:orientation="horizontal"
                     android:gravity="center_vertical">
 
                     <CheckBox
@@ -266,9 +266,8 @@
                     app:cornerRadius="12dp"
                     app:icon="@drawable/ic_person_add"
                     app:iconTint="?attr/colorOnPrimary"
-                    app:backgroundTint="?attr/colorPrimary"
+                    app:backgroundTint="?attr/colorSecondary"
                     style="@style/Widget.Material3.Button" />
-
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

@@ -38,4 +38,5 @@ public class LugarCercano {
 
     public Double getLongitud() { return longitud; }
     public void setLongitud(Double longitud) { this.longitud = longitud; }
+
 }

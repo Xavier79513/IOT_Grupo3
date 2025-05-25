@@ -24,4 +24,5 @@
     <item name="tv_title" type="id" />
     <item name="tv_modelo" type="id" />
     <item name="action_taxiFragment_to_hotelesFragment" type="id" />
+    <item name="photoGalleryRecyclerView" type="id"/>
 </resources>

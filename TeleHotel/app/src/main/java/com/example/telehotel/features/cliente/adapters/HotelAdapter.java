@@ -42,7 +42,6 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         holder.hotelName.setText(hotel.getNombre());
         holder.hotelDescription.setText(hotel.getDescripcion());
         holder.hotelPrice.setText("Desde $" + hotel.getMontoMinimoTaxi());
-        holder.hotelDiscount.setText("Check-in: " + hotel.getHoraCheckIn() + " / Check-out: " + hotel.getHoraCheckOut());
 
         // Cargar imagen desde Firebase (solo la primera)
         if (hotel.getImagenes() != null && !hotel.getImagenes().isEmpty()) {
@@ -58,8 +57,6 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
             intent.putExtra("hotelNombre", hotel.getNombre());
             intent.putExtra("descripcion", hotel.getDescripcion());
             intent.putExtra("precio", hotel.getMontoMinimoTaxi());
-            intent.putExtra("horaCheckIn", hotel.getHoraCheckIn());
-            intent.putExtra("horaCheckOut", hotel.getHoraCheckOut());
             if (hotel.getImagenes() != null && !hotel.getImagenes().isEmpty()) {
                 intent.putExtra("imagenUrl", hotel.getImagenes().get(0));
             }

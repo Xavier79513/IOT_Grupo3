@@ -65,4 +65,25 @@ public class HotelRepository {
                 })
                 .addOnFailureListener(onError::accept);
     }
+
+    // Nuevo método: filtrar hoteles por ciudad
+    public static void getHotelsByCity(@NonNull String city,
+                                       @NonNull Consumer<List<Hotel>> onSuccess,
+                                       @NonNull Consumer<Exception> onError) {
+        getCollection()
+                .whereEqualTo("city", city)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    List<Hotel> hoteles = new ArrayList<>();
+                    for (DocumentSnapshot doc : querySnapshot) {
+                        Hotel hotel = doc.toObject(Hotel.class);
+                        if (hotel != null) {
+                            hotel.setId(doc.getId());
+                            hoteles.add(hotel);
+                        }
+                    }
+                    onSuccess.accept(hoteles);
+                })
+                .addOnFailureListener(onError::accept);
+    }
 }

@@ -58,6 +58,8 @@
                         app:startIconDrawable="@drawable/ic_location"
                         app:startIconTint="@color/primaryColor">
 
+
+
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etCity"
                             android:layout_width="match_parent"
@@ -67,7 +69,14 @@
                             android:textSize="16sp" />
 
                     </com.google.android.material.textfield.TextInputLayout>
-
+                    <!-- Aquí pones el RecyclerView para sugerencias -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvCitySuggestions"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:visibility="gone"
+                        android:background="@color/white"
+                        />
                     <!-- Selector de fecha -->
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/dateSelector"

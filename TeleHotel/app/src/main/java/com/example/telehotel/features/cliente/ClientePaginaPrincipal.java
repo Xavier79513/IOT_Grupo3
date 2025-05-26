@@ -2,23 +2,30 @@ package com.example.telehotel.features.cliente;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.core.util.Pair;
-
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.Pair;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.telehotel.R;
 import com.example.telehotel.core.FirebaseUtil;
+import com.example.telehotel.core.utils.PrefsManager;
+import com.example.telehotel.data.model.Hotel;
+import com.example.telehotel.data.model.NominatimPlace;
+import com.example.telehotel.data.repository.CityRepository;
+import com.example.telehotel.features.cliente.adapters.CitySuggestionAdapter;
 import com.example.telehotel.features.cliente.adapters.HotelAdapter;
+import com.example.telehotel.features.cliente.adapters.LugaresAdapter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.example.telehotel.R;
-import com.example.telehotel.features.cliente.adapters.LugaresAdapter;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.text.SimpleDateFormat;
@@ -27,30 +34,84 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ClientePaginaPrincipal extends AppCompatActivity {
 
-    TextView tvDate;
-    TextView tvPeople;
+    private EditText etCity;
+    private RecyclerView rvCitySuggestions;
+    private CitySuggestionAdapter citySuggestionAdapter;
+
+    private TextView tvDate;
+    private TextView tvPeople;
+    private RecyclerView rvLugares;
+    private RecyclerView rvHoteles;
+
+    private HotelAdapter hotelAdapter;
+    private List<Hotel> listaHoteles;
+
+    private PrefsManager prefsManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cliente_pagina_inicio);
 
-        /*BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        prefsManager = new PrefsManager(this);
 
-        // Esta es la forma MÁS SEGURA de obtener el NavController
-        NavHostFragment navHostFragment =
-                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        NavController navController = navHostFragment.getNavController();
+        // --- Inicialización de componentes ---
+        etCity = findViewById(R.id.etCity);
+        rvCitySuggestions = findViewById(R.id.rvCitySuggestions);
+        tvDate = findViewById(R.id.tvDate);
+        tvPeople = findViewById(R.id.tvPeople);
 
-        NavigationUI.setupWithNavController(bottomNavigationView, navController);*/
+        rvLugares = findViewById(R.id.rvLugares);
+        rvHoteles = findViewById(R.id.rvHoteles);
 
-        // RECYCLER VIEW LUGARES
-        RecyclerView rvLugares = findViewById(R.id.rvLugares);
+        // --- Setup RecyclerView de sugerencias de ciudades ---
+        citySuggestionAdapter = new CitySuggestionAdapter(new ArrayList<>());
+        rvCitySuggestions.setLayoutManager(new LinearLayoutManager(this));
+        rvCitySuggestions.setAdapter(citySuggestionAdapter);
+        rvCitySuggestions.setVisibility(View.GONE);
+
+        citySuggestionAdapter.setOnItemClickListener(place -> {
+            etCity.setText(place.getDisplayName());
+            rvCitySuggestions.setVisibility(View.GONE);
+            // Aquí puedes guardar la ciudad o filtrar hoteles según place.getDisplayName()
+        });
+
+        // TextWatcher para el buscador de ciudad con debounce
+        etCity.addTextChangedListener(new TextWatcher() {
+            private Timer timer = new Timer();
+            private final long DELAY = 500; // ms
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                timer.cancel();
+                timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(() -> {
+                            if (s.length() > 2) {
+                                buscarCiudades(s.toString());
+                            } else {
+                                citySuggestionAdapter.updateList(new ArrayList<>());
+                                rvCitySuggestions.setVisibility(View.GONE);
+                            }
+                        });
+                    }
+                }, DELAY);
+            }
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+
+        // --- Cargar lista horizontal de lugares ---
         rvLugares.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
         List<LugaresAdapter.LugarItem> lugares = Arrays.asList(
                 new LugaresAdapter.LugarItem(R.drawable.ivory_coast, "Costa de Marfil"),
                 new LugaresAdapter.LugarItem(R.drawable.newyork, "New York"),
@@ -60,12 +121,10 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
         );
         rvLugares.setAdapter(new LugaresAdapter(lugares));
 
-        // RECYCLER VIEW HOTELES
-        RecyclerView rvHoteles = findViewById(R.id.rvHoteles);
+        // --- Cargar lista horizontal de hoteles ---
+        listaHoteles = new ArrayList<>();
+        hotelAdapter = new HotelAdapter(listaHoteles);
         rvHoteles.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
-        List<com.example.telehotel.data.model.Hotel> listaHoteles = new ArrayList<>();
-        HotelAdapter hotelAdapter = new HotelAdapter(listaHoteles);
         rvHoteles.setAdapter(hotelAdapter);
 
         FirebaseUtil.getFirestore()
@@ -74,7 +133,7 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
                 .addOnSuccessListener(querySnapshot -> {
                     listaHoteles.clear();
                     for (DocumentSnapshot doc : querySnapshot) {
-                        com.example.telehotel.data.model.Hotel hotel = doc.toObject(com.example.telehotel.data.model.Hotel.class);
+                        Hotel hotel = doc.toObject(Hotel.class);
                         if (hotel != null) listaHoteles.add(hotel);
                     }
                     hotelAdapter.notifyDataSetChanged();
@@ -83,31 +142,13 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
                         Toast.makeText(this, "Error al cargar hoteles", Toast.LENGTH_SHORT).show()
                 );
 
+        // --- Selector de fechas ---
+        MaterialDatePicker<Pair<Long, Long>> dateRangePicker = MaterialDatePicker.Builder.dateRangePicker()
+                .setTitleText("Seleccionar las fechas")
+                .build();
 
-        // RECYCLER VIEW OFERTAS
-        /*RecyclerView rvOfertas = findViewById(R.id.rvOfertas);
-        rvOfertas.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
-        List<OfertasAdapter.OfertaItem> ofertas = Arrays.asList(
-                new OfertasAdapter.OfertaItem(R.drawable.offer1, "Oferta Caribe"),
-                new OfertasAdapter.OfertaItem(R.drawable.offer2, "Descuento Europa")
-        );
-        rvOfertas.setAdapter(new OfertasAdapter(ofertas));*/
-
-
-        tvDate = findViewById(R.id.tvDate);
-
-
-        // Crear el selector de fechas
-        MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
-        builder.setTitleText("Seleccionar las fechas");
-
-        final MaterialDatePicker<Pair<Long, Long>> dateRangePicker = builder.build();
-
-        // Mostrar el selector al hacer clic
         tvDate.setOnClickListener(v -> dateRangePicker.show(getSupportFragmentManager(), "DATE_PICKER"));
 
-        // Manejar la selección de fechas
         dateRangePicker.addOnPositiveButtonClickListener(selection -> {
             Long startDate = selection.first;
             Long endDate = selection.second;
@@ -117,22 +158,43 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
             String formattedEnd = formatter.format(new Date(endDate != null ? endDate : 0));
 
             tvDate.setText(formattedStart + " - " + formattedEnd);
+
+            // Guarda fechas en PrefsManager
+            prefsManager.saveDateRange(startDate != null ? startDate : 0, endDate != null ? endDate : 0);
         });
-        // PERSONAS / HABITACIONES
-        TextView tvPeople = findViewById(R.id.tvPeople);
+
+        // --- Diálogo para seleccionar personas/habitaciones ---
         tvPeople.setOnClickListener(v -> showPeopleDialog());
 
-
-        Button btnSearch = findViewById(R.id.btnSearch);
-
-        btnSearch.setOnClickListener(v -> {
+        // --- Botón Buscar ---
+        findViewById(R.id.btnSearch).setOnClickListener(v -> {
             Intent intent = new Intent(ClientePaginaPrincipal.this, ClienteMainActivity.class);
             startActivity(intent);
         });
 
-
-
+        // Cargar datos guardados
+        loadSavedData();
     }
+
+    // Método para buscar ciudades usando el repositorio
+    private void buscarCiudades(String query) {
+        CityRepository.searchCities(query,
+                lugares -> runOnUiThread(() -> {
+                    if (lugares.isEmpty()) {
+                        rvCitySuggestions.setVisibility(View.GONE);
+                    } else {
+                        citySuggestionAdapter.updateList(lugares);
+                        rvCitySuggestions.setVisibility(View.VISIBLE);
+                    }
+                }),
+                error -> runOnUiThread(() -> {
+                    Toast.makeText(this, "Error al buscar ciudades: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.e("CitySearchError", "Error al buscar ciudades", error);
+                    rvCitySuggestions.setVisibility(View.GONE);
+                }));
+    }
+
+    // Diálogo para seleccionar personas y habitaciones
     private void showPeopleDialog() {
         BottomSheetDialog dialog = new BottomSheetDialog(this);
         View view = getLayoutInflater().inflate(R.layout.dialog_select_people, null);
@@ -141,17 +203,17 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
         TextView tvAdult = view.findViewById(R.id.tvAdultCount);
         TextView tvChild = view.findViewById(R.id.tvChildCount);
 
-        Button btnRoomPlus = view.findViewById(R.id.btnRoomPlus);
-        Button btnRoomMinus = view.findViewById(R.id.btnRoomMinus);
-        Button btnAdultPlus = view.findViewById(R.id.btnAdultPlus);
-        Button btnAdultMinus = view.findViewById(R.id.btnAdultMinus);
-        Button btnChildPlus = view.findViewById(R.id.btnChildPlus);
-        Button btnChildMinus = view.findViewById(R.id.btnChildMinus);
+        View btnRoomPlus = view.findViewById(R.id.btnRoomPlus);
+        View btnRoomMinus = view.findViewById(R.id.btnRoomMinus);
+        View btnAdultPlus = view.findViewById(R.id.btnAdultPlus);
+        View btnAdultMinus = view.findViewById(R.id.btnAdultMinus);
+        View btnChildPlus = view.findViewById(R.id.btnChildPlus);
+        View btnChildMinus = view.findViewById(R.id.btnChildMinus);
 
-        Button btnApply = view.findViewById(R.id.btnApply);
+        View btnApply = view.findViewById(R.id.btnApply);
 
-        final int[] roomCount = {1};
-        final int[] adultCount = {2};
+        final int[] roomCount = {0};
+        final int[] adultCount = {0};
         final int[] childCount = {0};
 
         btnRoomPlus.setOnClickListener(v -> {
@@ -162,7 +224,6 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
             if (roomCount[0] > 1) roomCount[0]--;
             tvRoom.setText(String.valueOf(roomCount[0]));
         });
-
         btnAdultPlus.setOnClickListener(v -> {
             adultCount[0]++;
             tvAdult.setText(String.valueOf(adultCount[0]));
@@ -171,7 +232,6 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
             if (adultCount[0] > 1) adultCount[0]--;
             tvAdult.setText(String.valueOf(adultCount[0]));
         });
-
         btnChildPlus.setOnClickListener(v -> {
             childCount[0]++;
             tvChild.setText(String.valueOf(childCount[0]));
@@ -180,12 +240,15 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
             if (childCount[0] > 0) childCount[0]--;
             tvChild.setText(String.valueOf(childCount[0]));
         });
-
         btnApply.setOnClickListener(v -> {
             String result = roomCount[0] + " habitaciones · " +
                     adultCount[0] + " adultos · " +
                     childCount[0] + " niños";
-            ((TextView)findViewById(R.id.tvPeople)).setText(result);
+            tvPeople.setText(result);
+
+            // Guarda string personas en PrefsManager
+            prefsManager.savePeopleString(result);
+
             dialog.dismiss();
         });
 
@@ -193,5 +256,21 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
         dialog.show();
     }
 
+    // Cargar datos guardados en la UI
+    private void loadSavedData() {
+        long startDate = prefsManager.getStartDate();
+        long endDate = prefsManager.getEndDate();
+        String peopleString = prefsManager.getPeopleString();
 
+        if (startDate != 0 && endDate != 0) {
+            SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM", Locale.getDefault());
+            String formattedStart = formatter.format(new Date(startDate));
+            String formattedEnd = formatter.format(new Date(endDate));
+            tvDate.setText(formattedStart + " - " + formattedEnd);
+        }
+
+        if (peopleString != null) {
+            tvPeople.setText(peopleString);
+        }
+    }
 }

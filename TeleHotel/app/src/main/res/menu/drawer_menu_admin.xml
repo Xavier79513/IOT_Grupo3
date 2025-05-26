@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_estado_taxi"
+        android:icon="@drawable/ic_taxi"
+        android:title="Estado de taxi"/>
+    <item
+        android:id="@+id/nav_checkout"
+        android:icon="@drawable/ic_checkout"
+        android:title="Checkout"/>
+</menu>

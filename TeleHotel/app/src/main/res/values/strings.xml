@@ -21,6 +21,8 @@
     <string name="my_bookings">Reservas</string>
     <string name="car_booking">Servicio taxista</string>
     <string name="my_profile">Mi perfil</string>
+    <string name="drawer_open">Abrir menú</string>
+    <string name="drawer_close">Cerrar menú</string>
 
     <string-array name="amenities_options">
         <item>Gym</item>

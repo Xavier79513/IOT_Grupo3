@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.telehotel.R;
+import com.example.telehotel.features.superadmin.Fragments.LogsFragment;
 import com.example.telehotel.features.superadmin.Fragments.UserListFragment;
 import com.example.telehotel.features.superadmin.Fragments.StatisticsFragment;
 import com.example.telehotel.features.superadmin.Fragments.SettingsFragment;
@@ -26,12 +27,14 @@ public class SuperAdminActivity extends AppCompatActivity {
             Fragment fragment = null;
             int id = item.getItemId();
 
-            if (id == R.id.nav_users) {
+            if (id == R.id.nav_home) {
                 fragment = new UserListFragment();
-            } else if (id == R.id.nav_statistics) {
+            } else if (id == R.id.nav_stats) {
                 fragment = new StatisticsFragment();
-            } else if (id == R.id.nav_settings) {
+            } else if (id == R.id.nav_profile) {
                 fragment = new SettingsFragment();
+            } else if (id == R.id.nav_logs) {
+                fragment = new LogsFragment();
             }
 
             if (fragment != null) {

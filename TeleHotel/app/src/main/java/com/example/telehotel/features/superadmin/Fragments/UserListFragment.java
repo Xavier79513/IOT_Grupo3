@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -109,13 +110,28 @@ public class UserListFragment extends Fragment implements UserAdapter.OnUserActi
 
     @Override
     public void onActivateClick(Usuario usuario) {
-        usuario.setEstado("Activo");
-        adapter.notifyDataSetChanged();
+        mostrarDialogoConfirmacion(usuario, true);
     }
 
     @Override
     public void onDeactivateClick(Usuario usuario) {
-        usuario.setEstado("Inactivo");
-        adapter.notifyDataSetChanged();
+        mostrarDialogoConfirmacion(usuario, false);
+    }
+
+    private void mostrarDialogoConfirmacion(Usuario usuario, boolean activar) {
+        String mensaje = activar
+                ? "¿Estás seguro de que deseas ACTIVAR este usuario?"
+                : "¿Estás seguro de que deseas DESACTIVAR este usuario?";
+        String titulo = activar ? "Activar Usuario" : "Desactivar Usuario";
+
+        new AlertDialog.Builder(requireContext())
+                .setTitle(titulo)
+                .setMessage(mensaje)
+                .setPositiveButton("Sí", (dialog, which) -> {
+                    usuario.setEstado(activar ? "Activo" : "Inactivo");
+                    adapter.notifyDataSetChanged();
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
     }
 }

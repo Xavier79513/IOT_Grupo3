@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/backend"
+    android:background="@color/backgroundColor"
     android:padding="24dp">
 
     <LinearLayout
@@ -16,8 +16,7 @@
             android:id="@+id/imageProfile"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/ic_user_placeholder"
-            android:background="@drawable/circle_background"
+            android:src="@drawable/ic_superadmin_logo"
             android:scaleType="centerCrop"
             android:layout_marginTop="32dp"/>
 
@@ -29,7 +28,7 @@
             android:text="Super Admin"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:layout_marginTop="16dp"/>
 
         <!-- Correo del usuario -->
@@ -39,7 +38,7 @@
             android:layout_height="wrap_content"
             android:text="superadmin@example.com"
             android:textSize="16sp"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:layout_marginTop="8dp"/>
 
         <!-- Botón Cerrar Sesión -->
@@ -49,7 +48,7 @@
             android:layout_height="wrap_content"
             android:text="Cerrar sesión"
             android:backgroundTint="@android:color/holo_red_light"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textStyle="bold"
             android:layout_marginTop="40dp"/>
 

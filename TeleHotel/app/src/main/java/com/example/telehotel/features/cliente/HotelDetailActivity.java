@@ -1,30 +1,38 @@
 package com.example.telehotel.features.cliente;
 
 import android.os.Bundle;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.util.Log;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.telehotel.R;
-import com.example.telehotel.core.FirebaseUtil;
 import com.example.telehotel.data.model.Hotel;
 import com.example.telehotel.features.cliente.fragments.HotelDetailCercaFragment;
 import com.example.telehotel.features.cliente.fragments.HotelDetailFotosFragment;
 import com.example.telehotel.features.cliente.fragments.HotelDetailResenaFragment;
 import com.example.telehotel.features.cliente.fragments.HotelDetailReservaFragment;
+import com.example.telehotel.data.repository.HotelRepository;
 
 public class HotelDetailActivity extends AppCompatActivity {
 
-    private Button reviewButton, photosButton, nearbyButton, bookingButton;
+    private Button bookingButton, reviewButton, photosButton, nearbyButton;
     private Button currentSelectedButton;
-    private TextView hotelNameTextView;
+
+    private TextView hotelNameTextView, hotelLocationTextView;
+    private ImageView hotelImage;
+    private ProgressBar imageLoadingSpinner;
+    private FrameLayout loadingOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,50 +40,32 @@ public class HotelDetailActivity extends AppCompatActivity {
         setContentView(R.layout.cliente_activity_hotel_detail_base);
 
         initViews();
-
-        String hotelId = getIntent().getStringExtra("hotelId");
-        Log.d("HotelDetail", "hotelId recibido: " + hotelId);
-
-        if (hotelId != null) {
-            FirebaseUtil.getFirestore()
-                    .collection("hoteles")
-                    .document(hotelId)
-                    .get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            Hotel hotel = documentSnapshot.toObject(Hotel.class);
-                            if (hotel != null) {
-                                Log.d("HotelDetail", "Hotel cargado: " + hotel.getNombre());
-                                hotelNameTextView.setText(hotel.getNombre());
-
-                                // Cargar fragmento solo cuando los datos estén listos
-                                loadFragment(new HotelDetailResenaFragment());
-                                setSelectedButton(reviewButton);
-                            } else {
-                                Log.w("HotelDetail", "Hotel es null");
-                            }
-                        } else {
-                            Log.w("HotelDetail", "Documento no existe en Firestore");
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("HotelDetail", "Error al consultar Firestore", e);
-                        Toast.makeText(this, "Error al cargar datos del hotel", Toast.LENGTH_SHORT).show();
-                    });
-        } else {
-            Log.e("HotelDetail", "hotelId es null");
-        }
-
         setupToolbar();
         setupButtonListeners();
+
+        String hotelId = getIntent().getStringExtra("hotelId");
+
+        if (hotelId != null) {
+            cargarDatosDelHotel(hotelId);
+        } else {
+            ocultarLoadingOverlay();
+        }
+
+        loadFragment(new HotelDetailReservaFragment());
+        setSelectedButton(bookingButton);
     }
 
     private void initViews() {
+        bookingButton = findViewById(R.id.bookingButton);
         reviewButton = findViewById(R.id.reviewButton);
         photosButton = findViewById(R.id.photosButton);
         nearbyButton = findViewById(R.id.nearbyButton);
-        bookingButton = findViewById(R.id.bookingButton);
+
         hotelNameTextView = findViewById(R.id.hotelName);
+        hotelLocationTextView = findViewById(R.id.hotelLocation);
+        hotelImage = findViewById(R.id.hotelImage);
+        imageLoadingSpinner = findViewById(R.id.imageLoadingSpinner);
+        loadingOverlay = findViewById(R.id.loadingOverlay);
     }
 
     private void setupToolbar() {
@@ -88,6 +78,11 @@ public class HotelDetailActivity extends AppCompatActivity {
     }
 
     private void setupButtonListeners() {
+        bookingButton.setOnClickListener(v -> {
+            loadFragment(new HotelDetailReservaFragment());
+            setSelectedButton(bookingButton);
+        });
+
         reviewButton.setOnClickListener(v -> {
             loadFragment(new HotelDetailResenaFragment());
             setSelectedButton(reviewButton);
@@ -102,15 +97,11 @@ public class HotelDetailActivity extends AppCompatActivity {
             loadFragment(new HotelDetailCercaFragment());
             setSelectedButton(nearbyButton);
         });
-
-        bookingButton.setOnClickListener(v -> {
-            loadFragment(new HotelDetailReservaFragment());
-            setSelectedButton(bookingButton);
-        });
     }
 
     private void loadFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction()
+        getSupportFragmentManager()
+                .beginTransaction()
                 .replace(R.id.fragmentContainer, fragment)
                 .commit();
     }
@@ -118,16 +109,71 @@ public class HotelDetailActivity extends AppCompatActivity {
     private void setSelectedButton(Button selectedButton) {
         resetButtonStyles();
         currentSelectedButton = selectedButton;
-        selectedButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4658B4")));
-        selectedButton.setTextColor(Color.WHITE);
+        selectedButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                android.graphics.Color.parseColor("#1E88E5") // azul primario
+        ));
+        selectedButton.setTextColor(getResources().getColor(android.R.color.white));
     }
 
     private void resetButtonStyles() {
-        Button[] buttons = {reviewButton, photosButton, nearbyButton, bookingButton};
-        for (Button button : buttons) {
-            button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#E0E0E0")));
-            button.setTextColor(Color.BLACK);
+        Button[] buttons = {bookingButton, reviewButton, photosButton, nearbyButton};
+        for (Button btn : buttons) {
+            btn.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                    android.graphics.Color.parseColor("#E0E0E0") // gris claro
+            ));
+            btn.setTextColor(getResources().getColor(android.R.color.black));
         }
+    }
+
+    private void cargarDatosDelHotel(String hotelId) {
+        HotelRepository.getHotelById(hotelId, hotel -> {
+            // Nombre
+            hotelNameTextView.setText(hotel.getNombre());
+            hotelNameTextView.animate().alpha(1f).setDuration(300).start();
+
+            // Ciudad
+            if (hotel.getUbicacion() != null) {
+                hotelLocationTextView.setText(hotel.getUbicacion().getCiudad());
+            }
+            hotelLocationTextView.animate().alpha(1f).setDuration(300).start();
+
+            // Imagen
+            if (hotel.getImagenes() != null && !hotel.getImagenes().isEmpty()) {
+                Glide.with(this)
+                        .load(hotel.getImagenes().get(0))
+                        .into(hotelImage);
+
+                hotelImage.animate()
+                        .alpha(1f)
+                        .setDuration(400)
+                        .withEndAction(this::ocultarLoadingOverlay)
+                        .start();
+            } else {
+                hotelImage.setAlpha(1f);
+                ocultarLoadingOverlay();
+            }
+
+        }, error -> {
+            Log.e("HotelDetail", "Error al cargar hotel", error);
+            ocultarLoadingOverlay(); // en caso de error, ocultamos igual
+        });
+    }
+
+    private void ocultarLoadingOverlay() {
+        if (loadingOverlay.getVisibility() == View.VISIBLE) {
+            Animation fadeOut = new AlphaAnimation(1, 0);
+            fadeOut.setDuration(300);
+            fadeOut.setFillAfter(true);
+            fadeOut.setAnimationListener(new Animation.AnimationListener() {
+                @Override public void onAnimationStart(Animation animation) {}
+                @Override public void onAnimationEnd(Animation animation) {
+                    loadingOverlay.setVisibility(View.GONE);
+                }
+                @Override public void onAnimationRepeat(Animation animation) {}
+            });
+            loadingOverlay.startAnimation(fadeOut);
+        }
+        imageLoadingSpinner.setVisibility(View.GONE);
     }
 
     @Override

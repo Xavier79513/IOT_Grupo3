@@ -43,9 +43,7 @@
         <activity
             android:name=".features.auth.RegisterActivity"
             android:label="Registrate" /> <!-- Actividad para la selección de roles (RoleSelectionActivity) -->
-        <activity
-            android:name=".features.auth.RoleSelectionActivity"
-            android:label="Seleccionar Rol" /> <!-- Actividad para Admin -->
+
         <activity
             android:name=".features.admin.AdminActivity"
             android:label="Admin"
@@ -88,9 +86,6 @@
 
         <activity
             android:name=".features.cliente.ClientePaginaPrincipal"
-            android:label="Cliente" />
-        <activity
-            android:name=".features.cliente.CercaActivity"
             android:label="Cliente" />
         <activity
             android:name=".features.cliente.FullscreenPhotoActivity"

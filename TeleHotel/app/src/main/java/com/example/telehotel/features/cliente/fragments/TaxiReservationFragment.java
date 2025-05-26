@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -50,7 +51,7 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
 
         LinearLayout vistaSinReserva = view.findViewById(R.id.vista_sin_reserva);
         LinearLayout vistaSinTaxi = view.findViewById(R.id.vista_sin_taxi);
-        ScrollView vistaConTaxi = view.findViewById(R.id.vista_con_taxi);
+        NestedScrollView vistaConTaxi = view.findViewById(R.id.vista_con_taxi);
 
         mapView = view.findViewById(R.id.mapView);
         if (mapView != null) {
@@ -69,41 +70,33 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
             vistaSinReserva.setVisibility(View.VISIBLE);
             vistaSinTaxi.setVisibility(View.GONE);
             vistaConTaxi.setVisibility(View.GONE);
-        } else if (reserva.getSolicitudTaxi() == null) {
+        } else if (reserva.getSolicitudTaxi() == null || !reserva.getSolicitudTaxi().getSolicitado()) {
             vistaSinReserva.setVisibility(View.GONE);
             vistaSinTaxi.setVisibility(View.VISIBLE);
             vistaConTaxi.setVisibility(View.GONE);
 
-            // Inflar la vista personalizada dentro del contenedor
-            LayoutInflater inflater = LayoutInflater.from(requireContext());
-            View vistaPersonalizada = inflater.inflate(R.layout.cliente_taxi_sin_servicio, vistaSinTaxi, false);
-            vistaSinTaxi.removeAllViews();
-            vistaSinTaxi.addView(vistaPersonalizada);
-
-            // Configurar botón dentro de la vista inflada
-            vistaPersonalizada.findViewById(R.id.btn_agregar_taxi).setOnClickListener(v -> {
+            view.findViewById(R.id.btn_agregar_taxi).setOnClickListener(v -> {
                 Intent intent = new Intent(requireContext(), com.example.telehotel.features.cliente.AgregarTaxiActivity.class);
                 startActivity(intent);
             });
 
-
-            // Configurar ícono de logout si lo deseas
-            vistaPersonalizada.findViewById(R.id.ivLogout).setOnClickListener(v -> {
-                // Acción de logout o navegación
-            });
         } else {
             vistaSinReserva.setVisibility(View.GONE);
             vistaSinTaxi.setVisibility(View.GONE);
             vistaConTaxi.setVisibility(View.VISIBLE);
 
             SolicitudTaxi taxi = reserva.getSolicitudTaxi();
-            ((TextView) view.findViewById(R.id.tv_title)).setText("Taxi reservado para ");
-            //generarCodigoQR(taxi.getQrCodigo());
 
-            // Puedes mostrar más info como el modelo del auto si tienes un TextView con id correspondiente
-            // ((TextView) view.findViewById(R.id.tv_modelo)).setText("Modelo: " + taxi.getModelo());
+            // Aquí puedes cargar los datos reales del taxi
+            TextView title = view.findViewById(R.id.tv_title);
+            if (title != null) {
+                title.setText("Taxi reservado para " + reserva.getFechaEntrada());
+            }
+
+            generarCodigoQR(taxi.getCodigoQR());
         }
 
+        // Botón para ir a reservas
         view.findViewById(R.id.btn_ir_reservar).setOnClickListener(v -> {
             NavHostFragment.findNavController(this).navigate(R.id.action_taxiFragment_to_hotelesFragment);
         });
@@ -111,10 +104,9 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
 
     private Reserva obtenerReservaActual() {
         Reserva reserva = new Reserva();
-
         reserva.id = "reserva123";
         reserva.clienteId = "cliente456";
-        reserva.hotelId = "hotel789"; // Debe coincidir con un ID válido en tu colección de hoteles
+        reserva.hotelId = "hotel789";
         reserva.habitacionId = "hab101";
         reserva.fechaEntrada = LocalDate.of(2025, 5, 5);
         reserva.fechaSalida = LocalDate.of(2025, 5, 7);
@@ -122,15 +114,17 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
         reserva.estado = "CONFIRMADA";
         reserva.fechaReserva = LocalDateTime.now();
 
-        // Sin taxi asignado (null o vacío)
-        reserva.solicitudTaxi = new SolicitudTaxi();
-        reserva.solicitudTaxi.setSolicitado(false);
+        // Simular taxi solicitado
+        SolicitudTaxi taxi = new SolicitudTaxi();
+        taxi.setSolicitado(true);
+        taxi.setCodigoQR("TAXI123456");
+        reserva.solicitudTaxi = taxi;
 
         return reserva;
     }
 
     private boolean yaHizoCheckout(Reserva reserva) {
-        return false; // Simula que la reserva está activa
+        return false; // Simulación
     }
 
     private void generarCodigoQR(String texto) {
@@ -143,6 +137,7 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
         }
     }
 
+    // Ciclo de vida del MapView
     @Override public void onStart() { super.onStart(); if (mapView != null) mapView.onStart(); }
     @Override public void onResume() { super.onResume(); if (mapView != null) mapView.onResume(); }
     @Override public void onPause() { if (mapView != null) mapView.onPause(); super.onPause(); }
@@ -164,7 +159,12 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
     }
 
     @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap map) {
+        this.googleMap = map;
 
+        // Ejemplo: marcar ubicación
+        LatLng ubicacionHotel = new LatLng(-12.0464, -77.0428); // Lima
+        googleMap.addMarker(new MarkerOptions().position(ubicacionHotel).title("Tu hotel"));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacionHotel, 15f));
     }
 }

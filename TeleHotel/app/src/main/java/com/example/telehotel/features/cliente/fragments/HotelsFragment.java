@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,11 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.telehotel.R;
-import com.example.telehotel.core.FirebaseUtil;
 import com.example.telehotel.data.model.Hotel;
 import com.example.telehotel.features.cliente.adapters.HotelAdapter;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.telehotel.data.repository.HotelRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +28,11 @@ import java.util.List;
 public class HotelsFragment extends Fragment {
 
     private RecyclerView recyclerView;
+    private ProgressBar progressBar;
+    private TextView textCantidad;
+
     private List<Hotel> listaHoteles = new ArrayList<>();
     private HotelAdapter adapter;
-    private FirebaseFirestore db;
 
     public HotelsFragment() {}
 
@@ -45,42 +47,33 @@ public class HotelsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         recyclerView = view.findViewById(R.id.recyclerHotelList);
+        progressBar = view.findViewById(R.id.progressBarHotels);
+        textCantidad = view.findViewById(R.id.textCantidadHoteles);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new HotelAdapter(listaHoteles);
         recyclerView.setAdapter(adapter);
 
-        db = FirebaseUtil.getFirestore();
+        cargarHoteles();
+    }
 
-        db.collection("hoteles")
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    Log.d(TAG, "Consulta ejecutada con éxito. Total documentos: " + querySnapshot.size());
+    private void cargarHoteles() {
+        progressBar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
 
-                    listaHoteles.clear();
+        HotelRepository.getAllHotels(hoteles -> {
+            listaHoteles.clear();
+            listaHoteles.addAll(hoteles);
+            adapter.notifyDataSetChanged();
 
-                    for (DocumentSnapshot doc : querySnapshot) {
-                        Log.d(TAG, "Documento recibido con ID: " + doc.getId());
+            textCantidad.setText("Se han encontrado " + hoteles.size() + " hoteles");
 
-                        try {
-                            Hotel hotel = doc.toObject(Hotel.class);
-                            if (hotel != null) {
-                                listaHoteles.add(hotel);
-                                Log.d(TAG, "Hotel agregado: " + hotel.getNombre());
-                            } else {
-                                Log.w(TAG, "Documento convertido a null: " + doc.getId());
-                            }
-                        } catch (Exception e) {
-                            Log.e(TAG, "Error al convertir el documento: " + doc.getId(), e);
-                        }
-                    }
-
-                    adapter.notifyDataSetChanged();
-                    Log.d(TAG, "Total hoteles listos para mostrar: " + listaHoteles.size());
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error al obtener hoteles desde Firestore", e);
-                    Toast.makeText(getContext(), "Error al cargar hoteles", Toast.LENGTH_SHORT).show();
-                });
-
+            progressBar.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }, error -> {
+            progressBar.setVisibility(View.GONE);
+            Toast.makeText(getContext(), "Error al cargar hoteles", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Error al obtener hoteles", error);
+        });
     }
 }

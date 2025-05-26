@@ -8,52 +8,67 @@
     android:background="#FFFFFF"
     tools:context=".features.cliente.HotelDetailActivity">
 
-    <!-- Toolbar -->
+    <!-- Toolbar (siempre visible) -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         android:background="@android:color/transparent"
         android:elevation="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:navigationIcon="@drawable/ic_arrow_back"
         app:title=""
         android:theme="@style/ThemeOverlay.AppCompat.Dark" />
 
-    <!-- Imagen principal del hotel -->
-    <ImageView
-        android:id="@+id/hotelImage"
+    <!-- Imagen con spinner local -->
+    <FrameLayout
+        android:id="@+id/imageContainer"
         android:layout_width="0dp"
         android:layout_height="220dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/coast"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- Contenedor de texto (nombre + ubicación) -->
+        <ImageView
+            android:id="@+id/hotelImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:alpha="0.0"
+            />
+
+        <ProgressBar
+            android:id="@+id/imageLoadingSpinner"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:visibility="visible" />
+    </FrameLayout>
+
+    <!-- Nombre y ciudad -->
     <LinearLayout
         android:id="@+id/textContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:gravity="center_vertical"
         android:orientation="vertical"
+        android:gravity="center_vertical"
         android:paddingStart="16dp"
-        app:layout_constraintBottom_toBottomOf="@id/hotelImage"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="@id/imageContainer"
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:id="@+id/hotelName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:text="Bristol Marriot Hotel Royale"
+            android:text="Cargando nombre..."
             android:textColor="#FFFFFF"
             android:textSize="22sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:alpha="0.0"
+            />
 
         <TextView
             android:id="@+id/hotelLocation"
@@ -61,12 +76,14 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_location"
             android:drawablePadding="6dp"
-            android:text="Bristol, Inglaterra"
+            android:text="Cargando ciudad..."
             android:textColor="#FFFFFF"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:alpha="0.0"
+            />
     </LinearLayout>
 
-    <!-- Options bar con 4 botones -->
+    <!-- Barra de botones -->
     <LinearLayout
         android:id="@+id/optionsBar"
         android:layout_width="0dp"
@@ -75,20 +92,28 @@
         android:background="@drawable/review_bar_background"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageContainer"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/hotelImage">
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/bookingButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#1E88E5"
+            android:text="Reservar"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/reviewButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:backgroundTint="#1E88E5"
-            android:clickable="true"
-            android:focusable="true"
+            android:backgroundTint="#E0E0E0"
             android:text="Reseña"
-            android:textColor="#FFFFFF"
+            android:textColor="#000000"
             android:textSize="12sp" />
 
         <Button
@@ -97,8 +122,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:backgroundTint="#E0E0E0"
-            android:clickable="true"
-            android:focusable="true"
             android:text="Fotos"
             android:textColor="#000000"
             android:textSize="12sp" />
@@ -109,42 +132,60 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:backgroundTint="#E0E0E0"
-            android:clickable="true"
-            android:focusable="true"
             android:text="Lugares"
-            android:textColor="#000000"
-            android:textSize="12sp" />
-
-        <Button
-            android:id="@+id/bookingButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="#E0E0E0"
-            android:clickable="true"
-            android:focusable="true"
-            android:text="Reservar"
             android:textColor="#000000"
             android:textSize="12sp" />
     </LinearLayout>
 
-    <!-- Fragment container para el contenido dinámico -->
+    <!-- Contenedor del fragmento -->
     <ScrollView
         android:id="@+id/fragmentScrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/optionsBar"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/optionsBar">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <FrameLayout
             android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="400dp" />
-
     </ScrollView>
 
+    <!-- Overlay general (NO cubre el Toolbar) -->
+    <FrameLayout
+        android:id="@+id/loadingOverlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#F5F5F5"
+        android:elevation="10dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ProgressBar
+                android:id="@+id/fullScreenSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cargando hotel..."
+                android:textColor="#666"
+                android:textSize="16sp"
+                android:layout_marginTop="12dp" />
+        </LinearLayout>
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

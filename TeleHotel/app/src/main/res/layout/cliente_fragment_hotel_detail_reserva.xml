@@ -314,7 +314,7 @@
 
         <!-- Botón de reserva -->
         <Button
-            android:id="@+id/bookNowButton"
+            android:id="@+id/viewRooms"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:backgroundTint="#4658B4"

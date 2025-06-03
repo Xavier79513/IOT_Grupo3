@@ -26,6 +26,9 @@ import com.example.telehotel.R;
 import com.example.telehotel.core.utils.PrefsManager;
 import com.example.telehotel.data.model.Hotel;
 import com.example.telehotel.data.repository.HotelRepository;
+import com.example.telehotel.features.cliente.HotelHabitacionActivity;
+
+import android.content.Intent;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -67,23 +70,17 @@ public class HotelDetailReservaFragment extends Fragment {
         txtGuests = view.findViewById(R.id.txtGuests);
 
         // Referencia al botón de reserva
-        Button bookNowButton = view.findViewById(R.id.bookNowButton);
+        Button viewRooms = view.findViewById(R.id.viewRooms);
 
         // Crear canal de notificación (solo para Android 8.0+)
         createNotificationChannel();
 
         // Listener para mostrar notificación al hacer click
-        bookNowButton.setOnClickListener(v -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1001);
-                } else {
-                    mostrarNotificacionReservaExitosa();
-                }
-            } else {
-                mostrarNotificacionReservaExitosa();
-            }
+        viewRooms.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), HotelHabitacionActivity.class);
+            // Si quieres enviar datos (como hotelId), usa:
+            intent.putExtra("hotelId", hotelId);
+            startActivity(intent);
         });
 
 

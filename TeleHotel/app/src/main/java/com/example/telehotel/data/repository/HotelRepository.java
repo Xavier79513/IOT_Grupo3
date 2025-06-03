@@ -1,7 +1,5 @@
 package com.example.telehotel.data.repository;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.example.telehotel.core.FirebaseUtil;
@@ -15,14 +13,12 @@ import java.util.function.Consumer;
 
 public class HotelRepository {
 
-    private static final String TAG = "HotelRepository";
+    private static final String COLLECTION_NAME = "hoteles";
 
-    // 🔁 Accede a la colección "hoteles"
-    public static CollectionReference getCollection() {
-        return FirebaseUtil.getFirestore().collection("hoteles");
+    private static CollectionReference getCollection() {
+        return FirebaseUtil.getFirestore().collection(COLLECTION_NAME);
     }
 
-    // 📥 Obtener todos los hoteles
     public static void getAllHotels(@NonNull Consumer<List<Hotel>> onSuccess,
                                     @NonNull Consumer<Exception> onError) {
 
@@ -33,7 +29,7 @@ public class HotelRepository {
                     for (DocumentSnapshot doc : querySnapshot) {
                         Hotel hotel = doc.toObject(Hotel.class);
                         if (hotel != null) {
-                            hotel.setId(doc.getId()); // 💡 ID del documento Firestore
+                            hotel.setId(doc.getId());
                             hoteles.add(hotel);
                         }
                     }
@@ -42,13 +38,12 @@ public class HotelRepository {
                 .addOnFailureListener(onError::accept);
     }
 
-    // 🔍 Buscar hotel por ID de documento
-    public static void getHotelById(String hotelId,
+    public static void getHotelById(@NonNull String hotelDocumentId,
                                     @NonNull Consumer<Hotel> onSuccess,
                                     @NonNull Consumer<Exception> onError) {
 
         getCollection()
-                .document(hotelId)
+                .document(hotelDocumentId)
                 .get()
                 .addOnSuccessListener(doc -> {
                     if (doc.exists()) {
@@ -60,29 +55,8 @@ public class HotelRepository {
                             onError.accept(new Exception("Hotel mapeado como null"));
                         }
                     } else {
-                        onError.accept(new Exception("No existe hotel con ID: " + hotelId));
+                        onError.accept(new Exception("No existe hotel con ID: " + hotelDocumentId));
                     }
-                })
-                .addOnFailureListener(onError::accept);
-    }
-
-    // Nuevo método: filtrar hoteles por ciudad
-    public static void getHotelsByCity(@NonNull String city,
-                                       @NonNull Consumer<List<Hotel>> onSuccess,
-                                       @NonNull Consumer<Exception> onError) {
-        getCollection()
-                .whereEqualTo("city", city)
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    List<Hotel> hoteles = new ArrayList<>();
-                    for (DocumentSnapshot doc : querySnapshot) {
-                        Hotel hotel = doc.toObject(Hotel.class);
-                        if (hotel != null) {
-                            hotel.setId(doc.getId());
-                            hoteles.add(hotel);
-                        }
-                    }
-                    onSuccess.accept(hoteles);
                 })
                 .addOnFailureListener(onError::accept);
     }

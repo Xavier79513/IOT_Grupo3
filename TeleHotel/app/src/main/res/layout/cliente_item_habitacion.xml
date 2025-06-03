@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:elevation="4dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Título del cuarto -->
+        <TextView
+            android:id="@+id/tvRoomTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="The Innside Room 2 Double Beds"
+            android:textColor="#007391"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+        <!-- Detalles -->
+        <TextView
+            android:id="@+id/tvRoomDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2 single beds · Size: 269 ft²"
+            android:textColor="#444"
+            android:layout_marginTop="4dp" />
+
+        <!-- Beneficios -->
+        <TextView
+            android:id="@+id/tvBenefits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Free WiFi · Ensuite bathroom · Air conditioning · TV · Minibar"
+            android:textColor="#666"
+            android:textSize="13sp"
+            android:layout_marginTop="4dp" />
+
+        <!-- Políticas -->
+        <TextView
+            android:id="@+id/tvPolicy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="✓ Free cancellation\n✓ Pay at the property\n🍽️ Breakfast included"
+            android:textColor="#2e7d32"
+            android:textSize="13sp"
+            android:layout_marginTop="6dp" />
+
+        <!-- Descuento -->
+        <TextView
+            android:id="@+id/tvDiscount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="30% off • Limited-time Deal"
+            android:textColor="#1b5e20"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp" />
+
+        <!-- Precio -->
+        <TextView
+            android:id="@+id/tvPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PEN 613 (antes PEN 875)"
+            android:textColor="#000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="2dp" />
+
+        <TextView
+            android:id="@+id/tvTaxes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ PEN 171.58 taxes"
+            android:textColor="#888"
+            android:textSize="13sp" />
+
+        <!-- Botón (opcional dentro del ítem) -->
+        <Button
+            android:id="@+id/btnSelect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select"
+            android:textColor="#fff"
+            android:backgroundTint="#007391"
+            android:layout_marginTop="10dp" />
+
+        <!-- Aviso de disponibilidad -->
+        <TextView
+            android:id="@+id/tvWarning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Only 5 rooms left"
+            android:textColor="#d32f2f"
+            android:textStyle="bold"
+            android:textSize="13sp"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -10,9 +10,9 @@ public class Hotel {
     private String descripcion;
     private Ubicacion ubicacion;
 
-    private List<String> imagenes;
-    private List<String> servicios;
-    private List<LugarCercano> lugaresCercanos;
+    private List<String> imagenes = new ArrayList<>();
+    private List<String> servicios = new ArrayList<>();  // Servicios del hotel, ej: WiFi, Piscina...
+    private List<LugarCercano> lugaresCercanos = new ArrayList<>();
 
     private String administradorId;
     private String estado;
@@ -20,6 +20,8 @@ public class Hotel {
     private Double montoMinimoTaxi;
     private Boolean permiteReservas;
     private String telefono;
+
+    private List<Habitacion> habitaciones = new ArrayList<>(); // Habitaciones embebidas
 
     public Hotel() {
         // Constructor vacío requerido por Firestore
@@ -44,6 +46,14 @@ public class Hotel {
     }
 
     // Getters y Setters
+
+    public List<Habitacion> getHabitaciones() {
+        return habitaciones;
+    }
+
+    public void setHabitaciones(List<Habitacion> habitaciones) {
+        this.habitaciones = habitaciones;
+    }
 
     public String getTelefono() {
         return telefono;

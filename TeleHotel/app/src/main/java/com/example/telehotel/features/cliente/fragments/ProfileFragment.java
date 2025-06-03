@@ -1,7 +1,6 @@
 package com.example.telehotel.features.cliente.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -18,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.telehotel.R;
-import com.example.telehotel.features.cliente.EditarPerfilActivity;
 import com.google.android.material.button.MaterialButton;
 
 public class ProfileFragment extends Fragment {

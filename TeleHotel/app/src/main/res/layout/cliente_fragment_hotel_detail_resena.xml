@@ -11,119 +11,205 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="16dp">
+        android:padding="16dp"
+        android:gravity="center_vertical">
 
-        <TextView
+        <!-- Sección Izquierda: Barras de calificación -->
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Reseñas de huéspedes"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#000" />
+            android:orientation="vertical"
+            android:layout_marginEnd="16dp">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/ratingScore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="4.5"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="#4658B4" />
-
+            <!-- Repite esto para cada nivel de estrella -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginStart="8dp">
-
-                <!-- Estrellas -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_marginEnd="2dp" />
-
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_marginEnd="2dp" />
-
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_marginEnd="2dp" />
-
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_marginEnd="2dp" />
-
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp" />
-                </LinearLayout>
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="106 reseñas"
+                    android:text="5"
                     android:textSize="12sp"
-                    android:textColor="#666" />
+                    android:textColor="#000000"
+                    android:layout_marginEnd="4dp"/>
+
+                <ProgressBar
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="8dp"
+                    android:layout_weight="1"
+                    android:progress="75"
+                    android:max="100"
+                    android:progressDrawable="@drawable/progress_yellow_bar"
+                    android:backgroundTint="#E0E0E0"/>
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4"
+                    android:textSize="12sp"
+                    android:textColor="#000000"
+                    android:layout_marginEnd="4dp"/>
+
+                <ProgressBar
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="8dp"
+                    android:layout_weight="1"
+                    android:progress="25"
+                    android:max="100"
+                    android:progressDrawable="@drawable/progress_yellow_bar"
+                    android:backgroundTint="#E0E0E0"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2"
+                    android:textSize="12sp"
+                    android:textColor="#000000"
+                    android:layout_marginEnd="4dp"/>
+
+                <ProgressBar
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="8dp"
+                    android:layout_weight="1"
+                    android:progress="25"
+                    android:max="100"
+                    android:progressDrawable="@drawable/progress_yellow_bar"
+                    android:backgroundTint="#E0E0E0"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4"
+                    android:textSize="12sp"
+                    android:textColor="#000000"
+                    android:layout_marginEnd="4dp"/>
+
+                <ProgressBar
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="8dp"
+                    android:layout_weight="1"
+                    android:progress="1"
+                    android:max="100"
+                    android:progressDrawable="@drawable/progress_yellow_bar"
+                    android:backgroundTint="#E0E0E0"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1"
+                    android:textSize="12sp"
+                    android:textColor="#000000"
+                    android:layout_marginEnd="4dp"/>
+
+                <ProgressBar
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="8dp"
+                    android:layout_weight="1"
+                    android:progress="2"
+                    android:max="100"
+                    android:progressDrawable="@drawable/progress_yellow_bar"
+                    android:backgroundTint="#E0E0E0"/>
+            </LinearLayout>
+
+            <!-- Puedes seguir con 3, 2 y 1 estrellas similares -->
+        </LinearLayout>
+
+        <!-- Sección Derecha: Promedio y reseñas -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4,4"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:textColor="#1A1A1A"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginVertical="4dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_star_yellow"/>
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_star_yellow"/>
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_star_yellow"/>
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_star_yellow"/>
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_star_half_yellow"
+                    android:layoutDirection="rtl" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8,817 reseñas"
+                android:textSize="12sp"
+                android:textColor="#666666"/>
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Filtros de reseñas -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
-
-        <Button
-            android:id="@+id/btnAllReviews"
-            android:layout_width="0dp"
-            android:layout_height="36dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            android:backgroundTint="#4658B4"
-            android:text="Todas"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp" />
-
-        <Button
-            android:id="@+id/btnPositiveReviews"
-            android:layout_width="0dp"
-            android:layout_height="36dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            android:backgroundTint="#E0E0E0"
-            android:text="Positivas"
-            android:textColor="#000000"
-            android:textSize="12sp" />
-
-        <Button
-            android:id="@+id/btnNegativeReviews"
-            android:layout_width="0dp"
-            android:layout_height="36dp"
-            android:layout_weight="1"
-            android:backgroundTint="#E0E0E0"
-            android:text="Negativas"
-            android:textColor="#000000"
-            android:textSize="12sp" />
-    </LinearLayout>
 
     <!-- Lista de reseñas (RecyclerView) -->
     <androidx.recyclerview.widget.RecyclerView
@@ -157,29 +243,51 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="@drawable/circle_background"
+                    android:background="@drawable/ic_person"
                     android:layout_marginEnd="12dp" />
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
+                    <!-- Columna izquierda: Nombre y fecha -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="María González"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:textColor="#000000" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Hace 2 días"
+                            android:textSize="12sp"
+                            android:textColor="#666666" />
+                    </LinearLayout>
+
+                    <!-- Columna derecha: Calificación -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="María González"
-                        android:textStyle="bold"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Hace 2 días"
-                        android:textSize="12sp"
-                        android:textColor="#666" />
+                        android:text="4/5"
+                        android:textSize="16sp"
+                        android:textColor="#666666"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="end" />
                 </LinearLayout>
+
+
 
             </LinearLayout>
 
@@ -189,7 +297,7 @@
                 android:layout_height="wrap_content"
                 android:text="Excelente hotel con vistas increíbles al mar. El personal fue muy amable y las instalaciones estaban impecables. Definitivamente lo recomiendo."
                 android:textSize="14sp"
-                 />
+                android:textColor="#000000" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

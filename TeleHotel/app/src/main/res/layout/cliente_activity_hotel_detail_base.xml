@@ -84,7 +84,7 @@
     </LinearLayout>
 
     <!-- Barra de botones -->
-    <LinearLayout
+    <!--LinearLayout
         android:id="@+id/optionsBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -135,7 +135,72 @@
             android:text="Lugares"
             android:textColor="#000000"
             android:textSize="12sp" />
+    </LinearLayout-->
+    <LinearLayout
+        android:id="@+id/optionsBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/review_bar_background"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/imageContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/bookingButton"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:backgroundTint="#1E88E5"
+            android:text="Reservar"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:maxLines="1"
+            android:ellipsize="none"
+            android:paddingHorizontal="8dp" />
+
+        <Button
+            android:id="@+id/reviewButton"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:backgroundTint="#E0E0E0"
+            android:text="Reseña"
+            android:textColor="#000000"
+            android:textSize="13sp"
+            android:maxLines="1"
+            android:ellipsize="none"
+            android:paddingHorizontal="8dp" />
+
+        <Button
+            android:id="@+id/photosButton"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:backgroundTint="#E0E0E0"
+            android:text="Fotos"
+            android:textColor="#000000"
+            android:textSize="13sp"
+            android:maxLines="1"
+            android:ellipsize="none"
+            android:paddingHorizontal="8dp" />
+
+        <Button
+            android:id="@+id/nearbyButton"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:backgroundTint="#E0E0E0"
+            android:text="Lugares"
+            android:textColor="#000000"
+            android:textSize="13sp"
+            android:maxLines="1"
+            android:ellipsize="none"
+            android:paddingHorizontal="8dp" />
     </LinearLayout>
+
 
     <!-- Contenedor del fragmento -->
     <ScrollView

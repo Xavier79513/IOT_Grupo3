@@ -21,116 +21,429 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="DESCRIPCIÓN DE LA UBICACIÓN"
-                android:textStyle="bold"
-                android:textSize="16sp" />
-
-            <TextView
+            <!-- Sección de Descripción -->
+            <!--androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Este hotel de lujo, con arte local contemporáneo y toques arquitectónicos, está situado en unos jardines paisajísticos con vistas a la laguna de Ébrié, a 3 km de la Mezquita de la Riviera y a 17 km del Parque Nacional del Banco."
-                android:textSize="14sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="16dp"
-                android:background="#E0E0E0" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="PUNTUACIÓN DE LA UBICACIÓN DEL HOTEL"
-                android:textStyle="bold"
-                android:textSize="16sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="3.9"
-                    android:textSize="24sp"
-                    android:textColor="#4CAF50" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:text=" Buena ubicación en general para hacer turismo, recreación y desplazamientos."
-                    android:textColor="#666" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="vertical">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:backgroundTint="@android:color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/camera" />
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="  Buenos lugares para tomarse fotos"
-                        android:textSize="14sp" />
+                        android:text="LUGARES HISTÓRICOS CERCANOS"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="#1A1A1A"
+                        android:letterSpacing="0.02"
+                        android:layout_marginBottom="12dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="• Mezquita de la Riviera (3 km)\n• Parque Nacional del Banco (17 km)\n• Museo Nacional de Costa de Marfil\n• Catedral de San Pablo\n• Monumento de la Paz de Abiyán"
+                        android:textSize="15sp"
+                        android:textColor="#2C2C2C"
+                        android:lineSpacingExtra="4dp" />
                 </LinearLayout>
+            </androidx.cardview.widget.CardView-->
+            <!-- Sección de Descripción -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:backgroundTint="@android:color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_train" />
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="  Opciones de transporte público cercanas."
-                        android:textSize="14sp" />
+                        android:text="🏛️ LUGARES HISTÓRICOS CERCANOS"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="#1A1A1A"
+                        android:letterSpacing="0.02"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Lista de lugares históricos -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="12dp"
+                            android:background="@drawable/feature_item_background"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:text="🕌"
+                                android:textSize="18sp"
+                                android:gravity="center"
+                                android:layout_marginEnd="12dp" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Mezquita de la Riviera"
+                                    android:textSize="15sp"
+                                    android:textColor="#1A1A1A"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="3 km • Arquitectura islámica tradicional"
+                                    android:textSize="13sp"
+                                    android:textColor="#666666" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="12dp"
+                            android:background="@drawable/feature_item_background"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:text="🏰"
+                                android:textSize="18sp"
+                                android:gravity="center"
+                                android:layout_marginEnd="12dp" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Palacio Presidencial"
+                                    android:textSize="15sp"
+                                    android:textColor="#1A1A1A"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="5 km • Sede del gobierno desde 1960"
+                                    android:textSize="13sp"
+                                    android:textColor="#666666" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="12dp"
+                            android:background="@drawable/feature_item_background"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:text="🏛️"
+                                android:textSize="18sp"
+                                android:gravity="center"
+                                android:layout_marginEnd="12dp" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Catedral San Pablo"
+                                    android:textSize="15sp"
+                                    android:textColor="#1A1A1A"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="7 km • Arquitectura colonial francesa"
+                                    android:textSize="13sp"
+                                    android:textColor="#666666" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="12dp"
+                            android:background="@drawable/feature_item_background"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:text="🏺"
+                                android:textSize="18sp"
+                                android:gravity="center"
+                                android:layout_marginEnd="12dp" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Museo Nacional de Costa de Marfil"
+                                    android:textSize="15sp"
+                                    android:textColor="#1A1A1A"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="8 km • Historia y cultura africana"
+                                    android:textSize="13sp"
+                                    android:textColor="#666666" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:background="@drawable/feature_item_background"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:text="🌉"
+                                android:textSize="18sp"
+                                android:gravity="center"
+                                android:layout_marginEnd="12dp" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Puente Félix Houphouët-Boigny"
+                                    android:textSize="15sp"
+                                    android:textColor="#1A1A1A"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="12 km • Icónico puente histórico de 1967"
+                                    android:textSize="13sp"
+                                    android:textColor="#666666" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Sección de Puntuación -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:backgroundTint="@android:color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_airport" />
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="  Aeropuerto a 15 minutos del hotel"
-                        android:textSize="14sp" />
+                        android:text="PUNTUACIÓN DE LA UBICACIÓN DEL HOTEL"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="#1A1A1A"
+                        android:letterSpacing="0.02"
+                        android:layout_marginBottom="16dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/rating_background"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="3.9"
+                            android:textSize="32sp"
+                            android:textColor="#245481"
+                            android:textStyle="bold"
+                            android:layout_marginEnd="12dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Buena ubicación en general para hacer turismo, recreación y desplazamientos."
+                            android:textColor="#4A4A4A"
+                            android:textSize="14sp"
+                            android:lineSpacingExtra="2dp" />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Sección de Características -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:backgroundTint="@android:color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="VENTAJAS DE LA UBICACIÓN"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="#1A1A1A"
+                        android:letterSpacing="0.02"
+                        android:layout_marginBottom="16dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/feature_item_background"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/camera"
+                            android:layout_marginEnd="16dp"
+                            app:tint="#FF6B35" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Buenos lugares para tomarse fotos"
+                            android:textSize="15sp"
+                            android:textColor="#2C2C2C"
+                            android:textStyle="normal" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/feature_item_background"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/ic_train"
+                            android:layout_marginEnd="16dp"
+                            app:tint="#4CAF50" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Opciones de transporte público cercanas"
+                            android:textSize="15sp"
+                            android:textColor="#2C2C2C"
+                            android:textStyle="normal" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/feature_item_background"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/ic_airport"
+                            android:layout_marginEnd="16dp"
+                            app:tint="#2196F3" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Aeropuerto a 15 minutos del hotel"
+                            android:textSize="15sp"
+                            android:textColor="#2C2C2C"
+                            android:textStyle="normal" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

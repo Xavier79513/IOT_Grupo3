@@ -10,8 +10,7 @@
     <string name="login_button">Iniciar sesión</string>
     <string name="forgot_password">¿Olvidaste la contraseña?</string>
     <string name="create_account">¿Nuevo usuario? Crear una cuenta</string>
-
-
+    <string name="cerrar_sesion_subrayado"><u>Cerrar Sesión</u></string>
 
 
     <string name="find_room">Find room</string>

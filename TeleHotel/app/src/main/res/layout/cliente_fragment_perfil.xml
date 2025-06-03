@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/profile_scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,7 +22,7 @@
             android:paddingBottom="60dp">
 
             <!-- Botón de configuración -->
-            <ImageButton
+            <!--ImageButton
                 android:id="@+id/btnSettings"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
@@ -30,7 +31,24 @@
                 android:layout_marginEnd="20dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_settings"
-                app:tint="?attr/colorOnPrimary" />
+                app:tint="?attr/colorOnPrimary" /-->
+            <TextView
+                android:id="@+id/tvCerrarSesion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:text="@string/cerrar_sesion_subrayado"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="8dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+
 
             <!-- FOTO DE PERFIL CENTRADA -->
             <RelativeLayout
@@ -109,7 +127,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Nombre Completo"
+                            android:text="Nombre y Apellidos"
                             android:textColor="?attr/colorOnSurfaceVariant"
                             android:textSize="12sp"
                             android:textStyle="bold" />
@@ -134,16 +152,94 @@
                                 app:tint="?attr/colorOnPrimary" />
 
                             <TextView
+                                android:id="@+id/tvNombre"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="16dp"
                                 android:layout_weight="1"
+                                android:layout_marginStart="16dp"
                                 android:text="John Smith"
                                 android:textColor="?attr/colorOnSurface"
                                 android:textSize="16sp" />
+                            <!-- EditText para editar el nombre, oculto inicialmente -->
+                            <EditText
+                                android:id="@+id/etNombre"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="16dp"
+                                android:visibility="gone"
+                                android:textSize="16sp"
+                                android:inputType="textPersonName"
+                                android:textColor="?attr/colorOnSurface" />
+
 
                             <ImageButton
                                 android:id="@+id/btnEditName"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:src="@drawable/ic_edit"
+                                app:tint="?attr/colorOnSurfaceVariant" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Tipo de Dcoumento -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="DNI"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <View
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="?attr/colorPrimary" />
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginStart="-32dp"
+                                android:src="@drawable/tipodocumento"
+                                app:tint="?attr/colorOnPrimary" />
+                            <TextView
+                                android:id="@+id/tvDni"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="16dp"
+                                android:text="71030722"
+                                android:textColor="?attr/colorOnSurface"
+                                android:textSize="16sp" />
+
+                            <EditText
+                                android:id="@+id/etDni"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="16dp"
+                                android:visibility="gone"
+                                android:textSize="16sp"
+                                android:inputType="number"
+                                android:textColor="?attr/colorOnSurface" />
+
+
+                            <ImageButton
+                                android:id="@+id/btnEditDni"
                                 android:layout_width="32dp"
                                 android:layout_height="32dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -177,7 +273,7 @@
                             <View
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
-                                android:background="?attr/colorSecondary" />
+                                android:background="?attr/colorPrimary" />
 
                             <ImageView
                                 android:layout_width="24dp"
@@ -323,7 +419,7 @@
                             <View
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
-                                android:background="?attr/colorSecondary" />
+                                android:background="?attr/colorPrimary" />
 
                             <ImageView
                                 android:layout_width="24dp"
@@ -424,20 +520,24 @@
             </com.google.android.material.card.MaterialCardView>
 
             <!-- BOTONES DE ACCIÓN -->
+            <!-- BOTONES DE ACCIÓN -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
                 android:orientation="horizontal"
-                android:weightSum="2">
+                android:weightSum="2"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:gravity="center">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSaveChanges"
                     style="@style/Widget.Material3.Button"
                     android:layout_width="0dp"
                     android:layout_height="56dp"
-                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
                     android:backgroundTint="?attr/colorPrimary"
                     android:text="Guardar Cambios"
                     android:textColor="?attr/colorOnPrimary"
@@ -447,13 +547,13 @@
                     app:iconPadding="8dp"
                     app:iconTint="?attr/colorOnPrimary" />
 
-                <com.google.android.material.button.MaterialButton
+                <!--com.google.android.material.button.MaterialButton
                     android:id="@+id/btnShareProfile"
                     style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="56dp"
-                    android:layout_marginStart="8dp"
                     android:layout_weight="1"
+                    android:layout_marginStart="8dp"
                     android:text="Compartir"
                     android:textColor="?attr/colorPrimary"
                     android:textSize="16sp"
@@ -461,8 +561,9 @@
                     app:iconGravity="textStart"
                     app:iconPadding="8dp"
                     app:iconTint="?attr/colorPrimary"
-                    app:strokeColor="?attr/colorPrimary" />
+                    app:strokeColor="?attr/colorPrimary" /-->
             </LinearLayout>
+
         </LinearLayout>
 
 

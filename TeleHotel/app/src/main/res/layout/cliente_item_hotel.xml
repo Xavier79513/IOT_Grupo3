@@ -40,7 +40,7 @@
 
         <TextView
             android:id="@+id/hotelRating"
-            android:text="⭐ 3.9  Reviews (200)"
+            android:text="⭐ 3.9  Reseñas (200)"
             android:textSize="12sp"
             android:textColor="#888888"
             android:layout_width="wrap_content"

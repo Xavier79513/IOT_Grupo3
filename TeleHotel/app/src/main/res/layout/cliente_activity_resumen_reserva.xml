@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF">
+
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#3F51B5"
+        android:elevation="4dp"
+        app:titleTextColor="@android:color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <!-- Imagen principal del hotel -->
     <ImageView
@@ -14,7 +27,7 @@
         android:layout_height="220dp"
         android:scaleType="centerCrop"
         android:src="@drawable/coast"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -39,6 +52,7 @@
             android:textStyle="bold"
             android:textColor="#FFFFFF"
             android:layout_marginBottom="4dp"/>
+
         <TextView
             android:id="@+id/hotelLocation"
             android:layout_width="wrap_content"
@@ -50,8 +64,9 @@
             android:drawablePadding="6dp"/>
     </LinearLayout>
 
-    <!-- SECCIÓN DE RESERVA (ScrollView sin barra inferior) -->
+    <!-- Sección de reserva con ScrollView -->
     <ScrollView
+        android:id="@+id/scrollViewReserva"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/hotelImage"
@@ -83,6 +98,7 @@
                 android:orientation="vertical"
                 android:paddingBottom="8dp">
 
+                <!-- Número de habitaciones -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -101,6 +117,7 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
+                <!-- Tipo de habitación -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -119,10 +136,52 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
+                <!-- Descripción de la habitación (nuevo) -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingTop="4dp">
+                    <TextView
+                        android:id="@+id/tvLabelRoomDescription"
+                        android:text="Descripción: "
+                        android:textStyle="bold"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tvRoomDescription"
+                        android:text="Habitación con vista al mar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <!-- Número de habitación (nuevo) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="4dp">
+                    <TextView
+                        android:id="@+id/tvLabelRoomNumber"
+                        android:text="Número de habitación: "
+                        android:textStyle="bold"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tvRoomNumber"
+                        android:text="101"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <!-- Días / Noches -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="8dp">
                     <TextView
                         android:id="@+id/tvLabelDays"
                         android:text="Días (Noches): "
@@ -137,10 +196,12 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
+                <!-- Impuestos -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingTop="4dp">
                     <TextView
                         android:id="@+id/tvLabelTaxes"
                         android:text="Impuestos: "
@@ -155,11 +216,12 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
+                <!-- Total -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingTop="4dp">
+                    android:paddingTop="8dp">
                     <TextView
                         android:id="@+id/tvLabelTotal"
                         android:text="Total: "
@@ -169,10 +231,30 @@
                         android:layout_weight="1"
                         android:layout_height="wrap_content" />
                     <TextView
-                        android:id="@+id/tvTotal"
+                        android:id="@+id/tvTotalPrice"
                         android:text="$406"
                         android:textStyle="bold"
                         android:textSize="16sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <!-- Número de huéspedes (nuevo) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="8dp">
+                    <TextView
+                        android:id="@+id/tvLabelGuests"
+                        android:text="Número de huéspedes: "
+                        android:textStyle="bold"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tvGuests"
+                        android:text="2 adultos"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>

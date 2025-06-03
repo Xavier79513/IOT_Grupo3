@@ -1,5 +1,6 @@
 package com.example.telehotel.features.cliente;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -45,9 +46,13 @@ public class HotelHabitacionActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewHabitaciones);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new HabitacionAdapter(this, listaHabitaciones, habitacion -> {
-            Toast.makeText(this, "Seleccionaste habitación " + habitacion.getNumero(), Toast.LENGTH_SHORT).show();
-            // Aquí puedes abrir detalle o flujo de reserva con hotelDocumentId + habitacion.getId()
+            // Navegar a la pantalla de resumen de reserva
+            Intent intent = new Intent(this, ResumenReservaActivity.class);
+            intent.putExtra("hotelId", hotelId);
+            intent.putExtra("habitacionId", habitacion.getId()); // Asegúrate de que getId() existe en Habitacion
+            startActivity(intent);
         });
+
         recyclerView.setAdapter(adapter);
 
         cargarHotelYHabitaciones();

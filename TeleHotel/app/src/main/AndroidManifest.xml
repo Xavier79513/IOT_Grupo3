@@ -97,9 +97,8 @@
         <activity
             android:name=".features.cliente.PagoExitosoActivity"
             android:label="Cliente" />
-        <activity
-            android:name=".features.cliente.ReservaActivity"
-            android:label="Cliente" />
+        <activity android:name=".features.cliente.ResumenReservaActivity" />
+
         <activity
             android:name=".features.cliente.PerfilActivity"
             android:label="Cliente" />

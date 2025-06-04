@@ -43,42 +43,145 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp" />
 
-        <EditText
+        <!--EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Buscar"
+            android:textColorHint="#625555"
             android:drawableStart="@android:drawable/ic_menu_search"
+            android:drawableTint="#FF333333"
             android:padding="12dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/search_background" />
+            android:background="@drawable/search_background" /-->
 
+        <!-- Contenedor principal con etiquetas -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="12dp"
-            android:gravity="center">
+            android:orientation="vertical"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            android:paddingHorizontal="16dp">
 
-            <Spinner
-                android:layout_width="0dp"
-                android:layout_weight="1"
+            <!-- Fila de etiquetas -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:entries="@array/amenities_options" />
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:weightSum="3"
+                android:layout_marginBottom="8dp">
 
-            <Spinner
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:entries="@array/filter_options" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:text="Servicios"
+                    android:textColor="#4A4A4A"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
 
-            <Spinner
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="4dp"
+                    android:text="Puntuación"
+                    android:textColor="#4A4A4A"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="Precio"
+                    android:textColor="#4A4A4A"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Fila de botones -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:entries="@array/sort_options" />
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:weightSum="3">
+
+                <!-- Filtro: Amenidades -->
+                <TextView
+                    android:id="@+id/txtSeleccionarAmenidades"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:padding="12dp"
+                    android:background="@drawable/filter_button_bg"
+                    android:hint="Elegir"
+                    android:text="Elegir"
+                    android:textColor="#1A1A1A"
+                    android:textColorHint="#666666"
+                    android:textSize="14sp"
+                    android:textStyle="normal"
+                    android:gravity="center"
+                    android:drawableEnd="@drawable/ic_arrow_drop_down"
+                    android:drawablePadding="4dp"
+                    android:drawableTint="#666666"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground" />
+
+                <!-- Filtro: Puntuación -->
+                <TextView
+                    android:id="@+id/txtSeleccionarPuntuacion"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="4dp"
+                    android:padding="12dp"
+                    android:background="@drawable/filter_button_bg"
+                    android:hint="Elegir"
+                    android:text="Elegir"
+                    android:textColor="#1A1A1A"
+                    android:textColorHint="#666666"
+                    android:textSize="14sp"
+                    android:textStyle="normal"
+                    android:gravity="center"
+                    android:drawableEnd="@drawable/ic_arrow_drop_down"
+                    android:drawablePadding="4dp"
+                    android:drawableTint="#666666"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground" />
+
+                <!-- Filtro: Precio -->
+                <TextView
+                    android:id="@+id/txtSeleccionarPrecio"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:padding="12dp"
+                    android:background="@drawable/filter_button_bg"
+                    android:hint="Elegir"
+                    android:text="Elegir"
+                    android:textColor="#1A1A1A"
+                    android:textColorHint="#666666"
+                    android:textSize="14sp"
+                    android:textStyle="normal"
+                    android:gravity="center"
+                    android:drawableEnd="@drawable/ic_arrow_drop_down"
+                    android:drawablePadding="4dp"
+                    android:drawableTint="#666666"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground" />
+            </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
 
     <!-- RecyclerView para la lista -->

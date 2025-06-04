@@ -1,18 +1,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:layout_marginVertical="8dp"
-    android:padding="8dp"
-    android:background="@drawable/card_background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginVertical="8dp"
+    android:layout_marginHorizontal="12dp"
+    android:padding="8dp"
+    android:background="@drawable/card_background"
     android:elevation="2dp"
-    android:clipToPadding="false"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?attr/selectableItemBackground"
-    android:layout_marginHorizontal="12dp">
+    android:foreground="?attr/selectableItemBackground">
 
+    <!-- Imagen del hotel -->
     <ImageView
         android:id="@+id/hotelImage"
         android:layout_width="100dp"
@@ -23,81 +23,101 @@
         android:background="@drawable/rounded_corners"
         android:clipToOutline="true" />
 
+    <!-- Contenido a la derecha de la imagen -->
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_height="wrap_content">
+        android:orientation="vertical"
+        android:gravity="center_vertical">
 
+        <!-- Nombre del hotel -->
         <TextView
             android:id="@+id/hotelName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Heden golf"
             android:textStyle="bold"
             android:textColor="#000000"
-            android:textSize="14sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textSize="14sp" />
 
+        <!-- Estrellas y reseñas -->
         <TextView
             android:id="@+id/hotelRating"
-            android:text="⭐ 3.9  Reseñas (200)"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⭐ 3.9  Reviews (200)"
             android:textSize="12sp"
             android:textColor="#888888"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginTop="2dp" />
 
+        <!-- Descripción -->
         <TextView
             android:id="@+id/hotelDescription"
-            android:text="Set in landscaped gardens overlooking the …"
-            android:textSize="12sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:textColor="#444"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Set in landscaped gardens overlooking the …"
+            android:textSize="12sp"
+            android:textColor="#444"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:layout_marginTop="2dp" />
 
+        <!-- Línea inferior: Descuento | Precio | Botón -->
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:weightSum="3">
+            android:weightSum="10">
 
-            <TextView
-                android:id="@+id/hotelDiscount"
-                android:textColor="#F57C00"
-                android:textStyle="bold"
-                android:textSize="12sp"
+            <!-- Descuento + Precio en un bloque vertical -->
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/hotelPrice"
-                android:textColor="#000"
-                android:textStyle="bold"
-                android:textSize="12sp"
-                android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal" />
+                android:layout_weight="5"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginEnd="4dp">
 
+                <TextView
+                    android:id="@+id/hotelDiscount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="25% OFF"
+                    android:textColor="#F57C00"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/hotelPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Desde S/.20.0"
+                    android:textColor="#000000"
+                    android:textSize="12sp"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+            </LinearLayout>
+
+
+            <!-- Botón "Reservar" reducido -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnBookNow"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Reserva ahora"
+                android:layout_weight="5"
+                android:text="Reservar"
                 android:textSize="12sp"
-                android:textColor="#050505"
-                android:backgroundTint="#93C6DE"
-                app:cornerRadius="24dp"
-                android:paddingHorizontal="16dp"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#609B95"
+                android:paddingHorizontal="12dp"
                 android:paddingVertical="4dp"
-                android:layout_gravity="end"/>
+                app:cornerRadius="20dp"
+                android:layout_gravity="center_vertical"
+                android:maxLines="1" />
         </LinearLayout>
-
     </LinearLayout>
 </LinearLayout>

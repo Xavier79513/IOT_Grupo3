@@ -8,10 +8,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Selecciona las habitaciones y las personas"
+        android:text="Seleccione el número de habitaciones y personas"
         android:textStyle="bold"
-        android:textSize="18sp"
-        android:layout_marginBottom="16dp" />
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"
+        android:textColor="#000000"/>
 
     <!-- Habitaciones -->
     <LinearLayout
@@ -25,28 +26,34 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Habitaciones" />
+            android:text="Habitaciones"
+            android:textSize="16sp"
+            android:textColor="#000000"/>
 
         <Button
             android:id="@+id/btnRoomMinus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#7E90D3"
-            android:text="−" />
+            android:backgroundTint="#009688"
+            android:text="−"
+            android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/tvRoomCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="0" />
+            android:text="0"
+            android:textSize="16sp"
+            android:textColor="#000000"/>
 
         <Button
             android:id="@+id/btnRoomPlus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#7E90D3"
-            android:text="+" />
+            android:backgroundTint="#009688"
+            android:text="+"
+            android:textSize="16sp"/>
     </LinearLayout>
 
     <!-- Adultos -->
@@ -61,28 +68,34 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Adultos" />
+            android:text="Adultos"
+            android:textSize="16sp"
+            android:textColor="#000000"/>
 
         <Button
             android:id="@+id/btnAdultMinus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#7E90D3"
-            android:text="−" />
+            android:backgroundTint="#009688"
+            android:text="−"
+            android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/tvAdultCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="0" />
+            android:text="0"
+            android:textSize="16sp"
+            android:textColor="#000000"/>
 
         <Button
             android:id="@+id/btnAdultPlus"
             android:layout_width="wrap_content"
-            android:backgroundTint="#7E90D3"
+            android:backgroundTint="#009688"
             android:layout_height="wrap_content"
-            android:text="+" />
+            android:text="+"
+            android:textSize="16sp"/>
     </LinearLayout>
 
     <!-- Niños -->
@@ -97,28 +110,34 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Niños" />
+            android:text="Niños"
+            android:textSize="16sp"
+            android:textColor="#000000"/>
 
         <Button
             android:id="@+id/btnChildMinus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#7E90D3"
-            android:text="−" />
+            android:backgroundTint="#009688"
+            android:text="−"
+            android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/tvChildCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="0" />
+            android:text="0"
+            android:textSize="16sp"
+            android:textColor="#000000"/>
 
         <Button
             android:id="@+id/btnChildPlus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#7E90D3"
-            android:text="+" />
+            android:backgroundTint="#009688"
+            android:text="+"
+            android:textSize="16sp"/>
     </LinearLayout>
 
     <Button
@@ -126,8 +145,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Aplicar"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="#495BBD"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#1B7C70"
         android:textColor="@android:color/white" />
 
 </LinearLayout>

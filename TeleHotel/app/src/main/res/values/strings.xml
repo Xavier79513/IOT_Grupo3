@@ -24,21 +24,30 @@
     <string name="drawer_close">Cerrar menú</string>
 
     <string-array name="amenities_options">
-        <item>Gym</item>
+        <item>WiFi gratis</item>
+        <item>Spa</item>
         <item>Piscina</item>
-        <item>Wi‑Fi gratis</item>
+        <item>Gimnasio</item>
+        <item>Restaurante</item>
+        <item>Bar</item>
+        <item>Mascotas permitidas</item>
+        <item>Recepción 24 horas</item>
+
+
     </string-array>
 
     <string-array name="filter_options">
-        <item>Filter by</item>
-        <item>Price</item>
-        <item>Rating</item>
+        <item>5 estrellas</item>
+        <item>4 estrellas</item>
+        <item>3 estrellas</item>
+        <item>2 estrellas</item>
+        <item>1 estrellas</item>
     </string-array>
 
     <string-array name="sort_options">
-        <item>Sort by</item>
-        <item>Distance</item>
-        <item>Popularity</item>
+        <item>Filter by</item>
+        <item>Price</item>
+        <item>Rating</item>
     </string-array>
 
     <!-- cadenas para admin_activity.xml -->

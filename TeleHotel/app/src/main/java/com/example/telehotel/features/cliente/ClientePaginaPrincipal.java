@@ -117,7 +117,7 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
                 new LugaresAdapter.LugarItem(R.drawable.newyork, "New York"),
                 new LugaresAdapter.LugarItem(R.drawable.cancun, "Cancun"),
                 new LugaresAdapter.LugarItem(R.drawable.barcelona, "Barcelona"),
-                new LugaresAdapter.LugarItem(R.drawable.envigado, "Envigado")
+                new LugaresAdapter.LugarItem(R.drawable.envigado, "Bucaramanga")
         );
         rvLugares.setAdapter(new LugaresAdapter(lugares));
 

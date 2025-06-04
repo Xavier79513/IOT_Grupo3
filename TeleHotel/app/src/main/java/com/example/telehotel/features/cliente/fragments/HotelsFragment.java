@@ -2,7 +2,9 @@ package com.example.telehotel.features.cliente.fragments;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +35,10 @@ public class HotelsFragment extends Fragment {
 
     private List<Hotel> listaHoteles = new ArrayList<>();
     private HotelAdapter adapter;
+    private TextView txtSeleccionarAmenidades;
+    private boolean[] seleccionados;
+    private String[] opcionesAmenidades;
+    private List<String> amenidadesSeleccionadas = new ArrayList<>();
 
     public HotelsFragment() {}
 
@@ -40,6 +46,7 @@ public class HotelsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.cliente_fragment_rooms, container, false);
+
     }
 
     @Override
@@ -55,6 +62,65 @@ public class HotelsFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         cargarHoteles();
+
+        txtSeleccionarAmenidades = view.findViewById(R.id.txtSeleccionarAmenidades);
+
+        // SERVICIOS
+        opcionesAmenidades = getResources().getStringArray(R.array.amenities_options);
+        seleccionados = new boolean[opcionesAmenidades.length];
+
+        txtSeleccionarAmenidades.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setTitle("Selecciona amenities");
+
+            builder.setMultiChoiceItems(opcionesAmenidades, seleccionados, (dialog, which, isChecked) -> {
+                if (isChecked) {
+                    amenidadesSeleccionadas.add(opcionesAmenidades[which]);
+                } else {
+                    amenidadesSeleccionadas.remove(opcionesAmenidades[which]);
+                }
+            });
+
+            builder.setPositiveButton("Aceptar", (dialog, which) -> {
+                txtSeleccionarAmenidades.setText(TextUtils.join(", ", amenidadesSeleccionadas));
+                // Aquí podrías agregar lógica para filtrar la lista
+            });
+
+            builder.setNegativeButton("Cancelar", null);
+
+            builder.show();
+        });
+
+        // PUNTUACIÓN
+        TextView txtSeleccionarPuntuacion = view.findViewById(R.id.txtSeleccionarPuntuacion);
+
+        String[] opcionesPuntuacion = getResources().getStringArray(R.array.filter_options);
+        boolean[] seleccionadas = new boolean[opcionesPuntuacion.length];
+        List<String> puntuacionSeleccionada = new ArrayList<>();
+
+        txtSeleccionarPuntuacion.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setTitle("Selecciona la puntuación");
+
+            builder.setMultiChoiceItems(opcionesPuntuacion, seleccionadas, (dialog, which, isChecked) -> {
+                if (isChecked) {
+                    puntuacionSeleccionada.add(opcionesPuntuacion[which]);
+                } else {
+                    puntuacionSeleccionada.remove(opcionesPuntuacion[which]);
+                }
+            });
+
+            builder.setPositiveButton("Aceptar", (dialog, which) -> {
+                txtSeleccionarPuntuacion.setText(TextUtils.join(", ", puntuacionSeleccionada));
+                // Aquí también podrías aplicar algún filtro si lo deseas
+            });
+
+            builder.setNegativeButton("Cancelar", null);
+
+            builder.show();
+        });
+
+
     }
 
     private void cargarHoteles() {

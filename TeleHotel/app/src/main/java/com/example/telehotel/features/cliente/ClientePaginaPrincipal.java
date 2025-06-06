@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,11 +22,13 @@ import com.example.telehotel.core.utils.PrefsManager;
 import com.example.telehotel.data.model.Hotel;
 import com.example.telehotel.data.model.NominatimPlace;
 import com.example.telehotel.data.repository.CityRepository;
+import com.example.telehotel.features.auth.LoginActivity;
 import com.example.telehotel.features.cliente.adapters.CitySuggestionAdapter;
 import com.example.telehotel.features.cliente.adapters.HotelAdapter;
 import com.example.telehotel.features.cliente.adapters.LugaresAdapter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.text.SimpleDateFormat;
@@ -52,11 +55,27 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
     private List<Hotel> listaHoteles;
 
     private PrefsManager prefsManager;
+    private ImageView ivLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cliente_pagina_inicio);
+
+        // Inicializar vistas
+        ivLogout = findViewById(R.id.ivLogout);
+
+        // Lógica para cerrar sesión
+        ivLogout.setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut(); // Cerrar sesión de Firebase
+            Toast.makeText(ClientePaginaPrincipal.this, "Sesión cerrada correctamente", Toast.LENGTH_SHORT).show();
+
+            // Ir al login y limpiar el back stack
+            Intent intent = new Intent(ClientePaginaPrincipal.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish(); // Finaliza esta actividad
+        });
 
         prefsManager = new PrefsManager(this);
 

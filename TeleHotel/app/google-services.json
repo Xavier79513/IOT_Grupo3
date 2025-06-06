@@ -12,7 +12,20 @@
           "package_name": "com.example.telehotel"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "236742837839-sav5hhtko1mivkd829bfjt27538m2it3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.telehotel",
+            "certificate_hash": "67761787d29c0981455397c40f5067af484240b0"
+          }
+        },
+        {
+          "client_id": "236742837839-eschelmjukh3qpveurdan1lee62dti1v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDw8_c32tYTnapcAXZERRwAxRvUhILqYrM"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "236742837839-eschelmjukh3qpveurdan1lee62dti1v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

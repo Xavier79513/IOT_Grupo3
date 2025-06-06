@@ -2,7 +2,7 @@ package com.example.telehotel.data.repository;
 
 import com.example.telehotel.data.model.Usuario;
 
-public class AuthRepository {
+/*public class AuthRepository {
 
     public Usuario login(String email, String password) {
         // Simulación de login con credenciales válidas
@@ -30,4 +30,65 @@ public class AuthRepository {
     public boolean recoverPassword(String email) {
         return true;
     }
+}*/
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+public class AuthRepository {
+
+    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
+    public void login(String email, String password, AuthCallback callback) {
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                        if (firebaseUser != null) {
+                            Usuario usuario = new Usuario(
+                                    firebaseUser.getUid(),
+                                    firebaseUser.getEmail(),
+                                    firebaseUser.getDisplayName(),
+                                    "Cliente" // Puedes recuperar el rol de Firebase si lo guardas en Firestore
+                            );
+                            callback.onSuccess(usuario);
+                        } else {
+                            callback.onFailure();
+                        }
+                    } else {
+                        callback.onFailure();
+                    }
+                });
+    }
+
+    public void register(String email, String password, AuthCallback callback) {
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                        if (firebaseUser != null) {
+                            Usuario usuario = new Usuario(
+                                    firebaseUser.getUid(),
+                                    email,
+                                    firebaseUser.getDisplayName(),
+                                    "Cliente"
+                            );
+                            callback.onSuccess(usuario);
+                        } else {
+                            callback.onFailure();
+                        }
+                    } else {
+                        callback.onFailure();
+                    }
+                });
+    }
+
+    public void recoverPassword(String email) {
+        firebaseAuth.sendPasswordResetEmail(email);
+    }
+
+    public interface AuthCallback {
+        void onSuccess(Usuario usuario);
+        void onFailure();
+    }
 }
+

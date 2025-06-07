@@ -13,8 +13,8 @@
         android:padding="32dp">
 
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:src="@drawable/cama"
             android:layout_marginBottom="24dp"
             app:tint="#FFFFFF" />
@@ -43,7 +43,7 @@
             android:text="Volver a la página principal"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
-            android:backgroundTint="#B0B0CE"
+            android:backgroundTint="#889B9A"
             android:layout_marginTop="24dp"
             android:paddingHorizontal="24dp"
             android:paddingVertical="12dp"/>

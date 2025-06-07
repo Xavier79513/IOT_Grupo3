@@ -296,29 +296,6 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-    /*private void guardarDatosUsuarioFirestore(String uid) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        Map<String, Object> usuario = new HashMap<>();
-        usuario.put("nombre", etNombre.getText().toString().trim());
-        usuario.put("apellido", etApellido.getText().toString().trim());
-        usuario.put("dni", etDni.getText().toString().trim());
-        usuario.put("fechaNacimiento", etFechaNacimiento.getText().toString().trim());
-        usuario.put("email", etEmail.getText().toString().trim());
-        usuario.put("telefono", etTelefono.getText().toString().trim());
-        usuario.put("domicilio", etDomicilio.getText().toString().trim());
-        usuario.put("fechaRegistro", new Date());
-        usuario.put("emailVerificado", false);
-
-        db.collection("usuarios").document(uid)
-                .set(usuario)
-                .addOnSuccessListener(aVoid -> {
-                    Log.d("Firestore", "Datos del usuario guardados exitosamente");
-                })
-                .addOnFailureListener(e -> {
-                    Log.w("Firestore", "Error al guardar datos del usuario", e);
-                });
-    }*/
     private void guardarDatosUsuarioFirestore(String uid) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -331,7 +308,7 @@ public class RegisterActivity extends AppCompatActivity {
         usuario.put("telefono", etTelefono.getText().toString().trim());
         usuario.put("domicilio", etDomicilio.getText().toString().trim());
         usuario.put("fechaRegistro", new Date());
-        usuario.put("emailVerificado", false);
+        //usuario.put("emailVerificado", false);
         usuario.put("role", "cliente");
 
 

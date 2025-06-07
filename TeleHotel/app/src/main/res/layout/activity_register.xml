@@ -119,7 +119,7 @@
                     android:layout_height="wrap_content"
                     android:hint="DNI"
                     android:layout_marginTop="16dp"
-                    app:startIconDrawable="@drawable/ic_badge"
+                    app:startIconDrawable="@drawable/ic_documento"
                     app:startIconTint="?attr/colorPrimary"
                     app:helperText="8 dígitos"
                     app:helperTextTextColor="?attr/colorOnSurfaceVariant"

@@ -6,14 +6,14 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="#F8F9FA">
 
     <!-- Toolbar -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:background="#3F51B5"
+        android:background="#004D40"
         android:elevation="4dp"
         app:titleTextColor="@android:color/white"
         app:layout_constraintTop_toTopOf="parent"
@@ -31,26 +31,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Contenedor de texto (nombre + ubicación) -->
+    <!-- Overlay para mejorar legibilidad del texto -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:background="@drawable/gradient_overlay"
+        app:layout_constraintBottom_toBottomOf="@id/hotelImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Contenedor de texto del hotel -->
     <LinearLayout
         android:id="@+id/textContainer"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingStart="16dp"
-        android:layout_marginBottom="16dp"
+        android:padding="16dp"
         android:gravity="center_vertical"
         app:layout_constraintBottom_toBottomOf="@id/hotelImage"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
             android:id="@+id/hotelName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Bristol Marriot Hotel Royale"
-            android:textSize="22sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
+            android:shadowColor="#80000000"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="3"
             android:layout_marginBottom="4dp"/>
 
         <TextView
@@ -58,10 +71,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Bristol, Inglaterra"
-            android:textColor="#FFFFFF"
+            android:textColor="#E0FFFFFF"
             android:textSize="16sp"
             android:drawableLeft="@drawable/ic_location"
-            android:drawablePadding="6dp"/>
+            android:drawablePadding="6dp"
+            android:shadowColor="#80000000"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2"/>
     </LinearLayout>
 
     <!-- Sección de reserva con ScrollView -->
@@ -69,6 +86,7 @@
         android:id="@+id/scrollViewReserva"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/hotelImage"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -80,283 +98,484 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Título -->
-            <TextView
-                android:id="@+id/tvTitleReserva"
-                android:text="Información sobre Reserva"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="8dp"/>
-
-            <!-- Campos de la reserva -->
-            <LinearLayout
-                android:id="@+id/layoutCamposReserva"
+            <!-- Card de Detalles de Reserva -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="8dp">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="#FFFFFF">
 
-                <!-- Número de habitaciones -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/tvLabelNumberRooms"
-                        android:text="Número de habitaciones: "
-                        android:textStyle="bold"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:id="@+id/tvNumberRooms"
-                        android:text="1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <!-- Título con icono -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_hotel"
+                            android:layout_marginEnd="8dp"
+                            app:tint="#004D40" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Detalles de la Reserva"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:textColor="#2E3A59" />
+                    </LinearLayout>
+
+                    <!-- Habitación -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/rounded_backgroud_light"
+                        android:padding="16dp"
+                        android:layout_marginBottom="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="HABITACIÓN"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="#6C757D"
+                            android:layout_marginBottom="4dp" />
+
+                        <TextView
+                            android:id="@+id/tvRoomType"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Económica"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#2E3A59"
+                            android:layout_marginBottom="2dp" />
+
+                        <TextView
+                            android:id="@+id/tvRoomDescription"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Habitación con vista al mar"
+                            android:textSize="14sp"
+                            android:textColor="#6C757D"
+                            android:layout_marginBottom="4dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Habitación "
+                                android:textSize="14sp"
+                                android:textColor="#6C757D" />
+
+                            <TextView
+                                android:id="@+id/tvRoomNumber"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="101"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:textColor="#004D40" />
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                android:layout_weight="1" />
+
+                            <TextView
+                                android:id="@+id/tvNumberRooms"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="1 habitación"
+                                android:textSize="14sp"
+                                android:textColor="#6C757D" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Huéspedes -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/rounded_backgroud_light"
+                        android:padding="16dp"
+                        android:layout_marginBottom="12dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_people"
+                            android:layout_marginEnd="12dp"
+                            app:tint="#004D40" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Huéspedes"
+                            android:textSize="14sp"
+                            android:textColor="#6C757D" />
+
+                        <TextView
+                            android:id="@+id/tvGuests"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2 adultos"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="#2E3A59" />
+                    </LinearLayout>
+
+                    <!-- Estancia -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/rounded_backgroud_light"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ESTANCIA"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="#6C757D"
+                            android:layout_marginBottom="8dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_calendar"
+                                android:layout_marginEnd="8dp"
+                                app:tint="#004D40" />
+
+                            <TextView
+                                android:id="@+id/tvDays"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="3 noches"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="#2E3A59" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-                <!-- Tipo de habitación -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/tvLabelRoomType"
-                        android:text="Tipo de habitación: "
-                        android:textStyle="bold"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:id="@+id/tvRoomType"
-                        android:text="Económica"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-
-                <!-- Descripción de la habitación (nuevo) -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="4dp">
-                    <TextView
-                        android:id="@+id/tvLabelRoomDescription"
-                        android:text="Descripción: "
-                        android:textStyle="bold"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:id="@+id/tvRoomDescription"
-                        android:text="Habitación con vista al mar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-
-                <!-- Número de habitación (nuevo) -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="4dp">
-                    <TextView
-                        android:id="@+id/tvLabelRoomNumber"
-                        android:text="Número de habitación: "
-                        android:textStyle="bold"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:id="@+id/tvRoomNumber"
-                        android:text="101"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-
-                <!-- Días / Noches -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="8dp">
-                    <TextView
-                        android:id="@+id/tvLabelDays"
-                        android:text="Días (Noches): "
-                        android:textStyle="bold"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:id="@+id/tvDays"
-                        android:text="3 Noches ($127 x 3 = $381)"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-
-                <!-- Impuestos -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="4dp">
-                    <TextView
-                        android:id="@+id/tvLabelTaxes"
-                        android:text="Impuestos: "
-                        android:textStyle="bold"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:id="@+id/tvTaxes"
-                        android:text="$25"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-
-                <!-- Total -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="8dp">
-                    <TextView
-                        android:id="@+id/tvLabelTotal"
-                        android:text="Total: "
-                        android:textStyle="bold"
-                        android:textSize="16sp"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:id="@+id/tvTotalPrice"
-                        android:text="$406"
-                        android:textStyle="bold"
-                        android:textSize="16sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-
-                <!-- Número de huéspedes (nuevo) -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="8dp">
-                    <TextView
-                        android:id="@+id/tvLabelGuests"
-                        android:text="Número de huéspedes: "
-                        android:textStyle="bold"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:id="@+id/tvGuests"
-                        android:text="2 adultos"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Información del cliente -->
-            <TextView
-                android:id="@+id/tvTitleCliente"
-                android:text="Información del cliente"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:layout_marginTop="16dp"
-                android:paddingBottom="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <LinearLayout
-                android:id="@+id/layoutInfoCliente"
+            <!-- Card de Resumen de Precios -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="#FFFFFF">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/tvLabelNombre"
-                        android:text="Nombre: "
-                        android:textStyle="bold"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:id="@+id/tvNombre"
-                        android:text="John Smith Jackson"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <!-- Título -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_dinero"
+                            android:layout_marginEnd="8dp"
+                            app:tint="#004D40" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Resumen de Precios"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:textColor="#2E3A59" />
+                    </LinearLayout>
+
+                    <!-- Desglose de precios -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="3 noches × $127"
+                            android:textSize="14sp"
+                            android:textColor="#6C757D" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="$381"
+                            android:textSize="14sp"
+                            android:textColor="#2E3A59" />
+                    </LinearLayout>
+
+                    <!--LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Impuestos y tasas"
+                            android:textSize="14sp"
+                            android:textColor="#6C757D" />
+
+                        <TextView
+                            android:id="@+id/tvTaxes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="$25"
+                            android:textSize="14sp"
+                            android:textColor="#2E3A59" />
+                    </LinearLayout-->
+
+                    <!-- Línea divisoria -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#E9ECEF"
+                        android:layout_marginVertical="12dp" />
+
+                    <!-- Total -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Total"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="#2E3A59" />
+
+                        <TextView
+                            android:id="@+id/tvTotalPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="$406"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="#004D40" />
+                    </LinearLayout>
                 </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/tvLabelEmail"
-                        android:text="Email: "
-                        android:textStyle="bold"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:id="@+id/tvEmail"
-                        android:text="johnsmith@gmail.com"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/tvLabelTelefono"
-                        android:text="Número móvil: "
-                        android:textStyle="bold"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:id="@+id/tvTelefono"
-                        android:text="+44 698698966"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Código promocional -->
-            <TextView
-                android:id="@+id/tvTitleCodigoPromo"
-                android:text="Código promocional"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:layout_marginTop="16dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <EditText
-                android:id="@+id/etCodigoPromo"
-                android:hint="Ingrese código promocional"
+            <!-- Card de Información del Cliente -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="#FFFFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <!-- Título -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_person"
+                            android:layout_marginEnd="8dp"
+                            app:tint="#004D40" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Información del Huésped"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:textColor="#2E3A59" />
+                    </LinearLayout>
+
+                    <!-- Información del cliente -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/rounded_backgroud_light"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="8dp">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:src="@drawable/ic_account"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginTop="2dp"
+                                app:tint="#6C757D" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Nombre completo"
+                                android:textSize="12sp"
+                                android:textColor="#6C757D" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvNombre"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="John Smith Jackson"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#2E3A59"
+                            android:layout_marginBottom="16dp"
+                            android:layout_marginStart="24dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="8dp">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:src="@drawable/ic_email"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginTop="2dp"
+                                app:tint="#6C757D" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Correo electrónico"
+                                android:textSize="12sp"
+                                android:textColor="#6C757D" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvEmail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="johnsmith@gmail.com"
+                            android:textSize="14sp"
+                            android:textColor="#2E3A59"
+                            android:layout_marginBottom="16dp"
+                            android:layout_marginStart="24dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="8dp">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:src="@drawable/ic_telefono"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginTop="2dp"
+                                app:tint="#6C757D" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Teléfono móvil"
+                                android:textSize="12sp"
+                                android:textColor="#6C757D" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvTelefono"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="+44 698698966"
+                            android:textSize="14sp"
+                            android:textColor="#2E3A59"
+                            android:layout_marginStart="24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
             <!-- Botón de confirmación -->
             <Button
                 android:id="@+id/btnConfirmOrder"
-                android:text="Confirmar reserva"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
+                android:text="Confirmar Reserva"
                 android:textColor="@android:color/white"
-                android:backgroundTint="#3F51B5"
-                android:layout_marginTop="20dp" />
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:backgroundTint="#004D40"
+                android:elevation="2dp"
+                app:cornerRadius="28dp"
+                android:layout_marginBottom="16dp" />
+
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

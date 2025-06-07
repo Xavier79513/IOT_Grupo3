@@ -200,12 +200,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Verificar si el usuario ya ha iniciado sesión
-        /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            goToMain(user);
-            return;
-        }*/
         // Verificar si el usuario ya ha iniciado sesión Y su email está verificado
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null && user.isEmailVerified()) {
@@ -282,31 +276,6 @@ public class LoginActivity extends AppCompatActivity {
         return isValid;
     }
 
-    /*private void login(String email, String password) {
-        // Mostrar loading
-        loginButton.setEnabled(false);
-        loginButton.setText("Iniciando sesión...");
-
-        authViewModel.login(email, password, new AuthRepository.AuthCallback() {
-            @Override
-            public void onSuccess(Usuario usuario) {
-                // El usuario existe en Firebase Auth, ahora verificar en Firestore
-                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                if (firebaseUser != null) {
-                    goToMain(firebaseUser);
-                }
-            }
-
-            @Override
-            public void onFailure() {
-                runOnUiThread(() -> {
-                    loginButton.setEnabled(true);
-                    loginButton.setText("Iniciar Sesión");
-                    Toast.makeText(LoginActivity.this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
-                });
-            }
-        });
-    }*/
     private void login(String email, String password) {
         loginButton.setEnabled(false);
         loginButton.setText("Iniciando sesión...");

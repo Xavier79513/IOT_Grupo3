@@ -1,6 +1,7 @@
 package com.example.telehotel.features.cliente;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -47,7 +48,7 @@ public class ResumenReservaActivity extends AppCompatActivity {
         tvRoomDescription = findViewById(R.id.tvRoomDescription);
         tvRoomNumber = findViewById(R.id.tvRoomNumber);
         tvDays = findViewById(R.id.tvDays);
-        tvTaxes = findViewById(R.id.tvTaxes);
+        //tvTaxes = findViewById(R.id.tvTaxes);
         tvTotalPrice = findViewById(R.id.tvTotalPrice);
         tvGuests = findViewById(R.id.tvGuests);
 
@@ -55,11 +56,25 @@ public class ResumenReservaActivity extends AppCompatActivity {
 
         cargarDatosResumen();
 
-        btnConfirmOrder.setOnClickListener(v -> {
+        /*btnConfirmOrder.setOnClickListener(v -> {
             // Aquí el flujo para confirmar reserva o avanzar
             Toast.makeText(this, "Reserva confirmada. Gracias!", Toast.LENGTH_SHORT).show();
             // Puedes ir a otra pantalla o cerrar
             finish();
+        });*/
+        btnConfirmOrder.setOnClickListener(v -> {
+            // Navegar a la vista de pago
+            Intent intent = new Intent(this, PagoActivity.class);
+
+            // Opcional: Pasar datos de la reserva si los necesitas
+            /*intent.putExtra("total_amount", "S/.406.00");
+            intent.putExtra("reservation_id", "12345");
+            intent.putExtra("hotel_name", "Bristol Marriot Hotel Royale");*/
+
+            startActivity(intent);
+
+            // Opcional: si quieres cerrar esta activity después de ir al pago
+            // finish();
         });
     }
 
@@ -72,7 +87,7 @@ public class ResumenReservaActivity extends AppCompatActivity {
         String roomNumber = prefsManager.getRoomNumber();
         int roomQuantity = prefsManager.getRoomQuantity();
         int totalDays = prefsManager.getTotalDays();
-        float taxes = prefsManager.getTotalTaxes();
+        //float taxes = prefsManager.getTotalTaxes();
         float totalPrice = prefsManager.getTotalPrice();
         String guests = prefsManager.getPeopleString();
 
@@ -94,7 +109,7 @@ public class ResumenReservaActivity extends AppCompatActivity {
 
         tvDays.setText(totalDays + " noches");
 
-        tvTaxes.setText(String.format("$%.2f", taxes));
+        //tvTaxes.setText(String.format("$%.2f", taxes));
         tvTotalPrice.setText(String.format("$%.2f", totalPrice));
         tvGuests.setText(guests);
     }

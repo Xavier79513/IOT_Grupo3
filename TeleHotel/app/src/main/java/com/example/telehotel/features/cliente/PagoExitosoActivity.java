@@ -20,7 +20,7 @@ public class PagoExitosoActivity extends AppCompatActivity {
         btnVerReservas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(PagoExitosoActivity.this, ClienteMainActivity.class);
+                Intent intent = new Intent(PagoExitosoActivity.this, ClientePaginaPrincipal.class);
                 startActivity(intent);
                 finish(); // Opcional, si no quieres que regrese a esta pantalla con "Back"
             }

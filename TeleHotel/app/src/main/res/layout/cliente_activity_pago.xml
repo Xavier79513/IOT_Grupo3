@@ -22,13 +22,13 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <!-- Icono de seguridad en el toolbar -->
-        <ImageView
+        <!--ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_lock"
             android:layout_gravity="end"
             android:layout_marginEnd="16dp"
-            app:tint="@android:color/white" />
+            app:tint="@android:color/white" /-->
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -341,7 +341,7 @@
                             android:layout_height="wrap_content"
                             android:hint="Número de tarjeta"
                             android:inputType="number"
-                            android:maxLength="19"
+                            android:maxLength="16"
                             android:drawableEnd="@drawable/ic_credit_card"
                             android:drawablePadding="12dp" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -386,7 +386,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="MM/YY"
-                                android:inputType="number"
+                                android:inputType="text"
                                 android:maxLength="5"
                                 android:drawableEnd="@drawable/ic_calendar"
                                 android:drawablePadding="12dp" />
@@ -408,7 +408,7 @@
                                 android:layout_height="wrap_content"
                                 android:hint="CVV"
                                 android:inputType="numberPassword"
-                                android:maxLength="4" />
+                                android:maxLength="3" />
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
 

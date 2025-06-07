@@ -7,9 +7,12 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -100,6 +103,8 @@ public class PagoActivity extends AppCompatActivity {
 
     private final String CHANNEL_ID = "payment_channel";
     private final int NOTIFICATION_ID = 202;
+    private EditText etExpiryDate;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +119,39 @@ public class PagoActivity extends AppCompatActivity {
 
         // Crear canal de notificación
         crearCanalNotificacion();
+        etExpiryDate = findViewById(R.id.etExpiryDate);
+
+        etExpiryDate.addTextChangedListener(new TextWatcher() {
+            private boolean isFormatting;
+            private int prevLength = 0;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                prevLength = s.length();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (isFormatting) return;
+
+                isFormatting = true;
+
+                String input = s.toString().replace("/", "");
+                if (input.length() >= 2) {
+                    String month = input.substring(0, 2);
+                    String year = input.length() > 2 ? input.substring(2) : "";
+                    String formatted = month + "/" + year;
+
+                    etExpiryDate.setText(formatted);
+                    etExpiryDate.setSelection(formatted.length());  // Mueve el cursor al final
+                }
+
+                isFormatting = false;
+            }
+        });
     }
 
     private void setupToolbar() {
@@ -173,6 +211,7 @@ public class PagoActivity extends AppCompatActivity {
             etCardHolder.requestFocus();
             return false;
         }
+
 
         // Validar fecha de vencimiento
         String expiryDate = etExpiryDate.getText().toString().trim();

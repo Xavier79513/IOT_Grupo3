@@ -134,6 +134,24 @@
                         android:textColor="?attr/colorOnSurface"
                         android:textSize="16sp" />
                 </com.google.android.material.textfield.TextInputLayout>
+                <!-- Fecha de Nacimieno -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Fecha de nacimiento"
+                    android:layout_marginTop="16dp"
+                    app:startIconDrawable="@drawable/ic_fechanacimiento"
+                    app:startIconTint="?attr/colorPrimary"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etFechaNacimiento"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="16sp"
+                        android:inputType="textPersonName|textCapWords" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Email -->
                 <com.google.android.material.textfield.TextInputLayout
@@ -152,6 +170,44 @@
                         android:inputType="textEmailAddress"
                         android:textColor="?attr/colorOnSurface"
                         android:textSize="16sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <!-- Telefono -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Teléfono"
+                    android:layout_marginTop="16dp"
+                    app:startIconDrawable="@drawable/ic_telefono"
+                    app:startIconTint="?attr/colorPrimary"
+                    app:helperText="9 dígitos"
+                    app:helperTextTextColor="?attr/colorOnSurfaceVariant"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etTelefono"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:maxLength="9"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="16sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <!-- Domicilio -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Domicilio"
+                    app:startIconDrawable="@drawable/ic_direccioncasa"
+                    app:startIconTint="?attr/colorPrimary"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etDomicilio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="16sp"
+                        android:inputType="textPersonName|textCapWords" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Password -->

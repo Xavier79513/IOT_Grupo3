@@ -201,10 +201,20 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         // Verificar si el usuario ya ha iniciado sesión
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             goToMain(user);
             return;
+        }*/
+        // Verificar si el usuario ya ha iniciado sesión Y su email está verificado
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null && user.isEmailVerified()) {
+            goToMain(user);
+            return;
+        } else if (user != null && !user.isEmailVerified()) {
+            // Usuario autenticado pero email no verificado
+            Toast.makeText(this, "Por favor verifica tu email antes de continuar", Toast.LENGTH_LONG).show();
+            FirebaseAuth.getInstance().signOut(); // Cerrar sesión
         }
 
         initViews();
@@ -272,7 +282,7 @@ public class LoginActivity extends AppCompatActivity {
         return isValid;
     }
 
-    private void login(String email, String password) {
+    /*private void login(String email, String password) {
         // Mostrar loading
         loginButton.setEnabled(false);
         loginButton.setText("Iniciando sesión...");
@@ -296,14 +306,50 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         });
+    }*/
+    private void login(String email, String password) {
+        loginButton.setEnabled(false);
+        loginButton.setText("Iniciando sesión...");
+
+        authViewModel.login(email, password, new AuthRepository.AuthCallback() {
+            @Override
+            public void onSuccess(Usuario usuario) {
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                if (firebaseUser != null) {
+                    // Verificar si el email está verificado
+                    if (firebaseUser.isEmailVerified()) {
+                        goToMain(firebaseUser);
+                    } else {
+                        runOnUiThread(() -> {
+                            loginButton.setEnabled(true);
+                            loginButton.setText("Iniciar Sesión");
+                            Toast.makeText(LoginActivity.this,
+                                    "Por favor verifica tu email antes de iniciar sesión",
+                                    Toast.LENGTH_LONG).show();
+                            FirebaseAuth.getInstance().signOut();
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure() {
+                runOnUiThread(() -> {
+                    loginButton.setEnabled(true);
+                    loginButton.setText("Iniciar Sesión");
+                    Toast.makeText(LoginActivity.this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
+
 
     private void forgotPassword(String email) {
         authViewModel.recoverPassword(email);
         Toast.makeText(this, "Se ha enviado un correo para restablecer tu contraseña", Toast.LENGTH_LONG).show();
     }
 
-    private void goToMain(FirebaseUser user) {
+    /*private void goToMain(FirebaseUser user) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("usuarios")
@@ -313,6 +359,59 @@ public class LoginActivity extends AppCompatActivity {
                     if (documentSnapshot.exists()) {
                         String role = documentSnapshot.getString("role");
                         String nombre = documentSnapshot.getString("nombres");
+
+                        Toast.makeText(this, "Bienvenido: " + nombre, Toast.LENGTH_SHORT).show();
+
+                        Intent intent = null;
+                        switch (role) {
+                            case "taxista":
+                                intent = new Intent(this, TaxistaActivity.class);
+                                break;
+                            case "admin":
+                                intent = new Intent(this, AdminActivity.class);
+                                break;
+                            case "superadmin":
+                                intent = new Intent(this, SuperAdminActivity.class);
+                                break;
+                            default: // cliente o cualquier otro
+                                intent = new Intent(this, ClientePaginaPrincipal.class);
+                                break;
+                        }
+
+                        if (intent != null) {
+                            startActivity(intent);
+                            finish();
+                        }
+                    } else {
+                        Toast.makeText(this, "Usuario no registrado en la base de datos", Toast.LENGTH_SHORT).show();
+                        FirebaseAuth.getInstance().signOut();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al obtener datos: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    loginButton.setEnabled(true);
+                    loginButton.setText("Iniciar Sesión");
+                });
+    }*/
+    private void goToMain(FirebaseUser user) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("usuarios")
+                .document(user.getUid())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Obtener role con valor por defecto
+                        String role = documentSnapshot.getString("role");
+                        if (role == null || role.isEmpty()) {
+                            role = "cliente"; // Valor por defecto
+                        }
+
+                        // Obtener nombre con valor por defecto
+                        String nombre = documentSnapshot.getString("nombres");
+                        if (nombre == null || nombre.isEmpty()) {
+                            nombre = "Usuario"; // Valor por defecto
+                        }
 
                         Toast.makeText(this, "Bienvenido: " + nombre, Toast.LENGTH_SHORT).show();
 

@@ -74,21 +74,7 @@ public class TaxistaHotelDetalle extends AppCompatActivity {
 
     // Metodo para crear la lista de solicitudes de taxi (simulada)
     private List<ServicioTaxi> crearListaSolicitudes() {
-        List<ServicioTaxi> solicitudes = new ArrayList<>();
-        solicitudes.add(new ServicioTaxi("1", "cliente01", "taxista01", "H01", "Aeropuerto Jorge Chávez", "2025-05-03", "pendiente", new Ubicacion("Av. El Polo 123, Surco", -12.1057, -76.9636), "QR001"));
-        solicitudes.add(new ServicioTaxi("2", "cliente02", "taxista02", "H02", "Aeropuerto Jorge Chávez", "2025-05-03", "pendiente", new Ubicacion("Calle Lima 456, Miraflores", -12.1208, -77.0297), "QR002"));
-        solicitudes.add(new ServicioTaxi("3", "cliente03", "taxista03", "H01", "Aeropuerto Jorge Chávez", "2025-05-03", "pendiente", new Ubicacion("Jr. Amazonas 789, Cercado de Lima", -12.0454, -77.0311), "QR003"));
-        solicitudes.add(new ServicioTaxi("4", "cliente04", "taxista04", "H03", "Aeropuerto Internacional", "2025-05-04", "pendiente", new Ubicacion("Calle Los Olivos 320, San Isidro", -12.0957, -77.0426), "QR004"));
-        solicitudes.add(new ServicioTaxi("5", "cliente05", "taxista05", "H02", "Aeropuerto Jorge Chávez", "2025-05-04", "pendiente", new Ubicacion("Calle Las Flores 67, Miraflores", -12.1212, -77.0337), "QR005"));
-        solicitudes.add(new ServicioTaxi("6", "cliente06", "taxista06", "H01", "Aeropuerto Jorge Chávez", "2025-05-04", "pendiente", new Ubicacion("Calle Pardo 101, San Isidro", -12.0934, -77.0298), "QR006"));
-        solicitudes.add(new ServicioTaxi("7", "cliente07", "taxista07", "H04", "Aeropuerto Internacional", "2025-05-05", "pendiente", new Ubicacion("Calle Los Cedros 100, Lince", -12.0695, -77.0422), "QR007"));
-        solicitudes.add(new ServicioTaxi("8", "cliente08", "taxista08", "H03", "Aeropuerto Jorge Chávez", "2025-05-05", "pendiente", new Ubicacion("Calle San Borja 45, San Borja", -12.0974, -77.0279), "QR008"));
-        solicitudes.add(new ServicioTaxi("9", "cliente09", "taxista09", "H02", "Aeropuerto Internacional", "2025-05-06", "pendiente", new Ubicacion("Avenida Javier Prado 212, San Isidro", -12.0896, -77.0400), "QR009"));
-        solicitudes.add(new ServicioTaxi("10", "cliente10", "taxista10", "H01", "Aeropuerto Jorge Chávez", "2025-05-06", "pendiente", new Ubicacion("Avenida El Polo 455, Surco", -12.1100, -76.9820), "QR010"));
-        solicitudes.add(new ServicioTaxi("11", "cliente11", "taxista11", "H04", "Aeropuerto Internacional", "2025-05-07", "pendiente", new Ubicacion("Avenida Los Olivos 222, Lima", -12.1010, -77.0580), "QR011"));
-        solicitudes.add(new ServicioTaxi("12", "cliente12", "taxista12", "H02", "Aeropuerto Jorge Chávez", "2025-05-07", "pendiente", new Ubicacion("Avenida Pardo 125, Miraflores", -12.1123, -77.0311), "QR012"));
-
-        return solicitudes;
+        List<ServicioTaxi> solicitudes = new ArrayList<>();    return solicitudes;
     }
 
 

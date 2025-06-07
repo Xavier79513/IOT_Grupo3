@@ -13,6 +13,11 @@
     <color name="colorOnSurfaceVariant">#555555</color>
     <color name="colorError">#F44336</color>
     <color name="colorOnError">#FFFFFF</color>
+    <color name="red_500">#F44336</color>
+    <color name="green_700">#388E3C</color>
+    <color name="red_700">#D32F2F</color>
+    <color name="orange_700">#F57C00</color>
+    <color name="gray_500">#9E9E9E</color>
 
     <!-- Texto -->
     <color name="textPrimary">#212121</color>

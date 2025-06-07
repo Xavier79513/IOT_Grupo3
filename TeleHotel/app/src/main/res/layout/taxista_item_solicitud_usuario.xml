@@ -1,112 +1,93 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="8dp"
     android:layout_marginHorizontal="12dp"
-    android:padding="12dp"
+    android:layout_marginVertical="8dp"
     android:background="@drawable/card_background"
-    android:elevation="2dp"
-    android:gravity="center_vertical"
-    android:clipToPadding="false"
     android:clickable="true"
+    android:clipToPadding="false"
+    android:elevation="2dp"
     android:focusable="true"
-    android:foreground="?attr/selectableItemBackground">
+    android:foreground="?attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="12dp">
 
-    <!-- Foto del usuario -->
+    <!-- Imagen del usuario -->
     <ImageView
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@drawable/user1"
-        android:scaleType="centerCrop"
         android:layout_marginEnd="12dp"
         android:background="@drawable/rounded_circle"
-        android:clipToOutline="true" />
+        android:clipToOutline="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/user1" />
 
-    <!-- Contenedor de texto y botones -->
+    <!-- Contenedor de textos -->
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_height="wrap_content">
+        android:orientation="vertical">
 
+        <!-- Estado -->
+        <TextView
+            android:id="@+id/textEstado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+
+            android:paddingHorizontal="10dp"
+        android:paddingVertical="4dp"
+        android:text="Terminado"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+        <!-- Nombre -->
         <TextView
             android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Luisa Pérez Acevedo"
-            android:textStyle="bold"
             android:textColor="#000000"
             android:textSize="15sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textStyle="bold" />
 
+        <!-- Rating -->
         <TextView
             android:id="@+id/textViewRating"
-            android:text="⭐ 4.98  Reviews (200)"
-            android:textSize="13sp"
-            android:textColor="#888888"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp" />
+            android:layout_marginTop="2dp"
+            android:text="⭐ 4.98  Reviews (200)"
+            android:textColor="#888888"
+            android:textSize="13sp" />
 
+        <!-- Destino -->
         <TextView
             android:id="@+id/textDestino"
-            android:text="Destino: 5 km - Aeropuerto Jorge Chávez"
-            android:textSize="13sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:textColor="#444"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp" />
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Destino: 5 km - Aeropuerto Jorge Chávez"
+            android:textColor="#444"
+            android:textSize="13sp" />
 
+        <!-- Recojo -->
         <TextView
             android:id="@+id/textRecojo"
-            android:text="Recojo: Hotel Los Delfines"
-            android:textSize="13sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:textColor="#444"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp" />
-
-        <!-- Botones -->
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="end"
-            android:weightSum="2">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAceptar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Aceptar"
-                android:textColor="#FFFFFF"
-                android:textSize="13sp"
-                android:minHeight="36dp"
-                android:paddingVertical="6dp"
-                app:cornerRadius="20dp"
-                android:backgroundTint="#4CAF50" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnRechazar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Rechazar"
-                android:textColor="#FFFFFF"
-                android:textSize="13sp"
-                android:minHeight="36dp"
-                android:paddingVertical="6dp"
-                android:layout_marginStart="8dp"
-                app:cornerRadius="20dp"
-                android:backgroundTint="#F44336" />
-        </LinearLayout>
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Recojo: Hotel Los Delfines"
+            android:textColor="#444"
+            android:textSize="13sp" />
     </LinearLayout>
 </LinearLayout>

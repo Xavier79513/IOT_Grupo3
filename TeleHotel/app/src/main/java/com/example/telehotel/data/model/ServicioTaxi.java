@@ -4,23 +4,50 @@ public class ServicioTaxi {
     private String id;
     private String clienteId;
     private String taxistaId;
+    private String fechaInicio;
+    private String horaInicio;
+    private String fechaFin;
+    private String horaFin;
     private String hotelId;
-    private String aeropuertoDestino;
-    private String fechaSolicitud;
+    private String aeropuertoId;
+
     private String estado;
     private Ubicacion ubicacionTaxista;
     private String qrCodigo;
 
-    public ServicioTaxi(String id, String clienteId, String taxistaId, String hotelId, String aeropuertoDestino, String fechaSolicitud, String estado, Ubicacion ubicacionTaxista, String qrCodigo) {
-        this.id = id;
-        this.clienteId = clienteId;
-        this.taxistaId = taxistaId;
-        this.hotelId = hotelId;
-        this.aeropuertoDestino = aeropuertoDestino;
-        this.fechaSolicitud = fechaSolicitud;
-        this.estado = estado;
-        this.ubicacionTaxista = ubicacionTaxista;
-        this.qrCodigo = qrCodigo;
+    public String getHoraFin() {
+        return horaFin;
+    }
+
+    public void setHoraFin(String horaFin) {
+        this.horaFin = horaFin;
+    }
+
+    public String getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(String fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+
+    public String getHoraInicio() {
+        return horaInicio;
+    }
+
+    public void setHoraInicio(String horaInicio) {
+        this.horaInicio = horaInicio;
+    }
+
+    public String getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(String fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public ServicioTaxi() {
     }
 
     public String getId() {
@@ -55,21 +82,14 @@ public class ServicioTaxi {
         this.hotelId = hotelId;
     }
 
-    public String getAeropuertoDestino() {
-        return aeropuertoDestino;
+    public String getAeropuertoId() {
+        return aeropuertoId;
     }
 
-    public void setAeropuertoDestino(String aeropuertoDestino) {
-        this.aeropuertoDestino = aeropuertoDestino;
+    public void setAeropuertoId(String aeropuertoDestino) {
+        this.aeropuertoId = aeropuertoDestino;
     }
 
-    public String getFechaSolicitud() {
-        return fechaSolicitud;
-    }
-
-    public void setFechaSolicitud(String fechaSolicitud) {
-        this.fechaSolicitud = fechaSolicitud;
-    }
 
     public String getEstado() {
         return estado;

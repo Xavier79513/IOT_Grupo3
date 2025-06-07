@@ -1,12 +1,13 @@
 package com.example.telehotel.features.taxista;
 
 import android.os.Bundle;
+import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.telehotel.R;
 import com.example.telehotel.data.model.ServicioTaxi;
-import com.example.telehotel.data.model.Ubicacion;
+import com.example.telehotel.data.repository.SolicitudRepository;
 import com.example.telehotel.features.taxista.adapter.ServicioTaxiAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -18,39 +19,72 @@ public class TaxistaHistorialActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ServicioTaxiAdapter solicitudAdapter;
     private List<ServicioTaxi> listaSolicitudes;
+    private SolicitudRepository solicitudRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.taxista_historial);
 
-        // Inicializar RecyclerView
         recyclerView = findViewById(R.id.recyclerViewSolicitudes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Crear y llenar la lista de solicitudes
         listaSolicitudes = new ArrayList<>();
-        listaSolicitudes.add(new ServicioTaxi("1", "cliente01", "taxista01", "hotel01", "Aeropuerto Jorge Chávez", "2025-05-03", "pendiente", new Ubicacion("Av. El Polo 123, Surco", -12.1057, -76.9636), "QR001"));
-        listaSolicitudes.add(new ServicioTaxi("2", "cliente02", "taxista02", "hotel02", "Aeropuerto Jorge Chávez", "2025-05-03", "pendiente", new Ubicacion("Calle Lima 456, Miraflores", -12.1208, -77.0297), "QR002"));
-        listaSolicitudes.add(new ServicioTaxi("3", "cliente03", "taxista03", "hotel03", "Aeropuerto Jorge Chávez", "2025-05-03", "pendiente", new Ubicacion("Jr. Amazonas 789, Cercado de Lima", -12.0454, -77.0311), "QR003"));
-        listaSolicitudes.add(new ServicioTaxi("4", "cliente04", "taxista04", "hotel04", "Aeropuerto Jorge Chávez", "2025-05-03", "pendiente", new Ubicacion("Av. Salaverry 2345, Jesús María", -12.0820, -77.0498), "QR004"));
-        listaSolicitudes.add(new ServicioTaxi("5", "cliente05", "taxista05", "hotel05", "Aeropuerto Jorge Chávez", "2025-05-03", "pendiente", new Ubicacion("Calle Los Eucaliptos 555, San Isidro", -12.0948, -77.0364), "QR005"));
-        listaSolicitudes.add(new ServicioTaxi("6", "cliente06", "taxista06", "hotel06", "Aeropuerto Jorge Chávez", "2025-05-03", "pendiente", new Ubicacion("Av. Pardo 980, Miraflores", -12.1192, -77.0320), "QR006"));
-        listaSolicitudes.add(new ServicioTaxi("7", "cliente07", "taxista07", "hotel07", "Aeropuerto Jorge Chávez", "2025-05-03", "pendiente", new Ubicacion("Malecón Cisneros 1500, Miraflores", -12.1257, -77.0350), "QR007"));
-        listaSolicitudes.add(new ServicioTaxi("8", "cliente08", "taxista08", "hotel08", "Aeropuerto Jorge Chávez", "2025-05-03", "pendiente", new Ubicacion("Av. La Marina 2400, San Miguel", -12.0789, -77.0891), "QR008"));
-        listaSolicitudes.add(new ServicioTaxi("9", "cliente09", "taxista09", "hotel09", "Aeropuerto Jorge Chávez", "2025-05-03", "pendiente", new Ubicacion("Av. Javier Prado Este 5600, La Molina", -12.0866, -76.9745), "QR009"));
-        listaSolicitudes.add(new ServicioTaxi("10", "cliente10", "taxista10", "hotel10", "Aeropuerto Jorge Chávez", "2025-05-03", "pendiente", new Ubicacion("Av. República de Panamá 3500, San Isidro", -12.1065, -77.0293), "QR010"));
-
-        // Configurar el adaptador con la lista de solicitudes
         solicitudAdapter = new ServicioTaxiAdapter(listaSolicitudes);
         recyclerView.setAdapter(solicitudAdapter);
 
-        // Configuración de la navegación
+        solicitudRepository = new SolicitudRepository();
+
+        String uidTaxista = "uid_12";  // <-- Reemplaza con tu lógica real (Auth o Intent extra)
+
+        cargarSolicitudes(uidTaxista);
+
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
-        bottomNav.setSelectedItemId(R.id.nav_stats);  // Establece el ítem seleccionado
+        bottomNav.setSelectedItemId(R.id.nav_stats);
         bottomNav.setOnItemSelectedListener(item -> {
             TaxistaNavigationHelper.navigate(TaxistaHistorialActivity.this, item.getItemId());
             return true;
         });
     }
+
+    private void cargarSolicitudes(String uidTaxista) {
+        solicitudRepository.getAllByUidTaxista(uidTaxista, new SolicitudRepository.OnViajesLoadedListener() {
+            @Override
+            public void onViajesLoaded(List<ServicioTaxi> viajes) {
+                Log.d("DEBUG_FIRESTORE", "Total de viajes recibidos: " + viajes.size());
+
+                for (ServicioTaxi viaje : viajes) {
+                    Log.d("DEBUG_FIRESTORE", "---- VIAJE ----");
+                    Log.d("DEBUG_FIRESTORE", "ID: " + viaje.getId());
+                    Log.d("DEBUG_FIRESTORE", "Cliente ID: " + viaje.getClienteId());
+                    Log.d("DEBUG_FIRESTORE", "Taxista ID: " + viaje.getTaxistaId());
+                    Log.d("DEBUG_FIRESTORE", "Hotel ID: " + viaje.getHotelId());
+                    Log.d("DEBUG_FIRESTORE", "Destino: " + viaje.getAeropuertoId());
+                    Log.d("DEBUG_FIRESTORE", "Fecha: " + viaje.getFechaInicio());
+                    Log.d("DEBUG_FIRESTORE", "Fecha: " + viaje.getFechaFin());
+                    Log.d("DEBUG_FIRESTORE", "Fecha: " + viaje.getHoraInicio());
+                    Log.d("DEBUG_FIRESTORE", "Fecha: " + viaje.getHoraFin());
+                    Log.d("DEBUG_FIRESTORE", "Estado: " + viaje.getEstado());
+                    Log.d("DEBUG_FIRESTORE", "QR: " + viaje.getQrCodigo());
+
+                    if (viaje.getUbicacionTaxista() != null) {
+                        Log.d("DEBUG_FIRESTORE", "Ubicación: " + viaje.getUbicacionTaxista().getDireccion());
+                    } else {
+                        Log.d("DEBUG_FIRESTORE", "Ubicación: NULL ❗️");
+                    }
+                }
+
+                listaSolicitudes.clear();
+                listaSolicitudes.addAll(viajes);
+                solicitudAdapter.notifyDataSetChanged();
+            }
+
+
+            @Override
+            public void onError(String errorMessage) {
+                Log.e("Firestore", "Error al obtener solicitudes: " + errorMessage);
+            }
+        });
+    }
+
 }

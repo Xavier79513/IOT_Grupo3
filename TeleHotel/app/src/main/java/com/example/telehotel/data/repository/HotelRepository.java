@@ -60,4 +60,27 @@ public class HotelRepository {
                 })
                 .addOnFailureListener(onError::accept);
     }
+
+    public static void getHotelByIdPorCampo(@NonNull String idHotel,
+                                            @NonNull Consumer<Hotel> onSuccess,
+                                            @NonNull Consumer<Exception> onError) {
+        getCollection()
+                .whereEqualTo("id", idHotel)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    if (!querySnapshot.isEmpty()) {
+                        DocumentSnapshot doc = querySnapshot.getDocuments().get(0);
+                        Hotel hotel = doc.toObject(Hotel.class);
+                        if (hotel != null) {
+                            hotel.setId(doc.getId()); // Guarda el ID real del documento Firestore
+                            onSuccess.accept(hotel);
+                        } else {
+                            onError.accept(new Exception("Hotel mapeado como null"));
+                        }
+                    } else {
+                        onError.accept(new Exception("No se encontró hotel con idHotel: " + idHotel));
+                    }
+                })
+                .addOnFailureListener(onError::accept);
+    }
 }

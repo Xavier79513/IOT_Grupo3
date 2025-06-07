@@ -11,7 +11,16 @@ public class UserRepository {
         void onFailure(String errorMessage);
     }
 
-    public void getUserByEmail(String email, final UserCallback callback) {
+    // Ahora definimos dos interfaces funcionales (funciones lambda)
+    public interface SuccessCallback {
+        void onSuccess(Usuario user);
+    }
+
+    public interface FailureCallback {
+        void onFailure(String errorMessage);
+    }
+
+    public void getUserByEmail(String email, SuccessCallback onSuccess, FailureCallback onFailure) {
         FirebaseUtil.getFirestore().collection("usuarios")
                 .whereEqualTo("email", email)
                 .limit(1)
@@ -20,12 +29,34 @@ public class UserRepository {
                     if (!queryDocumentSnapshots.isEmpty()) {
                         DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(0);
                         Usuario user = doc.toObject(Usuario.class);
-                        user.setUid(doc.getId()); // para que tenga UID si es el ID del doc
-                        callback.onSuccess(user);
+                        user.setUid(doc.getId());
+                        onSuccess.onSuccess(user);
                     } else {
-                        callback.onFailure("Usuario no encontrado");
+                        onFailure.onFailure("Usuario no encontrado");
                     }
                 })
-                .addOnFailureListener(e -> callback.onFailure("Error al consultar: " + e.getMessage()));
+                .addOnFailureListener(e -> onFailure.onFailure("Error al consultar: " + e.getMessage()));
+    }
+
+    public static void getUserByUid(String uidBuscado, SuccessCallback onSuccess, FailureCallback onFailure) {
+        FirebaseUtil.getFirestore().collection("usuarios")
+                .whereEqualTo("uid", uidBuscado)
+                .limit(1)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(0);
+                        Usuario user = doc.toObject(Usuario.class);
+                        if (user != null) {
+                            user.setUid(doc.getId());
+                            onSuccess.onSuccess(user);
+                        } else {
+                            onFailure.onFailure("Usuario mapeado como null");
+                        }
+                    } else {
+                        onFailure.onFailure("Usuario no encontrado con uid: " + uidBuscado);
+                    }
+                })
+                .addOnFailureListener(e -> onFailure.onFailure("Error al consultar: " + e.getMessage()));
     }
 }

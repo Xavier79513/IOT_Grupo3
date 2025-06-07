@@ -4,9 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="#F9F9F9">
 
-    <!-- Greeting Box -->
+    <!-- Greeting -->
     <TextView
         android:id="@+id/greetingBox"
         android:layout_width="0dp"
@@ -22,55 +22,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Imagen del mapa -->
-
-    <!-- ScrollView con lista de hoteles -->
-
-    <ImageView
-        android:id="@+id/mapImage"
+    <org.maplibre.android.maps.MapView
+        android:id="@+id/mapView"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="0dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/map"
-        app:layout_constraintDimensionRatio="16:9"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_height="300dp"
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/greetingBox" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/solicitudesScroll" />
 
+    <!-- Layout para SOLICITUDES -->
     <ScrollView
-        android:id="@+id/hotelScrollView"
+        android:id="@+id/solicitudesScroll"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
-        android:overScrollMode="never"
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/mapImage"
+        app:layout_constraintTop_toBottomOf="@id/mapView"
         app:layout_constraintBottom_toTopOf="@id/viewSolicitudes"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- 1 hijo directo -->
         <LinearLayout
+            android:id="@+id/solicitudesLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
 
-            <!-- Bloque de hotel #1 -->
+            <!-- Tarjetas de solicitudes -->
+            <!-- Puedes reutilizar el siguiente bloque en tu código para añadir más dinámicamente -->
+
+            <!-- Tarjeta de ejemplo -->
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="8dp"
+                android:layout_margin="12dp"
                 android:padding="8dp"
                 android:background="@drawable/card_background"
                 android:elevation="2dp"
-                android:layout_marginHorizontal="12dp"
+                android:gravity="center_vertical"
                 android:clickable="true"
                 android:focusable="true"
-                android:gravity="center_vertical"
-
                 android:foreground="?attr/selectableItemBackground">
 
                 <ImageView
@@ -85,12 +79,12 @@
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
 
                     <TextView
+                        android:id="@+id/txtNombrePasajero1"
                         android:text="Luisa Pérez Acevedo"
-                        android:id="@+id/userName"
                         android:textStyle="bold"
                         android:textColor="#000000"
                         android:textSize="14sp"
@@ -98,8 +92,8 @@
                         android:layout_height="wrap_content" />
 
                     <TextView
+                        android:id="@+id/txtRating1"
                         android:text="⭐ 4.98  Reviews (200)"
-                        android:id="@+id/textViewRating"
                         android:textSize="12sp"
                         android:textColor="#888888"
                         android:layout_width="wrap_content"
@@ -107,8 +101,8 @@
                         android:layout_marginTop="2dp" />
 
                     <TextView
+                        android:id="@+id/txtDestino1"
                         android:text="Destino: 5 km - Aeropuerto Jorge Chávez"
-                        android:id="@+id/textDestino"
                         android:textSize="12sp"
                         android:maxLines="1"
                         android:ellipsize="end"
@@ -118,8 +112,8 @@
                         android:layout_marginTop="2dp" />
 
                     <TextView
+                        android:id="@+id/txtRecojo1"
                         android:text="Recojo: Hotel Los Delfines"
-                        android:id="@+id/textRecojo"
                         android:textSize="12sp"
                         android:maxLines="1"
                         android:ellipsize="end"
@@ -128,17 +122,15 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp" />
 
-                    <!-- BOTONES ACEPTAR Y RECHAZAR -->
                     <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:gravity="end"
-                        android:weightSum="2">
+                        android:gravity="end">
 
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnAceptar"
+                            android:id="@+id/btnAceptar1"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -147,12 +139,11 @@
                             android:textSize="12sp"
                             android:minHeight="36dp"
                             android:paddingVertical="6dp"
-                            android:paddingHorizontal="0dp"
                             app:cornerRadius="20dp"
                             android:backgroundTint="#4CAF50" />
 
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnRechazar"
+                            android:id="@+id/btnRechazar1"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -161,134 +152,102 @@
                             android:textSize="12sp"
                             android:minHeight="36dp"
                             android:paddingVertical="6dp"
-                            android:paddingHorizontal="0dp"
                             android:layout_marginStart="8dp"
                             app:cornerRadius="20dp"
                             android:backgroundTint="#F44336" />
                     </LinearLayout>
-
                 </LinearLayout>
             </LinearLayout>
 
-
-            <!-- Bloque de hotel #2 (idéntico o con datos distintos) -->
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="8dp"
-                android:padding="8dp"
-                android:background="@drawable/card_background"
-                android:elevation="2dp"
-                android:layout_marginHorizontal="12dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical"
-
-                android:foreground="?attr/selectableItemBackground">
-
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/user2"
-                    android:scaleType="centerCrop"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/rounded_circle"
-                    android:clipToOutline="true"/>
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:text="Luis Antonio Gálvez Acevedo"
-                        android:id="@+id/userName2"
-                        android:textStyle="bold"
-                        android:textColor="#000000"
-                        android:textSize="14sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:text="⭐ 4.98  Reviews (200)"
-                        android:id="@+id/textViewRating2"
-                        android:textSize="12sp"
-                        android:textColor="#888888"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp" />
-
-                    <TextView
-                        android:text="Destino: 5 km - Aeropuerto Jorge Chávez"
-                        android:id="@+id/textDestino2"
-                        android:textSize="12sp"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:textColor="#444"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp" />
-
-                    <TextView
-                        android:text="Recojo: Hotel Los Delfines"
-                        android:id="@+id/textRecojo2"
-                        android:textSize="12sp"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:textColor="#444"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp" />
-
-                    <!-- BOTONES ACEPTAR Y RECHAZAR -->
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:gravity="end"
-                        android:weightSum="2">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnAceptar2"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Aceptar"
-                            android:textColor="#FFFFFF"
-                            android:textSize="12sp"
-                            android:minHeight="36dp"
-                            android:paddingVertical="6dp"
-                            android:paddingHorizontal="0dp"
-                            app:cornerRadius="20dp"
-                            android:backgroundTint="#4CAF50" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnRechazar2"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Rechazar"
-                            android:textColor="#FFFFFF"
-                            android:textSize="12sp"
-                            android:minHeight="36dp"
-                            android:paddingVertical="6dp"
-                            android:paddingHorizontal="0dp"
-                            android:layout_marginStart="8dp"
-                            app:cornerRadius="20dp"
-                            android:backgroundTint="#F44336" />
-                    </LinearLayout>
-
-                </LinearLayout>
-            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
 
+    <!-- Layout para VIAJE ACTIVO mejorado -->
+    <LinearLayout
+        android:id="@+id/viajeActivoLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:padding="24dp"
+        android:background="#F9F9F9"
+        app:layout_constraintTop_toBottomOf="@id/mapView"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center_horizontal">
 
-    <!-- Botón de reserva -->
+        <!-- Título agregado -->
+        <TextView
+            android:id="@+id/tituloViajeActual"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Viaje actual con:"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#212121"
+            android:layout_marginBottom="16dp"
+            android:textAlignment="center" />
+        <ImageView
+            android:id="@+id/imgPasajeroViaje"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginBottom="12dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/user1"
+            android:background="@drawable/rounded_circle"
+            android:clipToOutline="true" />
+
+        <TextView
+            android:id="@+id/txtNombreViaje"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Luisa Pérez Ramírez"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#212121"
+            android:layout_marginBottom="12dp"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/txtDestinoViaje"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Destino: Aeropuerto Jorge Chávez"
+            android:textColor="#555555"
+            android:textSize="16sp"
+            android:layout_marginBottom="6dp"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/txtRecojoViaje"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recojo: Hotel Los Delfines"
+            android:textColor="#555555"
+            android:textSize="16sp"
+            android:layout_marginBottom="24dp"
+            android:textAlignment="center" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMostrarQR"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="Escanear QR"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#6200EE"
+            app:icon="@drawable/qr_placeholder"
+            app:iconGravity="textStart"
+            app:iconPadding="12dp"
+            app:cornerRadius="24dp"
+            android:paddingVertical="12dp" />
+
+    </LinearLayout>
+
+
+    <!-- Botón inferior -->
     <Button
         android:id="@+id/viewSolicitudes"
         android:layout_width="wrap_content"
@@ -303,17 +262,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Menú de navegación inferior -->
+    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_gradient"
+        app:menu="@menu/taxista_bottom_nav_menu"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/taxista_bottom_nav_menu" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

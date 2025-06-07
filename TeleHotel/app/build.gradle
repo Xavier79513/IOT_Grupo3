@@ -64,8 +64,8 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
     implementation 'com.google.firebase:firebase-auth:23.2.1'
 
-
-
+    implementation 'org.maplibre.gl:android-sdk:11.8.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1' // para ubicación
     implementation "androidx.room:room-runtime:2.7.1"
     implementation "androidx.room:room-ktx:2.7.1"
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'

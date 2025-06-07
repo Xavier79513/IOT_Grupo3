@@ -5,32 +5,37 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import org.maplibre.android.maps.MapLibreMap;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.telehotel.R;
+import com.example.telehotel.data.model.ServicioTaxi;
+import com.example.telehotel.data.repository.SolicitudRepository;
+import com.example.telehotel.data.repository.UserRepository;
+import com.example.telehotel.features.taxista.adapter.SolicitudTaxiAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 
 import org.maplibre.android.MapLibre;
 import org.maplibre.android.camera.CameraPosition;
-import org.maplibre.android.camera.CameraUpdateFactory;
 import org.maplibre.android.geometry.LatLng;
 import org.maplibre.android.maps.MapView;
 import org.maplibre.android.maps.MapLibreMap;
 import org.maplibre.android.maps.OnMapReadyCallback;
 import org.maplibre.android.maps.Style;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class TaxistaActivity extends AppCompatActivity {
 
@@ -42,46 +47,48 @@ public class TaxistaActivity extends AppCompatActivity {
 
     private MapView mapView;
     private MaterialButton btnMostrarQR;
-    private LinearLayout layoutSolicitudes;
+    private RecyclerView recyclerSolicitudes;
     private LinearLayout layoutViajeActivo;
     private Button btnViewSolicitudes;
-
+    private SolicitudRepository servicioTaxiRepository;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        servicioTaxiRepository = new SolicitudRepository();
         MapLibre.getInstance(this);
         setContentView(R.layout.taxista_activity);
 
-
         // Vincular vistas
         mapView = findViewById(R.id.mapView);
-        layoutSolicitudes = findViewById(R.id.solicitudesLayout);
+        recyclerSolicitudes = findViewById(R.id.solicitudesRecyclerView);
         layoutViajeActivo = findViewById(R.id.viajeActivoLayout);
         btnMostrarQR = findViewById(R.id.btnMostrarQR);
         btnViewSolicitudes = findViewById(R.id.viewSolicitudes);
+        btnViewSolicitudes.setOnClickListener(v -> {
+            Intent intent = new Intent(TaxistaActivity.this, TaxistaTodasSolicitudes.class);
+            startActivity(intent);
+        });
+
 
         // Inicializar MapView
-
-            mapView.getMapAsync(new OnMapReadyCallback() {
-                @Override
-                public void onMapReady(@NonNull MapLibreMap mapLibreMap) {
-                    mapLibreMap.setStyle(new Style.Builder().fromUri("https://demotiles.maplibre.org/style.json"), new Style.OnStyleLoaded() {
-                        @Override
-                        public void onStyleLoaded(@NonNull Style style) {
-                            // Configurar la cámara con posición y zoom inicial
-                            CameraPosition position = new CameraPosition.Builder()
-                                    .target(new LatLng(0.0, 0.0))
-                                    .zoom(1.0)
-                                    .build();
-                            mapLibreMap.setCameraPosition(position);
-                        }
-                    });
-                }
-            });
-
-
-
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(@NonNull MapLibreMap mapLibreMap) {
+                mapLibreMap.setStyle(new Style.Builder()
+                                .fromUri("https://api.maptiler.com/maps/streets/style.json?key=f9F1eTaguwkNHqDsl8d5"),
+                        new Style.OnStyleLoaded() {
+                            @Override
+                            public void onStyleLoaded(@NonNull Style style) {
+                                // Centrar la cámara en Lima con zoom 13
+                                CameraPosition position = new CameraPosition.Builder()
+                                        .target(new LatLng(-12.0464, -77.0428))  // Lima
+                                        .zoom(13.0)
+                                        .build();
+                                mapLibreMap.setCameraPosition(position);
+                            }
+                        });
+            }
+        });
 
         // Mostrar estado de vista según viaje activo o no
         boolean viajeEnCurso = obtenerEstadoViaje();
@@ -171,27 +178,84 @@ public class TaxistaActivity extends AppCompatActivity {
 
     // Mostrar u ocultar layouts según estado de viaje
     private void mostrarVistaSegunEstado(boolean viajeEnCurso) {
+
         if (viajeEnCurso) {
-            layoutSolicitudes.setVisibility(View.GONE);
+            recyclerSolicitudes.setVisibility(View.GONE);
             layoutViajeActivo.setVisibility(View.VISIBLE);
             btnViewSolicitudes.setVisibility(View.GONE);
         } else {
-            layoutSolicitudes.setVisibility(View.VISIBLE);
+            recyclerSolicitudes.setVisibility(View.VISIBLE);
             layoutViajeActivo.setVisibility(View.GONE);
             btnViewSolicitudes.setVisibility(View.VISIBLE);
         }
     }
 
-    // Configurar botones de solicitudes
+    // Configurar RecyclerView de solicitudes con adapter y listener
     private void setupSolicitudes() {
-        Button btnAceptar1 = findViewById(R.id.btnAceptar1);
-        Button btnRechazar1 = findViewById(R.id.btnRechazar1);
+        // Inicializa el repositorio si no lo has hecho
 
-        btnAceptar1.setOnClickListener(v -> mostrarConfirmacion("Luisa Pérez Acevedo"));
-        btnRechazar1.setOnClickListener(v -> mostrarRechazo("Luisa Pérez Acevedo"));
+
+        // Crea el adapter con lista vacía y listener para acciones
+        SolicitudTaxiAdapter adapter = new SolicitudTaxiAdapter(new ArrayList<>(), new SolicitudTaxiAdapter.OnSolicitudActionListener() {
+            @Override
+            public void onAceptar(ServicioTaxi solicitud) {
+                String clienteId = solicitud.getClienteId();
+                if (clienteId != null && !clienteId.isEmpty()) {
+                    UserRepository.getUserByUid(clienteId,
+                            usuario -> {
+                                String nombreCompleto = usuario.getNombres() + " " + usuario.getApellidos();
+                                mostrarConfirmacion(nombreCompleto);
+                            },
+                            error -> {
+                                mostrarConfirmacion("(Nombre no disponible)");
+                            }
+                    );
+                } else {
+                    mostrarConfirmacion("(ID de cliente no disponible)");
+                }
+            }
+            @Override
+            public void onRechazar(ServicioTaxi solicitud) {
+                String clienteId = solicitud.getClienteId();
+                if (clienteId != null && !clienteId.isEmpty()) {
+                    UserRepository.getUserByUid(clienteId,
+                            usuario -> {
+                                String nombreCompleto = usuario.getNombres() + " " + usuario.getApellidos();
+                                mostrarRechazo(nombreCompleto);
+                            },
+                            error -> {
+                                mostrarRechazo("(Nombre no disponible)");
+                            }
+                    );
+                } else {
+                    mostrarRechazo("(ID de cliente no disponible)");
+                }
+            }
+
+        });
+
+        recyclerSolicitudes.setLayoutManager(new LinearLayoutManager(this));
+        recyclerSolicitudes.setAdapter(adapter);
+
+        // Llama al repositorio para obtener solicitudes con estado "Buscando"
+        servicioTaxiRepository.getSolicitudesBuscando(new SolicitudRepository.OnViajesLoadedListener() {
+            @Override
+            public void onViajesLoaded(List<ServicioTaxi> solicitudes) {
+                // Actualiza el adapter en el hilo principal
+                runOnUiThread(() -> adapter.updateSolicitudes(solicitudes));
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                runOnUiThread(() ->
+                        Toast.makeText(TaxistaActivity.this, "Error al cargar solicitudes: " + errorMessage, Toast.LENGTH_SHORT).show()
+                );
+            }
+        });
     }
 
-    // Mostrar diálogo para aceptar solicitud
+
+
     private void mostrarConfirmacion(String nombre) {
         BottomSheetDialog dialog = new BottomSheetDialog(this);
         View view = LayoutInflater.from(this).inflate(R.layout.taxista_bottom_sheet_confirmacion, null);
@@ -207,6 +271,7 @@ public class TaxistaActivity extends AppCompatActivity {
             dialog.dismiss();
             guardarEstadoViaje(true);
             mostrarVistaSegunEstado(true);
+            Toast.makeText(this, "Solicitud aceptada", Toast.LENGTH_SHORT).show();
         });
 
         btnDenegar.setOnClickListener(v -> dialog.dismiss());
@@ -229,13 +294,16 @@ public class TaxistaActivity extends AppCompatActivity {
         btnAceptar.setText("Sí, rechazar");
         btnDenegar.setText("Cancelar");
 
-        btnAceptar.setOnClickListener(v -> dialog.dismiss());
+        btnAceptar.setOnClickListener(v -> {
+            dialog.dismiss();
+            Toast.makeText(this, "Solicitud rechazada", Toast.LENGTH_SHORT).show();
+        });
         btnDenegar.setOnClickListener(v -> dialog.dismiss());
 
         dialog.show();
     }
 
-    // Abre la cámara solicitando permisos si es necesario
+    // Abrir cámara con permisos
     private void abrirCamara() {
         if (checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             lanzarCamara();
@@ -244,7 +312,6 @@ public class TaxistaActivity extends AppCompatActivity {
         }
     }
 
-    // Lanzar intent de cámara
     private void lanzarCamara() {
         Intent takePictureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -254,7 +321,6 @@ public class TaxistaActivity extends AppCompatActivity {
         }
     }
 
-    // Resultado de la solicitud de permisos
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,

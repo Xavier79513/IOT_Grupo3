@@ -50,6 +50,22 @@ public class SolicitudRepository {
                     listener.onError(e.getMessage());
                 });
     }
+    public void getSolicitudesBuscando(final OnViajesLoadedListener listener) {
+        viajesRef.whereEqualTo("estado", "Buscando")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<ServicioTaxi> solicitudTaxiList = new ArrayList<>();
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        ServicioTaxi solicitudTaxi = doc.toObject(ServicioTaxi.class);
+                        solicitudTaxiList.add(solicitudTaxi);
+                    }
+                    listener.onViajesLoaded(solicitudTaxiList);
+                })
+                .addOnFailureListener(e -> {
+                    listener.onError(e.getMessage());
+                });
+    }
+
 
 
     public interface OnViajesLoadedListener {

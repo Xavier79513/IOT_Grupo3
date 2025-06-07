@@ -16,22 +16,30 @@ import com.example.telehotel.data.repository.AeropuertoRepository;
 import com.example.telehotel.data.repository.HotelRepository;
 import com.example.telehotel.data.repository.UserRepository;
 import com.example.telehotel.features.taxista.TaxistaDetalleViaje;
+import com.google.android.material.button.MaterialButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ServicioTaxiAdapter extends RecyclerView.Adapter<ServicioTaxiAdapter.SolicitudViewHolder> {
+public class SolicitudTaxiAdapter extends RecyclerView.Adapter<SolicitudTaxiAdapter.SolicitudViewHolder> {
 
     private final List<ServicioTaxi> solicitudes;
+    private OnSolicitudActionListener actionListener;
 
-    public ServicioTaxiAdapter(List<ServicioTaxi> solicitudes) {
-        this.solicitudes = solicitudes;
+    public SolicitudTaxiAdapter(List<ServicioTaxi> solicitudes) {
+        this.solicitudes = new ArrayList<>(solicitudes);
+    }
+
+    public SolicitudTaxiAdapter(List<ServicioTaxi> solicitudes, OnSolicitudActionListener listener) {
+        this.solicitudes = new ArrayList<>(solicitudes);
+        this.actionListener = listener;
     }
 
     @NonNull
     @Override
     public SolicitudViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.taxista_item_solicitud_historial, parent, false);
+                .inflate(R.layout.taxista_item_solicitud_usuario, parent, false);
         return new SolicitudViewHolder(itemView);
     }
 
@@ -42,27 +50,8 @@ public class ServicioTaxiAdapter extends RecyclerView.Adapter<ServicioTaxiAdapte
         // Estado: mostrar texto y cambiar fondo/color según estado
         String estado = solicitud.getEstado();
         if (estado == null) estado = "Desconocido";
-        holder.textEstado.setText(estado);
 
-        switch (estado.toLowerCase()) {
-            case "terminado":
-                holder.textEstado.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.green_700));
-                holder.textEstado.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.white));
-                break;
-            case "cancelado":
-                holder.textEstado.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.gray_500));
-                holder.textEstado.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.white));
-                break;
-            case "en curso":
-                holder.textEstado.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.orange_700));
-                holder.textEstado.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.white));
-                break;
-            default:
-                // Color gris para desconocido o cualquier otro estado
-                holder.textEstado.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.gray_500));
-                holder.textEstado.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.white));
-                break;
-        }
+
 
         // Obtener datos del cliente
         if (solicitud.getClienteId() != null && !solicitud.getClienteId().isEmpty()) {
@@ -107,19 +96,52 @@ public class ServicioTaxiAdapter extends RecyclerView.Adapter<ServicioTaxiAdapte
             holder.textRecojo.setText("Recojo: (ID de hotel no disponible)");
         }
 
+        // Mostrar u ocultar botones Aceptar y Rechazar solo si estado es "buscando"
+        if ("buscando".equalsIgnoreCase(estado)) {
+            holder.btnAceptar.setVisibility(View.VISIBLE);
+            holder.btnRechazar.setVisibility(View.VISIBLE);
+        } else {
+            holder.btnAceptar.setVisibility(View.GONE);
+            holder.btnRechazar.setVisibility(View.GONE);
+        }
+
+        // Configurar listeners para botones Aceptar y Rechazar
+        holder.btnAceptar.setOnClickListener(v -> {
+            if (actionListener != null) {
+                actionListener.onAceptar(solicitud);
+            }
+        });
+
+        holder.btnRechazar.setOnClickListener(v -> {
+            if (actionListener != null) {
+                actionListener.onRechazar(solicitud);
+            }
+        });
+
+        // Click para abrir detalle (opcional)
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(holder.itemView.getContext(), TaxistaDetalleViaje.class);
+            // Aquí puedes pasar extras si necesitas detalles del viaje
             holder.itemView.getContext().startActivity(intent);
         });
     }
+
 
     @Override
     public int getItemCount() {
         return solicitudes.size();
     }
 
+    // Metodo para actualizar la lista y refrescar el RecyclerView
+    public void updateSolicitudes(List<ServicioTaxi> nuevasSolicitudes) {
+        solicitudes.clear();
+        solicitudes.addAll(nuevasSolicitudes);
+        notifyDataSetChanged();
+    }
+
     static class SolicitudViewHolder extends RecyclerView.ViewHolder {
-        TextView userName, textViewRating, textDestino, textRecojo, textEstado;
+        TextView userName, textViewRating, textDestino, textRecojo;
+        MaterialButton btnAceptar, btnRechazar; // Importa MaterialButton
 
         public SolicitudViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -127,7 +149,18 @@ public class ServicioTaxiAdapter extends RecyclerView.Adapter<ServicioTaxiAdapte
             textViewRating = itemView.findViewById(R.id.textViewRating);
             textDestino = itemView.findViewById(R.id.textDestino);
             textRecojo = itemView.findViewById(R.id.textRecojo);
-            textEstado = itemView.findViewById(R.id.textEstado);
+
+
+            btnAceptar = itemView.findViewById(R.id.btnAceptar);
+            btnRechazar = itemView.findViewById(R.id.btnRechazar);
         }
     }
+
+
+    // Interfaz para manejar acciones de aceptar/rechazar (opcional)
+    public interface OnSolicitudActionListener {
+        void onAceptar(ServicioTaxi solicitud);
+        void onRechazar(ServicioTaxi solicitud);
+    }
+
 }

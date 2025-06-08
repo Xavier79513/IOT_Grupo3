@@ -99,7 +99,6 @@ public class HistorialReservaAdapter extends RecyclerView.Adapter<HistorialReser
             nombreHotel = itemView.findViewById(R.id.txtNombreHotel); // <-- corregido
             precio = itemView.findViewById(R.id.txtPrecio); // <-- corregido
             fechaReserva = itemView.findViewById(R.id.txtFecha); // <-- corregido
-            btnBookAgain = itemView.findViewById(R.id.btnRepetir); // <-- corregido
         }
 
     }

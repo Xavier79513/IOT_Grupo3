@@ -108,18 +108,18 @@
             android:label="Cliente" />
         <activity android:name=".features.cliente.ResumenReservaActivity" />
 
-        <activity
+        <!--activity
             android:name=".features.cliente.PerfilActivity"
             android:label="Cliente" />
         <activity
             android:name=".features.cliente.EditarPerfilActivity"
-            android:label="Cliente" />
+            android:label="Cliente" /-->
         <activity
             android:name=".features.cliente.HistorialDetalleActivity"
             android:label="Cliente" />
-        <activity
+        <!--activity
             android:name=".features.cliente.HistorialReservaActivity"
-            android:label="Cliente" />
+            android:label="Cliente" /-->
         <activity android:name=".features.cliente.ClienteMainActivity" />
         <activity android:name=".features.cliente.VistaConTaxiActivity" />
         <activity android:name=".features.cliente.AgregarTaxiActivity" />

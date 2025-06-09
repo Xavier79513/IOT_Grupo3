@@ -54,7 +54,6 @@ public class UserListFragment extends Fragment implements UserAdapter.OnUserActi
 
         spinnerFiltroRoles = view.findViewById(R.id.spinnerFiltroRoles);
 
-        // Configurar spinner
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, roles);
         spinnerFiltroRoles.setAdapter(spinnerAdapter);
 
@@ -66,7 +65,7 @@ public class UserListFragment extends Fragment implements UserAdapter.OnUserActi
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // No hacer nada
+                // Nada
             }
         });
 
@@ -93,11 +92,9 @@ public class UserListFragment extends Fragment implements UserAdapter.OnUserActi
 
                     for (DocumentSnapshot doc : querySnapshot) {
                         Usuario usuario = doc.toObject(Usuario.class);
-
                         if (usuario != null && usuario.getUid() == null) {
                             usuario.setUid(doc.getId());
                         }
-
                         usuarioList.add(usuario);
                     }
 
@@ -126,27 +123,21 @@ public class UserListFragment extends Fragment implements UserAdapter.OnUserActi
     }
 
     @Override
-    public void onActivateClick(Usuario usuario) {
-        mostrarDialogoConfirmacion(usuario, true);
-    }
-
-    @Override
-    public void onDeactivateClick(Usuario usuario) {
-        mostrarDialogoConfirmacion(usuario, false);
+    public void onToggleEstadoClick(Usuario usuario) {
+        boolean activar = !"Activo".equalsIgnoreCase(usuario.getEstado());
+        mostrarDialogoConfirmacion(usuario, activar);
     }
 
     private void mostrarDialogoConfirmacion(Usuario usuario, boolean activar) {
+        String nuevoEstado = activar ? "Activo" : "Inactivo";
         String mensaje = activar
                 ? "¿Estás seguro de que deseas ACTIVAR este usuario?"
                 : "¿Estás seguro de que deseas DESACTIVAR este usuario?";
-        String titulo = activar ? "Activar Usuario" : "Desactivar Usuario";
 
         new AlertDialog.Builder(requireContext())
-                .setTitle(titulo)
+                .setTitle(activar ? "Activar Usuario" : "Desactivar Usuario")
                 .setMessage(mensaje)
                 .setPositiveButton("Sí", (dialog, which) -> {
-                    String nuevoEstado = activar ? "Activo" : "Inactivo";
-
                     FirebaseUtil.getFirestore().collection("usuarios")
                             .document(usuario.getUid())
                             .update("estado", nuevoEstado)

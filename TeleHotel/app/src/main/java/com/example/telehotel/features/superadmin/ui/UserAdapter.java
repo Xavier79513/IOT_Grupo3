@@ -6,10 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.telehotel.R;
 import com.example.telehotel.data.model.Usuario;
+
 import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
@@ -23,8 +26,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     }
 
     public interface OnUserActionListener {
-        void onActivateClick(Usuario usuario);
-        void onDeactivateClick(Usuario usuario);
+        void onToggleEstadoClick(Usuario usuario);
     }
 
     @NonNull
@@ -47,38 +49,27 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     static class UserViewHolder extends RecyclerView.ViewHolder {
         TextView txtNombre, txtCorreo, txtEstado;
-        Button btnActivar, btnDesactivar;
+        Button btnToggleEstado;
 
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
             txtNombre = itemView.findViewById(R.id.txtNombre);
             txtCorreo = itemView.findViewById(R.id.txtCorreo);
             txtEstado = itemView.findViewById(R.id.txtEstado);
-            btnActivar = itemView.findViewById(R.id.btnActivar);
-            btnDesactivar = itemView.findViewById(R.id.btnDesactivar);
+            btnToggleEstado = itemView.findViewById(R.id.btnToggleEstado);
         }
 
         public void bind(Usuario usuario, OnUserActionListener listener) {
-            txtNombre.setText(usuario.getName()); // usar getName() en lugar de getNombres()+getApellidos()
-            txtCorreo.setText(usuario.getEmail()); // usar getEmail() en lugar de getCorreo()
+            txtNombre.setText(usuario.getName());
+            txtCorreo.setText(usuario.getEmail());
             txtEstado.setText("Estado: " + usuario.getEstado());
 
-            if ("Activo".equals(usuario.getEstado())) {
-                btnActivar.setEnabled(false);
-                btnActivar.setAlpha(0.5f);
-                btnDesactivar.setEnabled(true);
-                btnDesactivar.setAlpha(1f);
-                btnDesactivar.setBackgroundColor(Color.RED);
-            } else {
-                btnActivar.setEnabled(true);
-                btnActivar.setAlpha(1f);
-                btnDesactivar.setEnabled(false);
-                btnDesactivar.setAlpha(0.5f);
-                btnActivar.setBackgroundColor(Color.GREEN);
-            }
+            boolean esActivo = "Activo".equalsIgnoreCase(usuario.getEstado());
 
-            btnActivar.setOnClickListener(v -> listener.onActivateClick(usuario));
-            btnDesactivar.setOnClickListener(v -> listener.onDeactivateClick(usuario));
+            btnToggleEstado.setText(esActivo ? "Desactivar" : "Activar");
+            btnToggleEstado.setBackgroundColor(esActivo ? Color.RED : Color.GREEN);
+
+            btnToggleEstado.setOnClickListener(v -> listener.onToggleEstadoClick(usuario));
         }
     }
 }

@@ -33,9 +33,7 @@ public class ServiceAdapter
         holder.name.setText(s.name);
         holder.desc.setText(s.desc);
         holder.price.setText(s.price);
-        // si quieres listeners:
-        holder.btnEdit.setOnClickListener(v -> {/* editar */});
-        holder.btnDelete.setOnClickListener(v -> {/* eliminar */});
+
     }
 
     @Override public int getItemCount() {
@@ -45,7 +43,6 @@ public class ServiceAdapter
     static class VH extends RecyclerView.ViewHolder {
         final ImageView icon;
         final TextView name, desc, price;
-        final MaterialButton btnEdit, btnDelete;
 
         VH(View itemView) {
             super(itemView);
@@ -53,8 +50,7 @@ public class ServiceAdapter
             name       = itemView.findViewById(R.id.tvServiceName);
             desc       = itemView.findViewById(R.id.tvServiceDesc);
             price      = itemView.findViewById(R.id.tvServicePrice);
-            btnEdit    = itemView.findViewById(R.id.btnEdit);
-            btnDelete  = itemView.findViewById(R.id.btnDelete);
+
         }
     }
 }

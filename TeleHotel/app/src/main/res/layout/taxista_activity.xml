@@ -11,7 +11,7 @@
         android:id="@+id/greetingBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="¿A dónde vamos hoy?, Alejandro"
+        android:text="¿A dónde vamos hoy?, Luis"
         android:textColor="#FFFFFF"
         android:textSize="25sp"
         android:textStyle="bold"

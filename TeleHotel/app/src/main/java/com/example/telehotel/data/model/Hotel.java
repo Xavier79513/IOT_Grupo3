@@ -1,5 +1,7 @@
 package com.example.telehotel.data.model;
 
+import androidx.room.Ignore;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,9 +11,10 @@ public class Hotel {
     private String nombre;
     private String descripcion;
     private Ubicacion ubicacion;
+    private String servicioId;
 
     private List<String> imagenes = new ArrayList<>();
-    private List<String> servicios = new ArrayList<>();  // Servicios del hotel, ej: WiFi, Piscina...
+    //private List<String> servicios = new ArrayList<>();  // Servicios del hotel, ej: WiFi, Piscina...
     private List<LugarCercano> lugaresCercanos = new ArrayList<>();
 
     private String administradorId;
@@ -20,6 +23,11 @@ public class Hotel {
     private Double montoMinimoTaxi;
     private Boolean permiteReservas;
     private String telefono;
+    //@Ignore
+    //private List<Servicio> servicios;
+    // ✅ CAMBIO CLAVE: servicios como List<String> (IDs), NO List<Servicio>
+    private List<String> servicios;
+
 
     private List<Habitacion> habitaciones = new ArrayList<>(); // Habitaciones embebidas
 
@@ -30,7 +38,7 @@ public class Hotel {
     public Hotel(String id, String nombre, Ubicacion ubicacion, List<String> imagenes, List<String> servicios,
                  List<LugarCercano> lugaresCercanos, String administradorId, String estado,
                  String descripcion, Double montoMinimoTaxi, Boolean permiteReservas,
-                 String horaCheckIn, String horaCheckOut, String telefono) {
+                 String horaCheckIn, String horaCheckOut, String telefono, String servicioId) {
         this.id = id;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
@@ -43,6 +51,7 @@ public class Hotel {
         this.montoMinimoTaxi = montoMinimoTaxi;
         this.permiteReservas = permiteReservas;
         this.telefono = telefono;
+        this.servicioId = servicioId;
     }
 
     // Getters y Setters
@@ -96,4 +105,11 @@ public class Hotel {
     public Boolean getPermiteReservas() { return permiteReservas; }
     public void setPermiteReservas(Boolean permiteReservas) { this.permiteReservas = permiteReservas; }
 
+    public String getServicioId() { return servicioId; }
+    public void setServicioId(String id) { this.servicioId = servicioId; }
+    /*@Ignore
+    public List<Servicio> getServicios() { return servicios; }
+
+    @Ignore
+    public void setServicios(List<Servicio> servicios) { this.servicios = servicios; }*/
 }

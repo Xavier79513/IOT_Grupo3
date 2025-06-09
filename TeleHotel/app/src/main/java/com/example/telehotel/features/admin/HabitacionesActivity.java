@@ -5,10 +5,17 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -17,6 +24,13 @@ import com.example.telehotel.R;
 import com.example.telehotel.databinding.ActivityHabitacionesBinding;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class HabitacionesActivity extends AppCompatActivity {
     private ActivityHabitacionesBinding binding;
@@ -83,7 +97,7 @@ public class HabitacionesActivity extends AppCompatActivity {
         binding.bottomNavigationView.setSelectedItemId(R.id.habitaciones_fragment);
     }
 
-    /** Clic en “Cerrar sesión” (overflow) */
+
     private boolean onLogoutItem(MenuItem item) {
         if (item.getItemId() == R.id.action_logout) {
             // TODO: implementar logout
@@ -92,7 +106,7 @@ public class HabitacionesActivity extends AppCompatActivity {
         return false;
     }
 
-    /** Navegación del BottomNavigationView */
+
     private boolean onBottomItem(MenuItem item) {
         int id = item.getItemId();
         Intent intent = null;

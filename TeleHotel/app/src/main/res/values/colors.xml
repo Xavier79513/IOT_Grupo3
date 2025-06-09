@@ -18,6 +18,7 @@
     <color name="red_700">#D32F2F</color>
     <color name="orange_700">#F57C00</color>
     <color name="gray_500">#9E9E9E</color>
+    <color name="teal_700">#018786</color>
 
     <!-- Texto -->
     <color name="textPrimary">#212121</color>

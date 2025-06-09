@@ -1,0 +1,9 @@
+<!-- res/values/arrays.xml -->
+<resources>
+    <string-array name="tipos_habitacion">
+        <item>standard</item>
+        <item>económica</item>
+        <item>lux</item>
+        <item>suite</item>
+    </string-array>
+</resources>

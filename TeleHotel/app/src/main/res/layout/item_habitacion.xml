@@ -1,39 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp">
+    android:padding="8dp"
+    android:background="?attr/selectableItemBackground">
 
-    <!-- Icono cama + título -->
+    <!-- FOTO + TÍTULO -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:paddingBottom="4dp">
 
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_bed"/>
+            android:id="@+id/ivFoto"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_bed"
+            android:contentDescription="Foto habitación" />
 
         <TextView
+            android:id="@+id/tvTitulo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Suite Ejecutiva"
+            android:text="Tipo"
             android:textStyle="bold"
+            android:textSize="16sp"
             android:layout_marginStart="8dp"/>
     </LinearLayout>
 
-    <!-- Capacidad, Tamaño, Info -->
-    <TextView android:layout_width="match_parent"
+    <!-- ESTADO -->
+    <TextView
+        android:id="@+id/tvEstado"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Capacidad: 2 adultos"/>
-    <TextView android:layout_width="match_parent"
+        android:text="Estado: disponible"
+        android:textSize="14sp"/>
+
+    <!-- PRECIO -->
+    <TextView
+        android:id="@+id/tvPrecio"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tamaño: 45 m²"/>
-    <TextView android:layout_width="match_parent"
+        android:text="Precio: S/ 100"
+        android:textSize="14sp"/>
+
+    <!-- CAPACIDAD -->
+    <TextView
+        android:id="@+id/tvCapacidad"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Información: Con escritorio y balcón"/>
+        android:text="Capacidad: 2 adultos, 2 niños"
+        android:textSize="14sp"/>
+
+    <!-- TAMAÑO -->
+    <TextView
+        android:id="@+id/tvTamano"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tamaño: 30 m²"
+        android:textSize="14sp"/>
+
+    <!-- DESCRIPCIÓN -->
+    <TextView
+        android:id="@+id/tvInformacion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Descripción"
+        android:textSize="14sp"/>
 </LinearLayout>

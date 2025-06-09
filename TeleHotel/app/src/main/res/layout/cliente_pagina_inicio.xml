@@ -46,6 +46,7 @@
                         android:layout_marginBottom="16dp" />
 
                     <!-- Buscador de ciudad -->
+                    <!-- Cambiar esta sección en cliente_pagina_inicio.xml -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -58,25 +59,22 @@
                         app:startIconDrawable="@drawable/ic_location"
                         app:startIconTint="@color/primaryColor">
 
-
-
-                        <com.google.android.material.textfield.TextInputEditText
+                        <AutoCompleteTextView
                             android:id="@+id/etCity"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Destino o ciudad"
                             android:textColor="@color/black"
-                            android:textSize="16sp" />
+                            android:textSize="16sp"
+                            android:completionThreshold="3"
+                            android:dropDownHeight="200dp"
+                            android:dropDownWidth="match_parent"
+                            android:inputType="textCapWords"
+                            android:maxLines="1" />
 
                     </com.google.android.material.textfield.TextInputLayout>
-                    <!-- Aquí pones el RecyclerView para sugerencias -->
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvCitySuggestions"
-                        android:layout_width="match_parent"
-                        android:layout_height="120dp"
-                        android:visibility="gone"
-                        android:background="@color/white"
-                        />
+
+
                     <!-- Selector de fecha -->
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/dateSelector"

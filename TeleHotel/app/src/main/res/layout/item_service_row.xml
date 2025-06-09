@@ -22,9 +22,9 @@
             android:id="@+id/imgServiceIcon"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:tint="?attr/colorOnSurface"
             android:src="@drawable/ic_services"
-            android:contentDescription="@string/servicio_icon"/>
+            android:contentDescription="@string/servicio_icon"
+            app:tint="?attr/colorOnSurface" />
 
         <!-- Texto: nombre/desc/precio -->
         <LinearLayout
@@ -59,30 +59,6 @@
                 android:paddingTop="2dp"/>
         </LinearLayout>
 
-        <!-- Botones Editar / Eliminar -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnEdit"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/editar"
-                android:drawablePadding="4dp"
-                android:text="Editar"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnDelete"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_delete"
-                android:drawablePadding="4dp"
-                android:text="Eliminar"
-                android:layout_marginStart="8dp"/>
-        </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

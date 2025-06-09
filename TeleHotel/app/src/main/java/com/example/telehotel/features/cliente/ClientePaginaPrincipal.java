@@ -688,15 +688,23 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
     private void searchHotelsByLocation(String location) {
         Log.d(TAG, "Buscando hoteles en: " + location);
 
-        // Mostrar mensaje de búsqueda
-        Toast.makeText(this, "Buscando hoteles en " + location + "...", Toast.LENGTH_SHORT).show();
+        // Mostrar mensaje de búsqueda con parámetros
+        String searchMessage = String.format("Buscando hoteles en %s para %d adultos, %d niños, %d habitación(es)...",
+                location, adultCount, childCount, roomCount);
+        Toast.makeText(this, searchMessage, Toast.LENGTH_SHORT).show();
 
-        HotelRepository.searchHotelsByLocationString(location,
+        // Buscar hoteles usando parámetros personalizados
+        HotelRepository.searchHotelsWithCustomParams(
+                this, // context
+                location,
+                adultCount,
+                childCount,
+                roomCount,
                 hoteles -> {
                     if (!isFinishing() && !isDestroyed()) {
                         runOnUiThread(() -> {
                             try {
-                                // Guardar búsqueda
+                                // Guardar búsqueda en el storage
                                 if (storageHelper != null && prefsManager != null) {
                                     storageHelper.saveCompleteSearch(location,
                                             prefsManager.getStartDate(),
@@ -704,30 +712,32 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
                                             adultCount, childCount, roomCount);
                                 }
 
+                                // Calcular días de estadía
+                                int dias = storageHelper != null && prefsManager != null ?
+                                        storageHelper.calculateDaysDifference(prefsManager.getStartDate(), prefsManager.getEndDate()) : 0;
+
                                 // Mostrar resumen de búsqueda
-                                String searchSummary = String.format("%s - %d días - %d habitación(es) - %d adulto(s) - %d hoteles encontrados",
-                                        location,
-                                        storageHelper != null ? storageHelper.calculateDaysDifference(
-                                                prefsManager.getStartDate(), prefsManager.getEndDate()) : 0,
-                                        roomCount,
-                                        adultCount,
-                                        hoteles.size());
+                                String searchSummary = String.format(
+                                        "%s - %d días - %d habitación(es) - %d adulto(s) - %d niño(s) - %d hoteles encontrados",
+                                        location, dias, roomCount, adultCount, childCount, hoteles.size());
 
-                                Toast.makeText(this, searchSummary, Toast.LENGTH_LONG).show();
+                                if (hoteles.isEmpty()) {
+                                    // No se encontraron hoteles que cumplan los criterios
+                                    showNoHotelsFoundDialog(location, adultCount, childCount, roomCount);
+                                } else {
+                                    // Hoteles encontrados
+                                    Toast.makeText(this, searchSummary, Toast.LENGTH_LONG).show();
 
-                                // Navegar a resultados
-                                Intent intent = new Intent(this, ClienteMainActivity.class);
-                                intent.putExtra("search_location", location);
-                                intent.putExtra("start_date", prefsManager != null ? prefsManager.getStartDate() : 0L);
-                                intent.putExtra("end_date", prefsManager != null ? prefsManager.getEndDate() : 0L);
-                                intent.putExtra("adults", adultCount);
-                                intent.putExtra("children", childCount);
-                                intent.putExtra("rooms", roomCount);
-                                intent.putExtra("hotels_found", hoteles.size());
-                                startActivity(intent);
+                                    // Navegar a resultados con información completa
+                                    navigateToSearchResults(location,
+                                            prefsManager != null ? prefsManager.getStartDate() : 0L,
+                                            prefsManager != null ? prefsManager.getEndDate() : 0L,
+                                            hoteles.size());
+                                }
 
                             } catch (Exception e) {
                                 Log.e(TAG, "Error procesando resultados de búsqueda", e);
+                                Toast.makeText(this, "Error procesando resultados", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -737,13 +747,137 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
                         runOnUiThread(() -> {
                             Log.e(TAG, "Error buscando hoteles: " + error.getMessage());
 
-                            if (error.getMessage().contains("Formato de ubicación inválido")) {
+                            if (error.getMessage().contains("Fechas no configuradas")) {
+                                Toast.makeText(this, "Por favor selecciona las fechas de estadía", Toast.LENGTH_LONG).show();
+                            } else if (error.getMessage().contains("Formato de ubicación inválido")) {
                                 Toast.makeText(this, "Formato de ubicación inválido. Use: 'Ciudad, País'", Toast.LENGTH_LONG).show();
                             } else {
-                                Toast.makeText(this, "No se encontraron hoteles en " + location, Toast.LENGTH_LONG).show();
+                                String errorMessage = String.format(
+                                        "No se encontraron hoteles disponibles en %s para %d adultos, %d niños y %d habitación(es)",
+                                        location, adultCount, childCount, roomCount);
+                                Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
                             }
                         });
                     }
+                }
+        );
+    }
+
+    /**
+     * Muestra un diálogo cuando no se encuentran hoteles
+     */
+    private void showNoHotelsFoundDialog(String location, int adults, int children, int rooms) {
+        try {
+            BottomSheetDialog dialog = new BottomSheetDialog(this);
+            View view = getLayoutInflater().inflate(R.layout.dialog_no_hotels_found, null);
+
+            TextView tvMessage = view.findViewById(R.id.tvNoHotelsMessage);
+            MaterialButton btnTryAgain = view.findViewById(R.id.btnTryAgain);
+            MaterialButton btnShowAll = view.findViewById(R.id.btnShowAllHotels);
+
+            // Mensaje personalizado
+            String message = String.format(
+                    "No encontramos hoteles en %s que cumplan exactamente con tus criterios:\n\n" +
+                            "• %d adulto(s)\n• %d niño(s)\n• %d habitación(es)\n\n" +
+                            "¿Te gustaría ver todos los hoteles disponibles en esta ubicación?",
+                    location, adults, children, rooms);
+
+            tvMessage.setText(message);
+
+            // Botón para intentar de nuevo (modificar búsqueda)
+            btnTryAgain.setOnClickListener(v -> {
+                dialog.dismiss();
+                // Reabrir el selector de huéspedes para modificar criterios
+                showPeopleDialog();
+            });
+
+            // Botón para mostrar todos los hoteles sin filtros
+            btnShowAll.setOnClickListener(v -> {
+                dialog.dismiss();
+                searchAllHotelsInLocation(location);
+            });
+
+            dialog.setContentView(view);
+            dialog.show();
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error mostrando diálogo de no encontrados", e);
+            // Fallback: mostrar toast simple
+            String message = String.format("No se encontraron hoteles en %s para tus criterios. Intenta con menos restricciones.", location);
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * Busca todos los hoteles en una ubicación sin filtros de capacidad
+     */
+    private void searchAllHotelsInLocation(String location) {
+        Log.d(TAG, "Buscando todos los hoteles en: " + location);
+
+        HotelRepository.searchHotelsByLocationString(location,
+                hoteles -> {
+                    if (!isFinishing() && !isDestroyed()) {
+                        runOnUiThread(() -> {
+                            String message = String.format("Mostrando todos los %d hoteles en %s",
+                                    hoteles.size(), location);
+                            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+
+                            navigateToSearchResults(location,
+                                    prefsManager.getStartDate(),
+                                    prefsManager.getEndDate(),
+                                    hoteles.size());
+                        });
+                    }
+                },
+                error -> {
+                    if (!isFinishing() && !isDestroyed()) {
+                        runOnUiThread(() -> {
+                            Toast.makeText(this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
+                    }
+                }
+        );
+    }
+
+    /**
+     * Navega a la pantalla de resultados de búsqueda
+     */
+    private void navigateToSearchResults(String location, long startDate, long endDate, int hotelsFound) {
+        Intent intent = new Intent(this, ClienteMainActivity.class);
+        intent.putExtra("search_location", location);
+        intent.putExtra("start_date", startDate);
+        intent.putExtra("end_date", endDate);
+        intent.putExtra("adults", adultCount);
+        intent.putExtra("children", childCount);
+        intent.putExtra("rooms", roomCount);
+        intent.putExtra("hotels_found", hotelsFound);
+        intent.putExtra("use_filters", true); // Indica que se usaron filtros
+        startActivity(intent);
+    }
+
+    /**
+     * Muestra estadísticas de disponibilidad para una ubicación
+     */
+    private void showAvailabilityStats(String location) {
+        if (prefsManager == null) return;
+
+        HotelRepository.getAvailabilityStats(location,
+                prefsManager.getStartDate(),
+                prefsManager.getEndDate(),
+                stats -> {
+                    if (!isFinishing() && !isDestroyed()) {
+                        runOnUiThread(() -> {
+                            String message = String.format(
+                                    "📊 Disponibilidad en %s:\n• %s\n• Capacidad máxima: %d adultos, %d niños",
+                                    location, stats.getResumen(),
+                                    stats.capacidadMaximaAdultos, stats.capacidadMaximaNinos
+                            );
+                            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+                        });
+                    }
+                },
+                error -> {
+                    Log.e(TAG, "Error obteniendo estadísticas: " + error.getMessage());
                 }
         );
     }

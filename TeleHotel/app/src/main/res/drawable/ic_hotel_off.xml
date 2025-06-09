@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <!-- Hotel building outline in gray (inactive) -->
+    <path d="M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H9V7H7V5.5C7 4.67 7.67 4 8.5 4h9C18.33 4 19 4.67 19 5.5V7z" fill="#9E9E9E" opacity="0.6"/>
+
+    <!-- Hotel base/ground -->
+    <rect x="3" y="19" width="18" height="2" fill="#9E9E9E" opacity="0.4"/>
+
+    <!-- Hotel rooms/windows in inactive gray -->
+    <rect x="5" y="9" width="1.5" height="1.5" fill="#BDBDBD"/>
+    <rect x="7.5" y="9" width="1.5" height="1.5" fill="#BDBDBD"/>
+    <rect x="10" y="9" width="1.5" height="1.5" fill="#BDBDBD"/>
+    <rect x="12.5" y="9" width="1.5" height="1.5" fill="#BDBDBD"/>
+    <rect x="15" y="9" width="1.5" height="1.5" fill="#BDBDBD"/>
+    <rect x="17.5" y="9" width="1.5" height="1.5" fill="#BDBDBD"/>
+
+    <rect x="5" y="12" width="1.5" height="1.5" fill="#BDBDBD"/>
+    <rect x="7.5" y="12" width="1.5" height="1.5" fill="#BDBDBD"/>
+    <rect x="10" y="12" width="1.5" height="1.5" fill="#BDBDBD"/>
+    <rect x="12.5" y="12" width="1.5" height="1.5" fill="#BDBDBD"/>
+    <rect x="15" y="12" width="1.5" height="1.5" fill="#BDBDBD"/>
+    <rect x="17.5" y="12" width="1.5" height="1.5" fill="#BDBDBD"/>
+
+    <rect x="5" y="15" width="1.5" height="1.5" fill="#BDBDBD"/>
+    <rect x="7.5" y="15" width="1.5" height="1.5" fill="#BDBDBD"/>
+    <rect x="10" y="15" width="1.5" height="1.5" fill="#BDBDBD"/>
+    <rect x="12.5" y="15" width="1.5" height="1.5" fill="#BDBDBD"/>
+    <rect x="15" y="15" width="1.5" height="1.5" fill="#BDBDBD"/>
+    <rect x="17.5" y="15" width="1.5" height="1.5" fill="#BDBDBD"/>
+
+    <!-- Main hotel structure -->
+    <path d="M19 7V4c0-1.11-.89-2-2-2H8c-1.11 0-2 .89-2 2v16H4v2h16v-2h-2V7h1z" stroke="#757575" stroke-width="1.5" fill="none" opacity="0.7"/>
+
+    <!-- "OFF" indicator - X mark overlay -->
+    <path d="M8 8L16 16M16 8L8 16" stroke="#F44336" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+
+    <!-- Small "OFF" text -->
+    <text x="12" y="6" text-anchor="middle" font-family="Arial, sans-serif" font-size="3" fill="#F44336" font-weight="bold">OFF</text>
+</svg>

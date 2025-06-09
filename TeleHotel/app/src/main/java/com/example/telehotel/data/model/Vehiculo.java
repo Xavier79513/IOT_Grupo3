@@ -10,6 +10,4 @@ public class Vehiculo {
     private String modelo;
     private List<String> fotos;
 
-    public Vehiculo() {}
-    // Getters y setters
 }

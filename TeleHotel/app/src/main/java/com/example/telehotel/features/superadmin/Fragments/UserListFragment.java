@@ -1,12 +1,15 @@
 package com.example.telehotel.features.superadmin.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,8 +19,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.telehotel.R;
+import com.example.telehotel.core.FirebaseUtil;
 import com.example.telehotel.data.model.Usuario;
+import com.example.telehotel.features.auth.LoginActivity;
 import com.example.telehotel.features.superadmin.ui.UserAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +33,11 @@ public class UserListFragment extends Fragment implements UserAdapter.OnUserActi
 
     private RecyclerView recyclerView;
     private UserAdapter adapter;
-    private List<Usuario> usuarioList;
+    private List<Usuario> usuarioList = new ArrayList<>();
     private Spinner spinnerFiltroRoles;
+    private ImageView ivLogout;
+
+    private final String[] roles = {"Todos", "Administrador", "Taxista", "Cliente"};
 
     @Nullable
     @Override
@@ -36,23 +46,22 @@ public class UserListFragment extends Fragment implements UserAdapter.OnUserActi
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_list, container, false);
 
+        ivLogout = view.findViewById(R.id.ivLogout);
+        ivLogout.setOnClickListener(v -> cerrarSesion());
+
         recyclerView = view.findViewById(R.id.recyclerViewUsers);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         spinnerFiltroRoles = view.findViewById(R.id.spinnerFiltroRoles);
 
-        loadUsers(); // Cargamos usuarios simulados
-
         // Configurar spinner
-        String[] roles = {"Todos", "Administrador", "Taxista", "Cliente"};
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, roles);
         spinnerFiltroRoles.setAdapter(spinnerAdapter);
 
         spinnerFiltroRoles.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String filtroSeleccionado = roles[position];
-                filtrarUsuarios(filtroSeleccionado);
+                filtrarUsuarios(roles[position]);
             }
 
             @Override
@@ -61,34 +70,42 @@ public class UserListFragment extends Fragment implements UserAdapter.OnUserActi
             }
         });
 
-        adapter = new UserAdapter(usuarioList, this);
-        recyclerView.setAdapter(adapter);
+        loadUsersFromFirestore();
 
         return view;
     }
 
-    private void loadUsers() {
-        usuarioList = new ArrayList<>();
-        usuarioList.add(new Usuario("1", "correo1@example.com", "Ana Martínez", "Administrador"));
-        usuarioList.add(new Usuario("2", "correo2@example.com", "Luis Gómez", "Cliente"));
-        usuarioList.add(new Usuario("3", "correo3@example.com", "María Pérez", "Recepcionista"));
-        usuarioList.add(new Usuario("4", "correo4@example.com", "Pedro Sánchez", "Cliente"));
-        usuarioList.add(new Usuario("5", "correo5@example.com", "Carlos Ruiz", "Taxista"));
-        usuarioList.add(new Usuario("6", "correo6@example.com", "Lucía Herrera", "Cliente"));
-        usuarioList.add(new Usuario("7", "correo7@example.com", "Fernando Torres", "Administrador"));
-        usuarioList.add(new Usuario("8", "correo8@example.com", "Isabel Mendoza", "Taxista"));
-        usuarioList.add(new Usuario("9", "correo9@example.com", "Alonso Martínez", "Cliente"));
-        usuarioList.add(new Usuario("10", "correo10@example.com", "Pamela Díaz", "Taxista"));
-        usuarioList.add(new Usuario("11", "correo11@example.com", "Miguel Soto", "Administrador"));
-        usuarioList.add(new Usuario("12", "correo12@example.com", "Carmen Lara", "Cliente"));
-        usuarioList.add(new Usuario("13", "correo13@example.com", "Jorge Ríos", "Taxista"));
-        usuarioList.add(new Usuario("14", "correo14@example.com", "Andrea Campos", "Cliente"));
-        usuarioList.add(new Usuario("15", "correo15@example.com", "Sebastián Reyes", "Administrador"));
+    private void cerrarSesion() {
+        FirebaseAuth.getInstance().signOut();
+        Toast.makeText(requireContext(), "Sesión cerrada correctamente", Toast.LENGTH_SHORT).show();
 
-        // Estados simulados
-        for (int i = 0; i < usuarioList.size(); i++) {
-            usuarioList.get(i).setEstado(i % 2 == 0 ? "Activo" : "Inactivo");
-        }
+        Intent intent = new Intent(requireContext(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        requireActivity().finish();
+    }
+
+    private void loadUsersFromFirestore() {
+        FirebaseUtil.getFirestore().collection("usuarios")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    usuarioList.clear();
+
+                    for (DocumentSnapshot doc : querySnapshot) {
+                        Usuario usuario = doc.toObject(Usuario.class);
+
+                        if (usuario != null && usuario.getUid() == null) {
+                            usuario.setUid(doc.getId());
+                        }
+
+                        usuarioList.add(usuario);
+                    }
+
+                    filtrarUsuarios(spinnerFiltroRoles.getSelectedItem().toString());
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Error al cargar usuarios: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
     }
 
     private void filtrarUsuarios(String rol) {
@@ -128,8 +145,19 @@ public class UserListFragment extends Fragment implements UserAdapter.OnUserActi
                 .setTitle(titulo)
                 .setMessage(mensaje)
                 .setPositiveButton("Sí", (dialog, which) -> {
-                    usuario.setEstado(activar ? "Activo" : "Inactivo");
-                    adapter.notifyDataSetChanged();
+                    String nuevoEstado = activar ? "Activo" : "Inactivo";
+
+                    FirebaseUtil.getFirestore().collection("usuarios")
+                            .document(usuario.getUid())
+                            .update("estado", nuevoEstado)
+                            .addOnSuccessListener(aVoid -> {
+                                usuario.setEstado(nuevoEstado);
+                                adapter.notifyDataSetChanged();
+                                Toast.makeText(getContext(), "Estado actualizado", Toast.LENGTH_SHORT).show();
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(getContext(), "Error al actualizar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();

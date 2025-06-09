@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Base Material 3 -->
+    <color name="teal_700">#018786</color>
     <color name="colorPrimary">#004D40</color>
     <color name="colorOnPrimary">#121212</color>
     <color name="colorSecondary">#00BFAE</color>

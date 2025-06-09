@@ -313,7 +313,7 @@ public class ServiciosActivity extends AppCompatActivity implements ServiciosAda
                 });
     }
 
-    private void cargarServiciosDelHotel() {
+    /*private void cargarServiciosDelHotel() {
         if (hotelId == null) {
             Log.w("ServiciosActivity", "hotelId es null, no se pueden cargar servicios");
             return;
@@ -351,6 +351,197 @@ public class ServiciosActivity extends AppCompatActivity implements ServiciosAda
                     Log.e("ServiciosActivity", "Error al cargar servicios del hotel", e);
                     Toast.makeText(this, "Error al cargar servicios", Toast.LENGTH_SHORT).show();
                 });
+    }*/
+    /*private void cargarServiciosDelHotel() {
+        if (hotelId == null) {
+            Log.w("ServiciosActivity", "❌ hotelId es null, no se pueden cargar servicios");
+            return;
+        }
+
+        Log.d("ServiciosActivity", "🔍 DEBUGGING - Iniciando carga de servicios...");
+        Log.d("ServiciosActivity", "🏨 Hotel ID: " + hotelId);
+
+        // ✅ PASO 1: Verificar que existen servicios en la colección
+        db.collection("servicios")
+                .get()
+                .addOnSuccessListener(allServicesSnapshot -> {
+                    int totalServicios = allServicesSnapshot.size();
+                    Log.d("ServiciosActivity", "📊 TOTAL servicios en colección: " + totalServicios);
+
+                    if (totalServicios == 0) {
+                        Log.e("ServiciosActivity", "❌ La colección 'servicios' está VACÍA");
+                        mostrarEstadoVacio();
+                        return;
+                    }
+
+                    // Mostrar TODOS los servicios para debugging
+                    for (QueryDocumentSnapshot doc : allServicesSnapshot) {
+                        String servicioHotelId = doc.getString("hotelId");
+                        String servicioNombre = doc.getString("nombre");
+                        String servicioId = doc.getId();
+
+                        Log.d("ServiciosActivity", "🔸 Servicio encontrado:");
+                        Log.d("ServiciosActivity", "   📋 ID: " + servicioId);
+                        Log.d("ServiciosActivity", "   🏷️ Nombre: " + servicioNombre);
+                        Log.d("ServiciosActivity", "   🏨 Hotel ID: " + servicioHotelId);
+                        Log.d("ServiciosActivity", "   ✅ ¿Coincide? " + hotelId.equals(servicioHotelId));
+                    }
+
+                    // PASO 2: Hacer la consulta filtrada
+                    consultarServiciosPorHotel();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ServiciosActivity", "❌ ERROR al verificar servicios totales", e);
+                    Toast.makeText(this, "Error de conexión: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+    }*/
+    private void cargarServiciosDelHotel() {
+        if (hotelId == null) {
+            Log.w("ServiciosActivity", "❌ hotelId es null, no se pueden cargar servicios");
+            return;
+        }
+
+        Log.d("ServiciosActivity", "🔍 Cargando servicios para hotel: " + hotelId);
+
+        // ✅ Usar arrayContains para buscar en arrays
+        db.collection("servicios")
+                .whereArrayContains("hotelId", hotelId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    serviciosList.clear();
+
+                    int totalEncontrados = queryDocumentSnapshots.size();
+                    Log.d("ServiciosActivity", "✅ Servicios encontrados para este hotel: " + totalEncontrados);
+
+                    if (totalEncontrados == 0) {
+                        Log.w("ServiciosActivity", "⚠️ No se encontraron servicios para hotelId: " + hotelId);
+                        mostrarEstadoVacio();
+                        return;
+                    }
+
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        try {
+                            Servicio servicio = document.toObject(Servicio.class);
+                            servicio.setId(document.getId());
+                            serviciosList.add(servicio);
+
+                            Log.d("ServiciosActivity", "✅ Servicio cargado: " + servicio.getNombre() +
+                                    " | Hoteles: " + servicio.getCantidadHoteles() +
+                                    " | Precio: " + servicio.getPrecioFormateado());
+
+                        } catch (Exception e) {
+                            Log.e("ServiciosActivity", "❌ Error al deserializar servicio: " + document.getId(), e);
+                        }
+                    }
+
+                    // Actualizar el adaptador
+                    Log.d("ServiciosActivity", "🔄 Actualizando adaptador con " + serviciosList.size() + " servicios");
+                    serviciosAdapter.updateServicios(serviciosList);
+
+                    if (serviciosList.isEmpty()) {
+                        mostrarEstadoVacio();
+                    } else {
+                        ocultarEstadoVacio();
+                        Log.d("ServiciosActivity", "🎉 Servicios mostrados correctamente");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ServiciosActivity", "❌ Error al cargar servicios del hotel", e);
+                    Toast.makeText(this, "Error al cargar servicios: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+    }
+    private void consultarServiciosPorHotel() {
+        Log.d("ServiciosActivity", "🔍 PASO 2: Consultando servicios específicos del hotel: " + hotelId);
+
+        db.collection("servicios")
+                .whereEqualTo("hotelId", hotelId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    serviciosList.clear();
+
+                    int totalEncontrados = queryDocumentSnapshots.size();
+                    Log.d("ServiciosActivity", "✅ Servicios encontrados para ESTE hotel: " + totalEncontrados);
+
+                    if (totalEncontrados == 0) {
+                        Log.w("ServiciosActivity", "⚠️ NO se encontraron servicios para hotelId: " + hotelId);
+                        Log.w("ServiciosActivity", "💡 Posibles causas:");
+                        Log.w("ServiciosActivity", "   1. Los servicios no tienen el campo 'hotelId'");
+                        Log.w("ServiciosActivity", "   2. El hotelId no coincide exactamente");
+                        Log.w("ServiciosActivity", "   3. Los servicios están en otra colección");
+                        mostrarEstadoVacio();
+                        return;
+                    }
+
+                    // PASO 3: Procesar cada servicio encontrado
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        try {
+                            Log.d("ServiciosActivity", "🔄 Procesando servicio: " + document.getId());
+
+                            Servicio servicio = document.toObject(Servicio.class);
+                            servicio.setId(document.getId());
+                            serviciosList.add(servicio);
+
+                            Log.d("ServiciosActivity", "✅ Servicio procesado exitosamente:");
+                            Log.d("ServiciosActivity", "   📋 ID: " + servicio.getId());
+                            Log.d("ServiciosActivity", "   🏷️ Nombre: " + servicio.getNombre());
+                            Log.d("ServiciosActivity", "   💰 Precio: " + servicio.getPrecioFormateado());
+                            Log.d("ServiciosActivity", "   🏨 Hotel: " + servicio.getHotelId());
+                            Log.d("ServiciosActivity", "   📂 Categoría: " + servicio.getCategoria());
+
+                        } catch (Exception e) {
+                            Log.e("ServiciosActivity", "❌ Error al deserializar servicio: " + document.getId(), e);
+                        }
+                    }
+
+                    // PASO 4: Actualizar UI
+                    Log.d("ServiciosActivity", "🔄 Actualizando adaptador con " + serviciosList.size() + " servicios");
+                    serviciosAdapter.updateServicios(serviciosList);
+
+                    // PASO 5: Verificar estado final
+                    if (serviciosList.isEmpty()) {
+                        Log.w("ServiciosActivity", "⚠️ Lista de servicios vacía después del procesamiento");
+                        mostrarEstadoVacio();
+                    } else {
+                        Log.d("ServiciosActivity", "🎉 ÉXITO: " + serviciosList.size() + " servicios mostrados correctamente");
+                        ocultarEstadoVacio();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ServiciosActivity", "❌ ERROR en consulta filtrada", e);
+                    Toast.makeText(this, "Error al cargar servicios: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+    }
+    // ✅ Método adicional para obtener todos los servicios (opcional)
+    private void cargarTodosLosServicios() {
+        Log.d("ServiciosActivity", "🔍 Cargando TODOS los servicios disponibles");
+
+        db.collection("servicios")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<Servicio> todosLosServicios = new ArrayList<>();
+
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        try {
+                            Servicio servicio = document.toObject(Servicio.class);
+                            servicio.setId(document.getId());
+                            todosLosServicios.add(servicio);
+
+                            Log.d("ServiciosActivity", "📋 Servicio: " + servicio.getNombre() +
+                                    " | Disponible en " + servicio.getCantidadHoteles() + " hoteles");
+
+                        } catch (Exception e) {
+                            Log.e("ServiciosActivity", "❌ Error al procesar servicio: " + document.getId(), e);
+                        }
+                    }
+
+                    // Aquí puedes mostrar todos los servicios si lo necesitas
+                    Log.d("ServiciosActivity", "📊 Total servicios cargados: " + todosLosServicios.size());
+                });
+    }
+
+    // ✅ Método para verificar si un servicio pertenece al hotel actual
+    private boolean servicioPertenece(Servicio servicio) {
+        return servicio.perteneceAlHotel(hotelId);
     }
 
     private void mostrarEstadoSinHotel() {

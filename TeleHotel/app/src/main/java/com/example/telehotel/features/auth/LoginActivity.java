@@ -276,7 +276,7 @@ public class LoginActivity extends AppCompatActivity {
         return isValid;
     }
 
-    private void login(String email, String password) {
+    /*private void login(String email, String password) {
         loginButton.setEnabled(false);
         loginButton.setText("Iniciando sesión...");
 
@@ -310,7 +310,93 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         });
+    }*/
+    private void login(String email, String password) {
+        loginButton.setEnabled(false);
+        loginButton.setText("Iniciando sesión...");
+
+        authViewModel.login(email, password, new AuthRepository.AuthCallback() {
+            @Override
+            public void onSuccess(Usuario usuario) {
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                if (firebaseUser != null) {
+                    String userEmail = firebaseUser.getEmail();
+
+                    // Permitir acceso directo a emails de tu dominio
+                    boolean esDominioInterno = userEmail != null && userEmail.endsWith("@telehotel.com");
+
+                    if (esDominioInterno || firebaseUser.isEmailVerified()) {
+                        goToMain(firebaseUser);
+                    } else {
+                        runOnUiThread(() -> {
+                            loginButton.setEnabled(true);
+                            loginButton.setText("Iniciar Sesión");
+                            Toast.makeText(LoginActivity.this,
+                                    "Por favor verifica tu email antes de iniciar sesión",
+                                    Toast.LENGTH_LONG).show();
+                            FirebaseAuth.getInstance().signOut();
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure() {
+                runOnUiThread(() -> {
+                    loginButton.setEnabled(true);
+                    loginButton.setText("Iniciar Sesión");
+                    Toast.makeText(LoginActivity.this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
+    /*private void login(String email, String password) {
+        loginButton.setEnabled(false);
+        loginButton.setText("Iniciando sesión...");
+
+        authViewModel.login(email, password, new AuthRepository.AuthCallback() {
+            @Override
+            public void onSuccess(Usuario usuario) {
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                if (firebaseUser != null) {
+                    // Lista de emails que no necesitan verificación
+                    List<String> emailsPreAutorizados = Arrays.asList(
+                            "cliente@telehotel.com",
+                            "admin@telehotel.com",
+                            "test@telehotel.com"
+                            // Agrega más emails según necesites
+                    );
+
+                    String userEmail = firebaseUser.getEmail();
+
+                    // Verificar si el email está en la lista pre-autorizada O si está verificado
+                    if (emailsPreAutorizados.contains(userEmail) || firebaseUser.isEmailVerified()) {
+                        goToMain(firebaseUser);
+                    } else {
+                        runOnUiThread(() -> {
+                            loginButton.setEnabled(true);
+                            loginButton.setText("Iniciar Sesión");
+                            Toast.makeText(LoginActivity.this,
+                                    "Por favor verifica tu email antes de iniciar sesión",
+                                    Toast.LENGTH_LONG).show();
+                            FirebaseAuth.getInstance().signOut();
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure() {
+                runOnUiThread(() -> {
+                    loginButton.setEnabled(true);
+                    loginButton.setText("Iniciar Sesión");
+                    Toast.makeText(LoginActivity.this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
+    }*/
+
+
 
 
     private void forgotPassword(String email) {
@@ -382,7 +468,7 @@ public class LoginActivity extends AppCompatActivity {
                             nombre = "Usuario"; // Valor por defecto
                         }
 
-                        Toast.makeText(this, "Bienvenido: " + nombre, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Bienvenido " + nombre, Toast.LENGTH_SHORT).show();
 
                         Intent intent = null;
                         switch (role) {

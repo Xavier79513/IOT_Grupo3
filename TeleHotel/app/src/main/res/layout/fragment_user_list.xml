@@ -4,65 +4,248 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="#F8F9FA">
 
     <!-- Encabezado con ID para poder referenciarlo -->
     <include
         android:id="@+id/encabezado"
         layout="@layout/encabezado" />
 
-    <!-- Texto de Bienvenida -->
-    <TextView
-        android:id="@+id/txtBienvenida"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Bienvenido SuperAdmin"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@color/primaryColor"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintTop_toBottomOf="@id/encabezado"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <!-- Subtítulo de sección -->
-    <TextView
-        android:id="@+id/txtTituloGestion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Gestión de Usuarios"
-        android:textSize="18sp"
-        android:textColor="@color/primaryColor"
-        android:textStyle="bold"
-        android:layout_marginTop="12dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintTop_toBottomOf="@id/txtBienvenida"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <!-- Spinner de roles -->
-    <Spinner
-        android:id="@+id/spinnerFiltroRoles"
+    <!-- Card de Bienvenida -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardBienvenida"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        android:backgroundTint="@color/primaryColor"
+        app:layout_constraintTop_toBottomOf="@id/encabezado"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/txtBienvenida"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¡Bienvenido SuperAdmin!"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/txtSubtituloBienvenida"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Panel de administración de usuarios"
+                android:textSize="14sp"
+                android:textColor="#E0FFFFFF"
+                android:layout_marginTop="4dp" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Card de Estadísticas Rápidas -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardEstadisticas"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:backgroundTint="#000000"
-        app:layout_constraintTop_toBottomOf="@id/txtTituloGestion"
+        android:layout_marginTop="8dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp"
+        android:backgroundTint="#FFFFFF"
+        app:layout_constraintTop_toBottomOf="@id/cardBienvenida"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- RecyclerView con lista de usuarios -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewUsers"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:weightSum="3">
+
+            <!-- Total Usuarios -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/txtTotalUsuarios"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Usuarios totales"
+                    android:textSize="12sp"
+                    android:textColor="#666666" />
+
+            </LinearLayout>
+
+            <!-- Separador -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="40dp"
+                android:background="#E0E0E0" />
+
+            <!-- Usuarios Activos -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/txtUsuariosActivos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="#4CAF50" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Habilitados"
+                    android:textSize="12sp"
+                    android:textColor="#666666" />
+
+            </LinearLayout>
+
+            <!-- Separador -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="40dp"
+                android:background="#E0E0E0" />
+
+            <!-- Usuarios Bloqueados -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/txtUsuariosBloqueados"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="#F44336" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Deshabilitados"
+                    android:textSize="12sp"
+                    android:textColor="#666666" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Card de Gestión de Usuarios -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardGestion"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintTop_toBottomOf="@id/spinnerFiltroRoles"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp"
+        android:backgroundTint="#FFFFFF"
+        app:layout_constraintTop_toBottomOf="@id/cardEstadisticas"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Cabecera con título -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:id="@+id/txtTituloGestion"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Gestión de Usuarios"
+                    android:textSize="18sp"
+                    android:textColor="@color/primaryColor"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- Sección de filtros -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical">
+
+                <!-- Spinner de roles mejorado -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/spinner_background"
+                    android:orientation="vertical">
+
+                    <Spinner
+                        android:id="@+id/spinnerFiltroRoles"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:backgroundTint="@color/primaryColor" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- RecyclerView con lista de usuarios -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewUsers"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:clipToPadding="false"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

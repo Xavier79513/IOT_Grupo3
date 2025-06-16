@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.AdapterView;
@@ -53,7 +54,7 @@ public class UserListFragment extends Fragment implements UserAdapter.OnUserActi
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         spinnerFiltroRoles = view.findViewById(R.id.spinnerFiltroRoles);
-
+        //AutoCompleteTextView autoCompleteFiltroRoles = view.findViewById(R.id.autoCompleteFiltroRoles);
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, roles);
         spinnerFiltroRoles.setAdapter(spinnerAdapter);
 

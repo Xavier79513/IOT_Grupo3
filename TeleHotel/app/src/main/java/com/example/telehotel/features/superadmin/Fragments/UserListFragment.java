@@ -31,131 +31,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-/*public class UserListFragment extends Fragment implements UserAdapter.OnUserActionListener {
-
-    private RecyclerView recyclerView;
-    private UserAdapter adapter;
-    private List<Usuario> usuarioList = new ArrayList<>();
-    private Spinner spinnerFiltroRoles;
-    private ImageView ivLogout;
-
-    private final String[] roles = {"Todos", "Administrador", "Taxista", "Cliente"};
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user_list, container, false);
-
-        ivLogout = view.findViewById(R.id.ivLogout);
-        ivLogout.setOnClickListener(v -> cerrarSesion());
-
-        recyclerView = view.findViewById(R.id.recyclerViewUsers);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        spinnerFiltroRoles = view.findViewById(R.id.spinnerFiltroRoles);
-        //AutoCompleteTextView autoCompleteFiltroRoles = view.findViewById(R.id.autoCompleteFiltroRoles);
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, roles);
-        spinnerFiltroRoles.setAdapter(spinnerAdapter);
-
-        spinnerFiltroRoles.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                filtrarUsuarios(roles[position]);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Nada
-            }
-        });
-
-        loadUsersFromFirestore();
-
-        return view;
-    }
-
-    private void cerrarSesion() {
-        FirebaseAuth.getInstance().signOut();
-        Toast.makeText(requireContext(), "Sesión cerrada correctamente", Toast.LENGTH_SHORT).show();
-
-        Intent intent = new Intent(requireContext(), LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        requireActivity().finish();
-    }
-
-    private void loadUsersFromFirestore() {
-        FirebaseUtil.getFirestore().collection("usuarios")
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    usuarioList.clear();
-
-                    for (DocumentSnapshot doc : querySnapshot) {
-                        Usuario usuario = doc.toObject(Usuario.class);
-                        if (usuario != null && usuario.getUid() == null) {
-                            usuario.setUid(doc.getId());
-                        }
-                        usuarioList.add(usuario);
-                    }
-
-                    filtrarUsuarios(spinnerFiltroRoles.getSelectedItem().toString());
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Error al cargar usuarios: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                });
-    }
-
-    private void filtrarUsuarios(String rol) {
-        List<Usuario> filtrados = new ArrayList<>();
-
-        if (rol.equals("Todos")) {
-            filtrados.addAll(usuarioList);
-        } else {
-            for (Usuario usuario : usuarioList) {
-                if (usuario.getRole() != null && usuario.getRole().equalsIgnoreCase(rol)) {
-                    filtrados.add(usuario);
-                }
-            }
-        }
-
-        adapter = new UserAdapter(filtrados, this);
-        recyclerView.setAdapter(adapter);
-    }
-
-    @Override
-    public void onToggleEstadoClick(Usuario usuario) {
-        boolean activar = !"Activo".equalsIgnoreCase(usuario.getEstado());
-        mostrarDialogoConfirmacion(usuario, activar);
-    }
-
-    private void mostrarDialogoConfirmacion(Usuario usuario, boolean activar) {
-        String nuevoEstado = activar ? "Activo" : "Inactivo";
-        String mensaje = activar
-                ? "¿Estás seguro de que deseas ACTIVAR este usuario?"
-                : "¿Estás seguro de que deseas DESACTIVAR este usuario?";
-
-        new AlertDialog.Builder(requireContext())
-                .setTitle(activar ? "Activar Usuario" : "Desactivar Usuario")
-                .setMessage(mensaje)
-                .setPositiveButton("Sí", (dialog, which) -> {
-                    FirebaseUtil.getFirestore().collection("usuarios")
-                            .document(usuario.getUid())
-                            .update("estado", nuevoEstado)
-                            .addOnSuccessListener(aVoid -> {
-                                usuario.setEstado(nuevoEstado);
-                                adapter.notifyDataSetChanged();
-                                Toast.makeText(getContext(), "Estado actualizado", Toast.LENGTH_SHORT).show();
-                            })
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(getContext(), "Error al actualizar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            });
-                })
-                .setNegativeButton("Cancelar", null)
-                .show();
-    }
-}*/
 public class UserListFragment extends Fragment implements UserAdapter.OnUserActionListener {
 
     private RecyclerView recyclerView;
@@ -185,14 +60,14 @@ public class UserListFragment extends Fragment implements UserAdapter.OnUserActi
 
         spinnerFiltroRoles = view.findViewById(R.id.spinnerFiltroRoles);
 
-        // ✅ CORREGIDO: Usar rolesDisplay
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, rolesDisplay);
+        // CORREGIDO: Usar rolesDisplay
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item, rolesDisplay);
+        spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerFiltroRoles.setAdapter(spinnerAdapter);
 
         spinnerFiltroRoles.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // ✅ CORREGIDO: Usar el rol de Firebase correspondiente
                 String rolFirebase = rolesFirebase[position];
                 filtrarUsuarios(rolFirebase);
             }

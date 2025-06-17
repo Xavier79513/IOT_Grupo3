@@ -11,9 +11,9 @@
     <item
         android:id="@+id/nav_stats"
         android:icon="@drawable/ic_stats"
-        android:title="Nuevo Usuario" />
+        android:title="Agregar usuario" />
     <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/profile"
-        android:title="Perfil" />
+        android:title="Reportes" />
 </menu>

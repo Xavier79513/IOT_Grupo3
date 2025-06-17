@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground">
+    android:background="@color/colorBackground"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,6 +12,7 @@
         android:orientation="vertical"
         android:padding="24dp">
 
+        <!-- Título principal -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -21,91 +23,221 @@
             android:gravity="center"
             android:paddingBottom="16dp" />
 
+        <!-- Card principal del formulario -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/formCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:elevation="6dp"
             app:cardCornerRadius="16dp"
-            app:cardBackgroundColor="@android:color/white">
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="?attr/colorSurface">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:padding="24dp">
 
+                <!-- Nombres -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Nombre completo"
-                    app:boxBackgroundMode="outline"
-                    app:boxStrokeColor="@color/colorPrimary">
+                    android:hint="Nombres"
+                    app:startIconDrawable="@drawable/ic_person"
+                    app:startIconTint="?attr/colorPrimary"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editTextNombreAdmin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@android:color/black" />
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="16sp"
+                        android:inputType="textPersonName|textCapWords" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Apellidos -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:hint="Apellidos"
+                    android:layout_marginTop="16dp"
+                    app:startIconDrawable="@drawable/ic_person"
+                    app:startIconTint="?attr/colorPrimary"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextApellidoAdmin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="16sp"
+                        android:inputType="textPersonName|textCapWords" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- DNI -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="DNI"
+                    android:layout_marginTop="16dp"
+                    app:startIconDrawable="@drawable/ic_documento"
+                    app:startIconTint="?attr/colorPrimary"
+                    app:helperText="8 dígitos"
+                    app:helperTextTextColor="?attr/colorOnSurfaceVariant"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextDniAdmin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:maxLength="8"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="16sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Correo electrónico -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:hint="Correo electrónico"
-                    app:boxBackgroundMode="outline"
-                    app:boxStrokeColor="@color/colorPrimary">
+                    android:layout_marginTop="16dp"
+                    app:startIconDrawable="@drawable/ic_email"
+                    app:startIconTint="?attr/colorPrimary"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editTextCorreoAdmin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress"
-                        android:textColor="@android:color/black" />
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="16sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Teléfono -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
                     android:hint="Teléfono"
-                    app:boxBackgroundMode="outline"
-                    app:boxStrokeColor="@color/colorPrimary">
+                    android:layout_marginTop="16dp"
+                    app:startIconDrawable="@drawable/ic_telefono"
+                    app:startIconTint="?attr/colorPrimary"
+                    app:helperText="9 dígitos"
+                    app:helperTextTextColor="?attr/colorOnSurfaceVariant"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editTextTelefonoAdmin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="phone"
-                        android:textColor="@android:color/black" />
+                        android:maxLength="9"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="16sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Contraseña -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="Dirección del hotel"
-                    app:boxBackgroundMode="outline"
-                    app:boxStrokeColor="@color/colorPrimary">
+                    android:hint="Contraseña"
+                    android:layout_marginTop="16dp"
+                    app:startIconDrawable="@drawable/ic_lock2"
+                    app:endIconMode="password_toggle"
+                    app:startIconTint="?attr/colorPrimary"
+                    app:endIconTint="?attr/colorPrimary"
+                    app:helperText="Mínimo 6 caracteres"
+                    app:helperTextTextColor="?attr/colorOnSurfaceVariant"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editTextDireccionHotel"
+                        android:id="@+id/editPasswordAdmin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@android:color/black" />
+                        android:inputType="textPassword"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="16sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <Button
-                    android:id="@+id/btnRegistrarAdminHotel"
+                <!-- Indicador de fortaleza de contraseña -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="4dp"
+                        android:layout_weight="1"
+                        android:max="100"
+                        android:progress="0"
+                        android:progressTint="?attr/colorError"
+                        android:layout_marginEnd="8dp" />
+
+                    <TextView
+                        android:id="@+id/txtPasswordStrength"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Débil"
+                        android:textSize="12sp"
+                        android:textColor="?attr/colorError"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+                <!-- Confirmar contraseña -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Confirmar contraseña"
+                    android:layout_marginTop="8dp"
+                    app:startIconDrawable="@drawable/ic_lock_check"
+                    app:endIconMode="password_toggle"
+                    app:startIconTint="?attr/colorPrimary"
+                    app:endIconTint="?attr/colorPrimary"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etConfirmPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="16sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- ProgressBar de carga -->
+                <ProgressBar
+                    android:id="@+id/progressBarLoading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone" />
+
+                <!-- Botón de registro -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRegistrarAdminHotel"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="24dp"
                     android:text="Registrar Administrador"
-                    android:textAllCaps="false"
-                    android:layout_marginTop="20dp"
-                    android:textColor="@android:color/white"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:fontFamily="sans-serif-medium" />
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    app:cornerRadius="12dp"
+                    app:icon="@drawable/ic_person_add"
+                    app:iconTint="?attr/colorOnPrimary"
+                    app:backgroundTint="?attr/colorPrimary"
+                    style="@style/Widget.Material3.Button" />
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

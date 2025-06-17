@@ -87,6 +87,7 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
     // Lista de ubicaciones para el buscador
     private List<String> allHotelLocations = new ArrayList<>();
     private List<LocationSearch> detailedLocations = new ArrayList<>();
+    private static final String NO_LOCATION_MESSAGE = "No se cuenta con la ubicación escrita";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -233,7 +234,7 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
                         Log.d(TAG, "Filtrando ubicaciones para: " + query);
 
                         if (query.length() >= 2) {
-                            filtrarUbicaciones(query);
+                            filtrarUbicacionesSimple(query);
                         } else {
                             // Mostrar todas las ubicaciones
                             cityAdapter.clear();
@@ -243,6 +244,48 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
                     };
 
                     searchHandler.postDelayed(searchRunnable, 300);
+                }
+
+                private void filtrarUbicacionesSimple(String query) {
+                    if (query == null || query.trim().isEmpty()) {
+                        return;
+                    }
+
+                    try {
+                        String queryLower = query.toLowerCase();
+                        List<String> ubicacionesFiltradas = new ArrayList<>();
+
+                        // Filtrar ubicaciones existentes
+                        for (String ubicacion : allHotelLocations) {
+                            if (ubicacion.toLowerCase().contains(queryLower)) {
+                                ubicacionesFiltradas.add(ubicacion);
+                            }
+                        }
+
+                        // Si no se encontraron ubicaciones, mostrar mensaje simple
+                        if (ubicacionesFiltradas.isEmpty()) {
+                            ubicacionesFiltradas.add(NO_LOCATION_MESSAGE);
+                        }
+
+                        // Actualizar adapter
+                        cityAdapter.clear();
+                        cityAdapter.addAll(ubicacionesFiltradas);
+                        cityAdapter.notifyDataSetChanged();
+
+                        // Mostrar dropdown
+                        if (!ubicacionesFiltradas.isEmpty() && etCity.hasFocus()) {
+                            etCity.showDropDown();
+
+                            if (ubicacionesFiltradas.get(0).equals(NO_LOCATION_MESSAGE)) {
+                                Log.d(TAG, "Mostrando mensaje de ubicación no encontrada para: " + query);
+                            } else {
+                                Log.d(TAG, "Mostrando " + ubicacionesFiltradas.size() + " ubicaciones filtradas");
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error filtrando ubicaciones", e);
+                    }
                 }
 
                 @Override
@@ -255,6 +298,12 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
                 try {
                     String selectedLocation = cityAdapter.getItem(position);
                     if (selectedLocation != null) {
+                        // *** CAMBIO: Verificar si es el mensaje de "no encontrado" ***
+                        if (selectedLocation.equals(NO_LOCATION_MESSAGE)) {
+                            // No hacer nada, es solo un mensaje informativo
+                            return;
+                        }
+
                         Log.d(TAG, "Ubicación seleccionada: " + selectedLocation);
 
                         // Buscar información detallada de la ubicación
@@ -666,8 +715,18 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
         String location = etCity != null ? etCity.getText().toString().trim() : "";
 
         if (location.isEmpty()) {
-            Toast.makeText(this, "Por favor selecciona una ciudad", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Por favor ingresa una ciudad o país", Toast.LENGTH_SHORT).show();
             if (etCity != null) {
+                etCity.requestFocus();
+            }
+            return;
+        }
+
+        // *** CAMBIO: Verificar si es el mensaje de error ***
+        if (location.equals(NO_LOCATION_MESSAGE)) {
+            Toast.makeText(this, "Por favor selecciona una ubicación válida", Toast.LENGTH_SHORT).show();
+            if (etCity != null) {
+                etCity.setText("");
                 etCity.requestFocus();
             }
             return;
@@ -678,8 +737,79 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
             return;
         }
 
-        // Buscar hoteles en la ubicación seleccionada
-        searchHotelsByLocation(location);
+        // Continuar con la búsqueda usando la función mejorada del repository
+        searchHotelsByLocationEnhanced(location);
+    }
+
+    private void searchHotelsByLocationEnhanced(String location) {
+        Log.d(TAG, "Buscando hoteles en: " + location);
+
+        String searchMessage = String.format("Buscando hoteles en %s para %d adultos, %d niños, %d habitación(es)...",
+                location, adultCount, childCount, roomCount);
+        Toast.makeText(this, searchMessage, Toast.LENGTH_SHORT).show();
+
+        // Usar la función mejorada del repository que maneja tanto búsquedas estándar como flexibles
+        HotelRepository.searchHotelsWithCustomParamsEnhanced(
+                this,
+                location,
+                adultCount,
+                childCount,
+                roomCount,
+                hoteles -> {
+                    if (!isFinishing() && !isDestroyed()) {
+                        runOnUiThread(() -> {
+                            try {
+                                // Guardar búsqueda
+                                if (storageHelper != null && prefsManager != null) {
+                                    storageHelper.saveCompleteSearch(location,
+                                            prefsManager.getStartDate(),
+                                            prefsManager.getEndDate(),
+                                            adultCount, childCount, roomCount);
+                                }
+
+                                // Calcular días de estadía
+                                int dias = storageHelper != null && prefsManager != null ?
+                                        storageHelper.calculateDaysDifference(prefsManager.getStartDate(), prefsManager.getEndDate()) : 0;
+
+                                if (hoteles.isEmpty()) {
+                                    // No se encontraron hoteles
+                                    String noResultsMessage = String.format(
+                                            "No se encontraron hoteles disponibles en '%s' para %d adultos, %d niños y %d habitación(es)",
+                                            location, adultCount, childCount, roomCount);
+                                    Toast.makeText(this, noResultsMessage, Toast.LENGTH_LONG).show();
+                                } else {
+                                    // Hoteles encontrados
+                                    String successMessage = String.format(
+                                            "✅ %d hoteles encontrados en '%s' - %d días - %d habitación(es)",
+                                            hoteles.size(), location, dias, roomCount);
+                                    Toast.makeText(this, successMessage, Toast.LENGTH_LONG).show();
+
+                                    // Navegar a resultados
+                                    navigateToSearchResults(location,
+                                            prefsManager != null ? prefsManager.getStartDate() : 0L,
+                                            prefsManager != null ? prefsManager.getEndDate() : 0L,
+                                            hoteles.size());
+                                }
+
+                            } catch (Exception e) {
+                                Log.e(TAG, "Error procesando resultados", e);
+                                Toast.makeText(this, "Error procesando resultados", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                },
+                error -> {
+                    if (!isFinishing() && !isDestroyed()) {
+                        runOnUiThread(() -> {
+                            Log.e(TAG, "Error en búsqueda: " + error.getMessage());
+                            String errorMessage = String.format(
+                                    "No se pudieron buscar hoteles en '%s'. Intenta con otra ubicación.",
+                                    location);
+                            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
+                        });
+                    }
+                }
+        );
     }
 
     /**
@@ -843,6 +973,9 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
      * Navega a la pantalla de resultados de búsqueda
      */
     private void navigateToSearchResults(String location, long startDate, long endDate, int hotelsFound) {
+        Log.d(TAG, String.format("Navegando a resultados: %s, fechas: %d-%d, hoteles: %d",
+                location, startDate, endDate, hotelsFound));
+
         Intent intent = new Intent(this, ClienteMainActivity.class);
         intent.putExtra("search_location", location);
         intent.putExtra("start_date", startDate);
@@ -852,6 +985,11 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
         intent.putExtra("rooms", roomCount);
         intent.putExtra("hotels_found", hotelsFound);
         intent.putExtra("use_filters", true); // Indica que se usaron filtros
+
+        // *** NUEVO: Log para debug ***
+        Log.d(TAG, String.format("Intent extras: ubicacion='%s', adultos=%d, niños=%d, habitaciones=%d",
+                location, adultCount, childCount, roomCount));
+
         startActivity(intent);
     }
 

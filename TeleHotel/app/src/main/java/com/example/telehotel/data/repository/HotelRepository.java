@@ -10,6 +10,7 @@ import com.example.telehotel.data.model.Habitacion;
 import com.example.telehotel.data.model.Hotel;
 import com.example.telehotel.data.model.LocationSearch;
 import com.example.telehotel.data.model.Ubicacion;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -612,5 +613,326 @@ public class HotelRepository {
 
         return score;
     }
+
+
+    // Agregar estas funciones a tu HotelRepository.java existente
+
+    /**
+     * Busca hoteles usando texto flexible (para búsquedas personalizadas)
+     * Esta función permite buscar cuando el usuario escribe texto que no coincide
+     * exactamente con el formato "Ciudad, País"
+     */
+    public static void searchHotelsByFlexibleText(@NonNull String searchText,
+                                                  int adults,
+                                                  int children,
+                                                  int rooms,
+                                                  @NonNull Consumer<List<Hotel>> onSuccess,
+                                                  @NonNull Consumer<Exception> onError) {
+
+        if (searchText == null || searchText.trim().isEmpty()) {
+            onError.accept(new Exception("Texto de búsqueda vacío"));
+            return;
+        }
+
+        String searchLower = searchText.toLowerCase().trim();
+
+        getCollection()
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    List<Hotel> hotelesEncontrados = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : querySnapshot) {
+                        try {
+                            Hotel hotel = doc.toObject(Hotel.class);
+                            if (hotel != null) {
+                                hotel.setId(doc.getId());
+
+                                // Verificar si el hotel coincide con la búsqueda flexible
+                                if (matchesFlexibleSearch(hotel, searchLower)) {
+                                    // Si se especificaron criterios de capacidad, verificarlos
+                                    if (adults > 0 || children > 0 || rooms > 1) {
+                                        if (isHotelAvailableForGuests(hotel, adults, children, rooms)) {
+                                            hotelesEncontrados.add(hotel);
+                                        }
+                                    } else {
+                                        // Sin criterios de capacidad, agregar todos los que coincidan
+                                        hotelesEncontrados.add(hotel);
+                                    }
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e("HotelRepository", "Error procesando hotel: " + e.getMessage());
+                        }
+                    }
+
+                    onSuccess.accept(hotelesEncontrados);
+                })
+                .addOnFailureListener((OnFailureListener) onError);
+    }
+
+    /**
+     * Verifica si un hotel coincide con la búsqueda flexible
+     * Busca en múltiples campos: nombre, descripción, ubicación, servicios
+     */
+    private static boolean matchesFlexibleSearch(Hotel hotel, String searchLower) {
+        if (hotel == null) return false;
+
+        try {
+            // Buscar en nombre del hotel
+            if (hotel.getNombre() != null &&
+                    hotel.getNombre().toLowerCase().contains(searchLower)) {
+                return true;
+            }
+
+            // Buscar en descripción
+            if (hotel.getDescripcion() != null &&
+                    hotel.getDescripcion().toLowerCase().contains(searchLower)) {
+                return true;
+            }
+
+            // Buscar en ubicación
+            if (hotel.getUbicacion() != null) {
+                Ubicacion ub = hotel.getUbicacion();
+
+                // Dirección
+                if (ub.getDireccion() != null &&
+                        ub.getDireccion().toLowerCase().contains(searchLower)) {
+                    return true;
+                }
+
+                // Ciudad
+                if (ub.getCiudad() != null &&
+                        ub.getCiudad().toLowerCase().contains(searchLower)) {
+                    return true;
+                }
+
+                // País
+                if (ub.getPais() != null &&
+                        ub.getPais().toLowerCase().contains(searchLower)) {
+                    return true;
+                }
+            }
+
+            // Buscar en servicios
+            if (hotel.getServicios() != null) {
+                for (String servicio : hotel.getServicios()) {
+                    if (servicio != null && servicio.toLowerCase().contains(searchLower)) {
+                        return true;
+                    }
+                }
+            }
+
+            // Buscar en lugares cercanos (si es que existen)
+            if (hotel.getLugaresCercanos() != null) {
+                for (Object lugarObj : hotel.getLugaresCercanos()) {
+                    if (lugarObj != null) {
+                        String lugarStr = lugarObj.toString().toLowerCase();
+                        if (lugarStr.contains(searchLower)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e("HotelRepository", "Error en matchesFlexibleSearch: " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    /**
+     * Versión simplificada de verificación de disponibilidad para búsquedas flexibles
+     * (reutiliza lógica existente pero sin fechas)
+     */
+    private static boolean isHotelAvailableForGuests(Hotel hotel, int adults, int children, int rooms) {
+        // Verificar que el hotel permita reservas
+        if (hotel.getPermiteReservas() == null || !hotel.getPermiteReservas()) {
+            return false;
+        }
+
+        // Verificar que el hotel esté activo
+        if (!"activo".equalsIgnoreCase(hotel.getEstado())) {
+            return false;
+        }
+
+        // Verificar disponibilidad de habitaciones
+        List<Habitacion> habitaciones = hotel.getHabitaciones();
+        if (habitaciones == null || habitaciones.isEmpty()) {
+            return false;
+        }
+
+        // Contar habitaciones que pueden acomodar los huéspedes requeridos
+        int habitacionesDisponibles = 0;
+        for (Habitacion habitacion : habitaciones) {
+            if (isHabitacionSuitableForGuests(habitacion, adults, children)) {
+                habitacionesDisponibles++;
+                if (habitacionesDisponibles >= rooms) {
+                    return true; // Encontramos suficientes habitaciones
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Versión simplificada de verificación de habitación (sin fechas)
+     */
+    private static boolean isHabitacionSuitableForGuests(Habitacion habitacion, int adults, int children) {
+        if (habitacion == null || habitacion.getCapacidad() == null) {
+            return false;
+        }
+
+        // Verificar que la habitación esté disponible
+        if (!"disponible".equalsIgnoreCase(habitacion.getEstado())) {
+            return false;
+        }
+
+        Capacidad capacidad = habitacion.getCapacidad();
+
+        // Verificar capacidad de adultos (debe ser mayor o igual)
+        if (capacidad.getAdultos() == null || capacidad.getAdultos() < adults) {
+            return false;
+        }
+
+        // Verificar capacidad de niños (debe ser mayor o igual)
+        if (capacidad.getNinos() == null || capacidad.getNinos() < children) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Mejora de la función searchHotelsWithCustomParams existente
+     * Ahora también maneja búsquedas flexibles como fallback
+     */
+    public static void searchHotelsWithCustomParamsEnhanced(@NonNull android.content.Context context,
+                                                            @NonNull String locationInput,
+                                                            int adults,
+                                                            int children,
+                                                            int rooms,
+                                                            @NonNull Consumer<List<Hotel>> onSuccess,
+                                                            @NonNull Consumer<Exception> onError) {
+        try {
+            // Primero intentar búsqueda estándar (formato "Ciudad, País")
+            if (locationInput.contains(",") && locationInput.split(",").length == 2) {
+                // Usar función existente para formato estándar
+                searchHotelsWithCustomParams(context, locationInput, adults, children, rooms,
+                        hoteles -> {
+                            if (!hoteles.isEmpty()) {
+                                onSuccess.accept(hoteles);
+                            } else {
+                                // Si no hay resultados con búsqueda estándar, intentar búsqueda flexible
+                                searchHotelsByFlexibleText(locationInput, adults, children, rooms, onSuccess, onError);
+                            }
+                        },
+                        error -> {
+                            // Si falla la búsqueda estándar, intentar búsqueda flexible
+                            searchHotelsByFlexibleText(locationInput, adults, children, rooms, onSuccess, onError);
+                        }
+                );
+            } else {
+                // Input no tiene formato estándar, usar directamente búsqueda flexible
+                searchHotelsByFlexibleText(locationInput, adults, children, rooms, onSuccess, onError);
+            }
+
+        } catch (Exception e) {
+            onError.accept(new Exception("Error en búsqueda mejorada: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Función auxiliar para verificar si una ubicación existe en formato estándar
+     * Útil para determinar si mostrar el mensaje de "no se cuenta con la ubicación"
+     */
+    public static void checkIfLocationExists(@NonNull String locationInput,
+                                             @NonNull Consumer<Boolean> onResult) {
+
+        if (locationInput == null || locationInput.trim().isEmpty()) {
+            onResult.accept(false);
+            return;
+        }
+
+        // Si tiene formato "Ciudad, País", verificar directamente
+        if (locationInput.contains(",") && locationInput.split(",").length == 2) {
+            searchHotelsByLocationString(locationInput,
+                    hoteles -> onResult.accept(!hoteles.isEmpty()),
+                    error -> onResult.accept(false)
+            );
+        } else {
+            // Para texto libre, verificar si coincide con alguna ubicación conocida
+            getUniqueLocations(
+                    ubicaciones -> {
+                        String inputLower = locationInput.toLowerCase().trim();
+                        boolean exists = ubicaciones.stream()
+                                .anyMatch(ubicacion -> ubicacion.toLowerCase().contains(inputLower));
+                        onResult.accept(exists);
+                    },
+                    error -> onResult.accept(false)
+            );
+        }
+    }
+
+    /**
+     * Obtiene sugerencias de ubicaciones similares al texto ingresado
+     * Útil para cuando no se encuentra una ubicación exacta
+     */
+    public static void getSimilarLocations(@NonNull String searchText,
+                                           int maxSuggestions,
+                                           @NonNull Consumer<List<String>> onSuccess,
+                                           @NonNull Consumer<Exception> onError) {
+
+        if (searchText == null || searchText.trim().isEmpty()) {
+            onSuccess.accept(new ArrayList<>());
+            return;
+        }
+
+        getUniqueLocations(
+                ubicaciones -> {
+                    List<String> sugerencias = new ArrayList<>();
+                    String searchLower = searchText.toLowerCase().trim();
+
+                    // Buscar ubicaciones que contengan parcialmente el texto
+                    for (String ubicacion : ubicaciones) {
+                        if (ubicacion.toLowerCase().contains(searchLower) ||
+                                containsSimilarWords(ubicacion.toLowerCase(), searchLower)) {
+                            sugerencias.add(ubicacion);
+
+                            if (sugerencias.size() >= maxSuggestions) {
+                                break;
+                            }
+                        }
+                    }
+
+                    onSuccess.accept(sugerencias);
+                },
+                onError
+        );
+    }
+
+    /**
+     * Verifica si dos strings contienen palabras similares
+     * (implementación simple para sugerencias)
+     */
+    private static boolean containsSimilarWords(String location, String search) {
+        String[] locationWords = location.split("[,\\s]+");
+        String[] searchWords = search.split("\\s+");
+
+        for (String searchWord : searchWords) {
+            if (searchWord.length() >= 3) { // Solo palabras de 3+ caracteres
+                for (String locationWord : locationWords) {
+                    if (locationWord.contains(searchWord) || searchWord.contains(locationWord)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 }
+
+
 

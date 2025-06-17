@@ -5,18 +5,22 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.telehotel.R;
 import com.example.telehotel.databinding.ActivityPerfilBinding;
+import com.example.telehotel.features.auth.LoginActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class PerfilActivity extends AppCompatActivity {
 
@@ -140,7 +144,22 @@ public class PerfilActivity extends AppCompatActivity {
     }
 
     private void doLogout() {
-        // TODO: lógica real de cerrar sesión
-        Snackbar.make(binding.root, "Sesión cerrada", Snackbar.LENGTH_SHORT).show();
+        new AlertDialog.Builder(this)
+                .setTitle("Cerrar Sesión")
+                .setMessage("¿Estás seguro que deseas cerrar sesión?")
+                .setPositiveButton("Sí", (dialog, which) -> {
+                    // Cerrar sesión
+                    FirebaseAuth.getInstance().signOut();
+
+                    // Ir al LoginActivity
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                    Toast.makeText(this, "Sesión cerrada exitosamente", Toast.LENGTH_SHORT).show();
+                    startActivity(intent);
+                    finish();
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 }

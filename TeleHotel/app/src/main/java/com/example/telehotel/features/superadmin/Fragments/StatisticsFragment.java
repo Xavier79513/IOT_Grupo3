@@ -1,11 +1,16 @@
 package com.example.telehotel.features.superadmin.Fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,14 +23,21 @@ import androidx.fragment.app.Fragment;
 import com.example.telehotel.R;
 import android.util.Patterns;
 import android.widget.ProgressBar;
+
+import com.example.telehotel.data.model.Hotel;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import android.text.Editable;
 import android.text.TextWatcher;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.WriteBatch;
 
 
 public class StatisticsFragment extends Fragment {
@@ -35,10 +47,18 @@ public class StatisticsFragment extends Fragment {
     private ProgressBar progressBarLoading, progressBar;
     private TextView txtPasswordStrength;
     private EditText etConfirmPassword;
+    private AutoCompleteTextView autoCompleteHoteles;
 
     // Firebase
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+
+    // Lista de hoteles
+    private List<Hotel> hotelesDisponibles = new ArrayList<>();
+    //private ArrayAdapter<Hotel> hotelesAdapter;
+    private HotelesAdapter hotelesAdapter;  // En lugar de ArrayAdapter<Hotel>
+
+    private Hotel hotelSeleccionado;
 
     @SuppressLint("MissingInflatedId")
     @Nullable
@@ -64,12 +84,138 @@ public class StatisticsFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBar);
         txtPasswordStrength = view.findViewById(R.id.txtPasswordStrength);
         etConfirmPassword = view.findViewById(R.id.etConfirmPassword);
+        autoCompleteHoteles = view.findViewById(R.id.autoCompleteHoteles);
 
+        // Configurar listeners
+        /*btnRegistrarAdminHotel.setOnClickListener(v -> registrarAdministradorHotel());
+        setupPasswordStrengthIndicator();
+        setupHotelesDropdown();
+
+        // Cargar hoteles disponibles
+        cargarHotelesDisponibles();*/
         // Configurar listeners
         btnRegistrarAdminHotel.setOnClickListener(v -> registrarAdministradorHotel());
         setupPasswordStrengthIndicator();
 
+        // ✅ CAMBIAR ORDEN: Configurar dropdown ANTES de cargar datos
+        setupHotelesDropdown();
+        cargarHotelesDisponibles(); // Ahora el adapter ya está inicializado
+
         return view;
+    }
+
+    private void setupHotelesDropdown() {
+        // ✅ CAMBIAR: Usar el adapter personalizado
+        hotelesAdapter = new HotelesAdapter(getContext(), hotelesDisponibles);
+        autoCompleteHoteles.setAdapter(hotelesAdapter);
+
+        autoCompleteHoteles.setOnItemClickListener((parent, view, position, id) -> {
+            hotelSeleccionado = (Hotel) parent.getItemAtPosition(position);
+            Log.d("HotelSelection", "Hotel seleccionado: " + hotelSeleccionado.getNombre());
+        });
+    }
+    // ✅ AGREGAR: Adapter personalizado para hoteles
+    public class HotelesAdapter extends ArrayAdapter<Hotel> {
+
+        public HotelesAdapter(Context context, List<Hotel> hoteles) {
+            super(context, android.R.layout.simple_dropdown_item_1line, hoteles);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = super.getView(position, convertView, parent);
+            TextView textView = (TextView) view;
+            textView.setTextColor(Color.BLACK);  //
+            textView.setTextSize(16);
+            textView.setPadding(16, 12, 16, 12);
+            return view;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            View view = super.getDropDownView(position, convertView, parent);
+            TextView textView = (TextView) view;
+            textView.setTextColor(Color.BLACK);  //
+            textView.setTextSize(16);
+            textView.setPadding(16, 16, 16, 16);
+            textView.setBackgroundColor(Color.WHITE);  // ✅ Fondo blanco
+            return view;
+        }
+    }
+
+    /*private void cargarHotelesDisponibles() {
+        db.collection("hoteles")
+                .whereEqualTo("estado", "activo")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    hotelesDisponibles.clear();
+
+                    for (DocumentSnapshot doc : querySnapshot) {
+                        Hotel hotel = doc.toObject(Hotel.class);
+                        if (hotel != null) {
+                            hotel.setId(doc.getId());
+
+                            // Solo agregar hoteles que NO tengan administrador asignado
+                            if (!hotel.tieneAdministrador()) {
+                                hotelesDisponibles.add(hotel);
+                            }
+                        }
+                    }
+
+                    // Actualizar adapter
+                    hotelesAdapter.notifyDataSetChanged();
+
+                    Log.d("HotelesDebug", "Hoteles disponibles cargados: " + hotelesDisponibles.size());
+
+                    if (hotelesDisponibles.isEmpty()) {
+                        Toast.makeText(getContext(), "No hay hoteles disponibles sin administrador", Toast.LENGTH_LONG).show();
+                        autoCompleteHoteles.setHint("No hay hoteles disponibles");
+                        autoCompleteHoteles.setEnabled(false);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("HotelesDebug", "Error al cargar hoteles: " + e.getMessage());
+                    Toast.makeText(getContext(), "Error al cargar hoteles: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }*/
+    private void cargarHotelesDisponibles() {
+        db.collection("hoteles")
+                .whereEqualTo("estado", "activo")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    hotelesDisponibles.clear();
+
+                    for (DocumentSnapshot doc : querySnapshot) {
+                        Hotel hotel = doc.toObject(Hotel.class);
+                        if (hotel != null) {
+                            hotel.setId(doc.getId());
+
+                            // Solo agregar hoteles que NO tengan administrador asignado
+                            if (!hotel.tieneAdministrador()) {
+                                hotelesDisponibles.add(hotel);
+                            }
+                        }
+                    }
+
+                    // ✅ AGREGAR ESTA LÍNEA (línea 166 según el error):
+                    if (hotelesAdapter != null) {
+                        hotelesAdapter.notifyDataSetChanged();
+                    }
+                    // ✅ SI NO EXISTE LA LÍNEA DE ARRIBA, COMENTAR/ELIMINAR ESTA:
+                    // hotelesAdapter.notifyDataSetChanged();
+
+                    Log.d("HotelesDebug", "Hoteles disponibles cargados: " + hotelesDisponibles.size());
+
+                    if (hotelesDisponibles.isEmpty()) {
+                        Toast.makeText(getContext(), "No hay hoteles disponibles sin administrador", Toast.LENGTH_LONG).show();
+                        autoCompleteHoteles.setHint("No hay hoteles disponibles");
+                        autoCompleteHoteles.setEnabled(false);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("HotelesDebug", "Error al cargar hoteles: " + e.getMessage());
+                    Toast.makeText(getContext(), "Error al cargar hoteles: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void setupPasswordStrengthIndicator() {
@@ -131,7 +277,7 @@ public class StatisticsFragment extends Fragment {
         String password = editTextPassword.getText().toString().trim();
         String confirmPassword = etConfirmPassword.getText().toString().trim();
 
-        // Validar campos
+        // Validar campos incluyendo hotel
         if (!validarCampos(nombre, apellido, dni, correo, telefono, password, confirmPassword)) {
             return;
         }
@@ -175,7 +321,7 @@ public class StatisticsFragment extends Fragment {
     }
 
     private boolean validarCampos(String nombre, String apellido, String dni, String correo, String telefono, String password, String confirmPassword) {
-        // Validar campos vacíos
+        // Validaciones existentes...
         if (TextUtils.isEmpty(nombre)) {
             editTextNombre.setError("El nombre es requerido");
             editTextNombre.requestFocus();
@@ -218,35 +364,39 @@ public class StatisticsFragment extends Fragment {
             return false;
         }
 
-        // Validar formato de correo
+        // ✅ NUEVA VALIDACIÓN: Hotel seleccionado
+        if (hotelSeleccionado == null) {
+            autoCompleteHoteles.setError("Debe seleccionar un hotel");
+            autoCompleteHoteles.requestFocus();
+            Toast.makeText(getContext(), "Por favor selecciona un hotel para asignar al administrador", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        // Validaciones de formato...
         if (!Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
             editTextCorreo.setError("Formato de correo inválido");
             editTextCorreo.requestFocus();
             return false;
         }
 
-        // Validar longitud de contraseña
         if (password.length() < 6) {
             editTextPassword.setError("La contraseña debe tener al menos 6 caracteres");
             editTextPassword.requestFocus();
             return false;
         }
 
-        // Validar que las contraseñas coincidan
         if (!password.equals(confirmPassword)) {
             etConfirmPassword.setError("Las contraseñas no coinciden");
             etConfirmPassword.requestFocus();
             return false;
         }
 
-        // Validar DNI (8 dígitos)
         if (dni.length() != 8 || !dni.matches("\\d+")) {
             editTextDni.setError("El DNI debe tener 8 dígitos");
             editTextDni.requestFocus();
             return false;
         }
 
-        // Validar teléfono (9 dígitos)
         if (telefono.length() != 9 || !telefono.matches("\\d+")) {
             editTextTelefono.setError("El teléfono debe tener 9 dígitos");
             editTextTelefono.requestFocus();
@@ -266,24 +416,37 @@ public class StatisticsFragment extends Fragment {
         adminData.put("telefono", telefono);
         adminData.put("role", "admin");
         adminData.put("estado", "activo");
-        adminData.put("emailVerificado", false); // Inicialmente false
+        adminData.put("emailVerificado", false);
+        adminData.put("hotelAsignado", hotelSeleccionado.getId()); // ✅ NUEVO: ID del hotel asignado
         adminData.put("fechaRegistro", com.google.firebase.Timestamp.now());
         adminData.put("creadoPor", mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : "sistema");
 
-        // Guardar en Firestore
-        db.collection("usuarios").document(userId)
-                .set(adminData)
+        // Guardar en Firestore usando batch para operaciones múltiples
+        WriteBatch batch = db.batch();
+
+        // 1. Crear el documento del administrador
+        DocumentReference adminRef = db.collection("usuarios").document(userId);
+        batch.set(adminRef, adminData);
+
+        // 2. Actualizar el hotel con el ID del administrador
+        DocumentReference hotelRef = db.collection("hoteles").document(hotelSeleccionado.getId());
+        batch.update(hotelRef, "administradorId", userId);
+
+        // Ejecutar batch
+        batch.commit()
                 .addOnSuccessListener(aVoid -> {
                     mostrarProgreso(false);
                     Toast.makeText(getContext(),
-                            "Administrador registrado exitosamente. Se ha enviado un email de verificación a " + correo,
+                            "Administrador registrado exitosamente para el hotel: " + hotelSeleccionado.getNombre() +
+                                    ". Se ha enviado un email de verificación a " + correo,
                             Toast.LENGTH_LONG).show();
                     limpiarCampos();
+                    cargarHotelesDisponibles(); // Recargar lista de hoteles
                 })
                 .addOnFailureListener(e -> {
                     mostrarProgreso(false);
                     Toast.makeText(getContext(), "Error al guardar datos: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    // Si falla el guardado en Firestore, eliminar el usuario de Auth
+                    // Si falla el guardado, eliminar el usuario de Auth
                     FirebaseUser currentUser = mAuth.getCurrentUser();
                     if (currentUser != null) {
                         currentUser.delete();
@@ -309,6 +472,10 @@ public class StatisticsFragment extends Fragment {
         if (etConfirmPassword != null) {
             etConfirmPassword.setText("");
         }
+        if (autoCompleteHoteles != null) {
+            autoCompleteHoteles.setText("");
+            hotelSeleccionado = null;
+        }
 
         // Limpiar errores
         editTextNombre.setError(null);
@@ -319,6 +486,9 @@ public class StatisticsFragment extends Fragment {
         editTextPassword.setError(null);
         if (etConfirmPassword != null) {
             etConfirmPassword.setError(null);
+        }
+        if (autoCompleteHoteles != null) {
+            autoCompleteHoteles.setError(null);
         }
 
         // Ocultar indicador de fortaleza
@@ -343,5 +513,8 @@ public class StatisticsFragment extends Fragment {
         progressBar = null;
         progressBarLoading = null;
         txtPasswordStrength = null;
+        autoCompleteHoteles = null;
+        hotelesAdapter = null;
+        hotelSeleccionado = null;
     }
 }

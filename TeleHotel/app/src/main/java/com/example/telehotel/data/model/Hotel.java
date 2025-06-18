@@ -112,4 +112,13 @@ public class Hotel {
 
     @Ignore
     public void setServicios(List<Servicio> servicios) { this.servicios = servicios; }*/
+    @Override
+    public String toString() {
+        return nombre != null ? nombre : "Hotel sin nombre";
+    }
+
+    // Método para verificar si tiene administrador
+    public boolean tieneAdministrador() {
+        return administradorId != null && !administradorId.isEmpty();
+    }
 }

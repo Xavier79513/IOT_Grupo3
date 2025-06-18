@@ -107,7 +107,7 @@ public class UserListFragment extends Fragment implements UserAdapter.OnUserActi
                         usuarioList.add(usuario);
                     }
 
-                    // ✅ AGREGADO: Log para debug
+                    //  AGREGADO: Log para debug
                     Log.d("UserListDebug", "Total usuarios cargados: " + usuarioList.size());
                     for (Usuario u : usuarioList) {
                         Log.d("UserListDebug", "Usuario: " + u.getCorreo() + ", Rol: " + u.getRole() + ", Estado: " + u.getEstado());

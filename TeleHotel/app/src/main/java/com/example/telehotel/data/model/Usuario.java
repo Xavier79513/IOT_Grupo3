@@ -33,6 +33,7 @@ public class Usuario {
     private int viajesRealizadosHoy;
     private double ingresosDiarios;
     private double reputacion;
+    private String hotelAsignado;
 
     // Datos específicos para clientes
     private List<TarjetaCredito> tarjetasCredito = new ArrayList<>();
@@ -117,4 +118,8 @@ public class Usuario {
 
     public List<TarjetaCredito> getTarjetasCredito() { return tarjetasCredito; }
     public void setTarjetasCredito(List<TarjetaCredito> tarjetasCredito) { this.tarjetasCredito = tarjetasCredito; }
+
+    public String getHotelAsignado() { return hotelAsignado; }
+    public void setHotelAsignado(String hotelAsignado) { this.hotelAsignado = hotelAsignado; }
+
 }

@@ -27,120 +27,87 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import android.graphics.Color;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.telehotel.R;
+import com.example.telehotel.data.model.Servicio;
+
+import java.util.List;
+
 public class ServiciosAdapter extends RecyclerView.Adapter<ServiciosAdapter.ServicioViewHolder> {
 
-    private List<Servicio> serviciosList;
-    private OnServicioClickListener listener;
+    private List<Servicio> servicios;
 
-    public interface OnServicioClickListener {
-        void onServicioClick(Servicio servicio);
-    }
-
-    public ServiciosAdapter(List<Servicio> serviciosList) {
-        this.serviciosList = serviciosList;
-    }
-
-    public void setOnServicioClickListener(OnServicioClickListener listener) {
-        this.listener = listener;
+    public ServiciosAdapter(List<Servicio> servicios) {
+        this.servicios = servicios;
     }
 
     @NonNull
     @Override
     public ServicioViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_service_row, parent, false);
+                .inflate(R.layout.item_servicio, parent, false);
         return new ServicioViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ServicioViewHolder holder, int position) {
-        Servicio servicio = serviciosList.get(position);
+        Servicio servicio = servicios.get(position);
         holder.bind(servicio);
     }
 
     @Override
     public int getItemCount() {
-        return serviciosList.size();
+        return servicios.size();
     }
 
-    public void updateServicios(List<Servicio> nuevosServicios) {
-        this.serviciosList = nuevosServicios;
-        notifyDataSetChanged();
-    }
-
-    public class ServicioViewHolder extends RecyclerView.ViewHolder {
-
-        private ImageView imgServiceIcon;
-        private TextView tvServiceName;
-        private TextView tvServiceDesc;
-        private TextView tvServicePrice;
+    public static class ServicioViewHolder extends RecyclerView.ViewHolder {
+        private TextView tvNombre, tvDescripcion, tvPrecio, tvEstado, tvImagenes;
 
         public ServicioViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            imgServiceIcon = itemView.findViewById(R.id.imgServiceIcon);
-            tvServiceName = itemView.findViewById(R.id.tvServiceName);
-            tvServiceDesc = itemView.findViewById(R.id.tvServiceDesc);
-            tvServicePrice = itemView.findViewById(R.id.tvServicePrice);
-
-            // Click listener para todo el item
-            itemView.setOnClickListener(v -> {
-                if (listener != null) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        listener.onServicioClick(serviciosList.get(position));
-                    }
-                }
-            });
+            tvNombre = itemView.findViewById(R.id.tvNombre);
+            tvDescripcion = itemView.findViewById(R.id.tvDescripcion);
+            tvPrecio = itemView.findViewById(R.id.tvPrecio);
+            tvEstado = itemView.findViewById(R.id.tvEstado);
+            tvImagenes = itemView.findViewById(R.id.tvImagenes);
         }
 
         public void bind(Servicio servicio) {
-            tvServiceName.setText(servicio.getNombre());
-            tvServiceDesc.setText(servicio.getDescripcion());
-            tvServicePrice.setText("Precio: " + servicio.getPrecioFormateado());
+            tvNombre.setText(servicio.getNombre());
+            tvDescripcion.setText(servicio.getDescripcion());
+            tvPrecio.setText(servicio.getPrecioFormateado());
+            tvEstado.setText(servicio.getEstadoTexto());
 
-            // Establecer ícono según la categoría
-            setIconByCategory(servicio.getCategoria());
-        }
-
-        private void setIconByCategory(String categoria) {
-            int iconResource;
-
-            if (categoria == null) {
-                iconResource = R.drawable.ic_services;
+            // Color del precio según si es gratuito o no
+            if (servicio.esGratuito()) {
+                tvPrecio.setTextColor(Color.parseColor("#4CAF50")); // Verde para gratuito
             } else {
-                switch (categoria.toLowerCase()) {
-                    case "alimentación":
-                    case "desayuno":
-                    case "restaurant":
-                        iconResource = R.drawable.ic_breakfast;
-                        break;
-                    case "transporte":
-                    case "taxi":
-                        iconResource = R.drawable.ic_taxi;
-                        break;
-                    case "estacionamiento":
-                        iconResource = R.drawable.ic_parking;
-                        break;
-                    case "lavandería":
-                    case "limpieza":
-                        iconResource = R.drawable.ic_lavanderia;
-                        break;
-                    case "spa":
-                    case "bienestar":
-                        iconResource = R.drawable.ic_spa;
-                        break;
-                    case "habitación":
-                    case "room service":
-                        iconResource = R.drawable.ic_room_service;
-                        break;
-                    default:
-                        iconResource = R.drawable.ic_services;
-                        break;
-                }
+                tvPrecio.setTextColor(Color.parseColor("#FF9800")); // Naranja para con costo
             }
 
-            imgServiceIcon.setImageResource(iconResource);
+            // Color del estado
+            if (servicio.isDisponible()) {
+                tvEstado.setTextColor(Color.parseColor("#4CAF50")); // Verde
+            } else {
+                tvEstado.setTextColor(Color.parseColor("#F44336")); // Rojo
+            }
+
+            // Información de imágenes
+            if (servicio.tieneImagenes()) {
+                tvImagenes.setText(servicio.getCantidadImagenes() + " imagen(es)");
+                tvImagenes.setTextColor(Color.parseColor("#2196F3")); // Azul
+            } else {
+                tvImagenes.setText("Sin imágenes");
+                tvImagenes.setTextColor(Color.parseColor("#666666")); // Gris
+            }
         }
     }
 }

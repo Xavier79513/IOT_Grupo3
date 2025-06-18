@@ -1,74 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp"
-    android:background="?attr/selectableItemBackground">
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp"
+    android:backgroundTint="#FFFFFF">
 
-    <!-- FOTO + TÍTULO -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingBottom="4dp">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <ImageView
-            android:id="@+id/ivFoto"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_bed"
-            android:contentDescription="Foto habitación" />
-
-        <TextView
-            android:id="@+id/tvTitulo"
-            android:layout_width="wrap_content"
+        <!-- Header con número y estado -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tipo"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:layout_marginStart="8dp"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/tvNumero"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Habitación 101"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#1A1A1A" />
+
+            <TextView
+                android:id="@+id/tvEstado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DISPONIBLE"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#4CAF50"
+                android:backgroundTint="#E8F5E8"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp" />
+
+        </LinearLayout>
+
+        <!-- Información principal -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp"
+            android:weightSum="3">
+
+            <!-- Tipo -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tipo"
+                    android:textSize="12sp"
+                    android:textColor="#666666"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvTipo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Estándar"
+                    android:textSize="14sp"
+                    android:textColor="#333333"
+                    android:layout_marginTop="2dp" />
+
+            </LinearLayout>
+
+            <!-- Capacidad -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Capacidad"
+                    android:textSize="12sp"
+                    android:textColor="#666666"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvCapacidad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2 adultos, 1 niños"
+                    android:textSize="14sp"
+                    android:textColor="#333333"
+                    android:layout_marginTop="2dp" />
+
+            </LinearLayout>
+
+            <!-- Tamaño -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tamaño"
+                    android:textSize="12sp"
+                    android:textColor="#666666"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvTamaño"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="25.5 m²"
+                    android:textSize="14sp"
+                    android:textColor="#333333"
+                    android:layout_marginTop="2dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Separador -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E0E0E0"
+            android:layout_marginVertical="8dp" />
+
+        <!-- Precio -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Precio por noche:"
+                android:textSize="14sp"
+                android:textColor="#666666" />
+
+            <TextView
+                android:id="@+id/tvPrecio"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="S/ 150.00"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/primaryColor"
+                android:layout_marginStart="8dp"
+                android:gravity="end" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
-    <!-- ESTADO -->
-    <TextView
-        android:id="@+id/tvEstado"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Estado: disponible"
-        android:textSize="14sp"/>
-
-    <!-- PRECIO -->
-    <TextView
-        android:id="@+id/tvPrecio"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Precio: S/ 100"
-        android:textSize="14sp"/>
-
-    <!-- CAPACIDAD -->
-    <TextView
-        android:id="@+id/tvCapacidad"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Capacidad: 2 adultos, 2 niños"
-        android:textSize="14sp"/>
-
-    <!-- TAMAÑO -->
-    <TextView
-        android:id="@+id/tvTamano"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Tamaño: 30 m²"
-        android:textSize="14sp"/>
-
-    <!-- DESCRIPCIÓN -->
-    <TextView
-        android:id="@+id/tvInformacion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Descripción"
-        android:textSize="14sp"/>
-</LinearLayout>
+</androidx.cardview.widget.CardView>

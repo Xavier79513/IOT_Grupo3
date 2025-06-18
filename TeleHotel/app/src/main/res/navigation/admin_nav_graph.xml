@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/admin_nav_graph"
+    app:startDestination="@id/nav_admin_inicio">
+
+    <fragment
+        android:id="@+id/nav_admin_inicio"
+        android:name="com.example.telehotel.features.admin.fragments.AdminInicioFragment"
+        android:label="Inicio" />
+
+    <fragment
+        android:id="@+id/nav_admin_habitaciones"
+        android:name="com.example.telehotel.features.admin.fragments.HabitacionesFragment"
+        android:label="Habitaciones" />
+
+    <fragment
+        android:id="@+id/nav_admin_servicios"
+        android:name="com.example.telehotel.features.admin.fragments.ServiciosFragment"
+        android:label="Servicios" />
+
+    <fragment
+        android:id="@+id/nav_admin_taxista"
+        android:name="com.example.telehotel.features.admin.fragments.TaxistaEstadoFragment"
+        android:label="Estado del Taxista" />
+
+    <fragment
+        android:id="@+id/nav_admin_reportes"
+        android:name="com.example.telehotel.features.admin.fragments.ReportesFragment"
+        android:label="Reportes" />
+
+    <fragment
+        android:id="@+id/nav_admin_checkout"
+        android:name="com.example.telehotel.features.admin.fragments.CheckoutFragment"
+        android:label="Checkout" />
+
+</navigation-->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/admin_nav_graph"
+    app:startDestination="@id/nav_admin_inicio">
+
+    <fragment
+        android:id="@+id/nav_admin_inicio"
+        android:name="com.example.telehotel.features.admin.fragments.AdminInicioFragment"
+        android:label="Inicio" />
+
+    <fragment
+        android:id="@+id/nav_admin_habitaciones"
+        android:name="com.example.telehotel.features.admin.fragments.HabitacionesFragment"
+        android:label="Habitaciones" />
+
+    <fragment
+        android:id="@+id/nav_admin_servicios"
+        android:name="com.example.telehotel.features.admin.fragments.ServiciosFragment"
+        android:label="Servicios" />
+
+    <fragment
+        android:id="@+id/nav_admin_reportes"
+        android:name="com.example.telehotel.features.admin.fragments.ReportesFragment"
+        android:label="Reportes" />
+
+    <fragment
+        android:id="@+id/nav_admin_mas"
+        android:name="com.example.telehotel.features.admin.fragments.MasOpcionesFragment"
+        android:label="Más Opciones" />
+
+</navigation>

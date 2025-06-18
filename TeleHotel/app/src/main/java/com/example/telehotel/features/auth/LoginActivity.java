@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.telehotel.R;
 import com.example.telehotel.data.model.Usuario;
 import com.example.telehotel.data.repository.AuthRepository;
-import com.example.telehotel.features.admin.AdminActivity;
+import com.example.telehotel.features.admin.AdminMainActivity;
 import com.example.telehotel.features.cliente.ClientePaginaPrincipal;
 import com.example.telehotel.features.superadmin.ui.SuperAdminActivity;
 import com.example.telehotel.features.taxista.TaxistaActivity;
@@ -238,7 +238,7 @@ public class LoginActivity extends AppCompatActivity {
                                 intent = new Intent(this, TaxistaActivity.class);
                                 break;
                             case "admin":
-                                intent = new Intent(this, AdminActivity.class);
+                                intent = new Intent(this, AdminMainActivity.class);
                                 break;
                             case "superadmin":
                                 intent = new Intent(this, SuperAdminActivity.class);

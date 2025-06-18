@@ -55,7 +55,7 @@
             android:label="Registrate" /> <!-- Actividad para la selección de roles (RoleSelectionActivity) -->
 
         <activity
-            android:name=".features.admin.AdminActivity"
+            android:name=".features.admin.AdminMainActivity"
             android:label="Admin"
             android:theme="@style/Theme.TeleHotel.Admin" /> <!-- Actividad para Superadmin -->
         <activity

@@ -29,6 +29,14 @@ public class HotelRepository {
     private static CollectionReference getCollection() {
         return FirebaseUtil.getFirestore().collection(COLLECTION_NAME);
     }
+    // Agregar al final de HotelRepository.java
+
+    // Variables estáticas para cache inteligente
+    private static List<String> cachedLocations = new ArrayList<>();
+    private static List<LocationSearch> cachedDetailedLocations = new ArrayList<>();
+    private static long lastLocationCacheTime = 0;
+    private static final long CACHE_DURATION = 60000; // 1 minuto
+    private static final List<Consumer<List<String>>> locationUpdateCallbacks = new ArrayList<>();
 
     public static void getAllHotels(@NonNull Consumer<List<Hotel>> onSuccess,
                                     @NonNull Consumer<Exception> onError) {
@@ -207,13 +215,6 @@ public class HotelRepository {
                 })
                 .addOnFailureListener(onError::accept);
     }
-
-    /**
-     * Busca hoteles por una ubicación completa (formato: "Ciudad, País")
-     * @param ubicacionCompleta La ubicación en formato "Ciudad, País"
-     * @param onSuccess Callback que recibe la lista de hoteles encontrados
-     * @param onError Callback que recibe la excepción en caso de error
-     */
     public static void searchHotelsByLocationString(@NonNull String ubicacionCompleta,
                                                     @NonNull Consumer<List<Hotel>> onSuccess,
                                                     @NonNull Consumer<Exception> onError) {
@@ -226,19 +227,6 @@ public class HotelRepository {
             onError.accept(new Exception("Formato de ubicación inválido. Use: 'Ciudad, País'"));
         }
     }
-
-    /**
-     * Busca hoteles con filtros avanzados basados en parámetros de búsqueda
-     * @param ciudad La ciudad a buscar
-     * @param pais El país a buscar
-     * @param fechaInicio Fecha de inicio de la estadía (timestamp)
-     * @param fechaFin Fecha de fin de la estadía (timestamp)
-     * @param adultos Número mínimo de adultos que debe soportar
-     * @param ninos Número mínimo de niños que debe soportar
-     * @param habitacionesRequeridas Número mínimo de habitaciones requeridas
-     * @param onSuccess Callback que recibe la lista de hoteles filtrados
-     * @param onError Callback que recibe la excepción en caso de error
-     */
     public static void searchHotelsWithFilters(@NonNull String ciudad,
                                                @NonNull String pais,
                                                long fechaInicio,
@@ -279,17 +267,6 @@ public class HotelRepository {
         );
     }
 
-    /**
-     * Busca hoteles con filtros usando string de ubicación completa
-     * @param ubicacionCompleta La ubicación en formato "Ciudad, País"
-     * @param fechaInicio Fecha de inicio de la estadía (timestamp)
-     * @param fechaFin Fecha de fin de la estadía (timestamp)
-     * @param adultos Número mínimo de adultos que debe soportar
-     * @param ninos Número mínimo de niños que debe soportar
-     * @param habitacionesRequeridas Número mínimo de habitaciones requeridas
-     * @param onSuccess Callback que recibe la lista de hoteles filtrados
-     * @param onError Callback que recibe la excepción en caso de error
-     */
     public static void searchHotelsWithFiltersString(@NonNull String ubicacionCompleta,
                                                      long fechaInicio,
                                                      long fechaFin,
@@ -310,9 +287,6 @@ public class HotelRepository {
         }
     }
 
-    /**
-     * Verifica si un hotel está disponible según los criterios especificados
-     */
     private static boolean isHotelAvailable(Hotel hotel, long fechaInicio, long fechaFin,
                                             int adultos, int ninos, int habitacionesRequeridas) {
 
@@ -346,9 +320,6 @@ public class HotelRepository {
         return false;
     }
 
-    /**
-     * Verifica si una habitación es adecuada para los huéspedes especificados
-     */
     private static boolean isHabitacionSuitable(Habitacion habitacion, int adultos, int ninos,
                                                 long fechaInicio, long fechaFin) {
         if (habitacion == null || habitacion.getCapacidad() == null) {
@@ -932,7 +903,59 @@ public class HotelRepository {
 
         return false;
     }
+    // Agregar estos métodos al final de tu clase HotelRepository existente
+
+    /**
+     * Método para obtener todas las ciudades únicas para el AutoComplete
+     * Compatible con el formato que espera ClientePaginaPrincipal
+     */
+    public static void obtenerCiudadesDisponibles(@NonNull OnCiudadesObtenidas callback) {
+        getUniqueLocations(
+                ciudades -> callback.onSuccess(ciudades),
+                error -> callback.onError(error.getMessage())
+        );
+    }
+
+    /**
+     * Método para buscar hoteles por ubicación (compatible con ClientePaginaPrincipal)
+     * @param busqueda Texto de búsqueda (puede ser ciudad, país o "Ciudad, País")
+     * @param callback Callback con los resultados
+     */
+    public static void buscarHotelesPorUbicacion(@NonNull String busqueda,
+                                                 @NonNull OnHotelesObtenidos callback) {
+
+        if (busqueda == null || busqueda.trim().isEmpty()) {
+            callback.onError("Texto de búsqueda vacío");
+            return;
+        }
+
+        // Si tiene formato "Ciudad, País", usar búsqueda directa
+        if (busqueda.contains(",") && busqueda.split(",").length == 2) {
+            searchHotelsByLocationString(busqueda,
+                    hoteles -> callback.onSuccess(hoteles),
+                    error -> callback.onError(error.getMessage())
+            );
+        } else {
+            // Si no tiene formato estándar, usar búsqueda flexible
+            searchHotelsByFlexibleText(busqueda, 0, 0, 1, // Sin restricciones de capacidad
+                    hoteles -> callback.onSuccess(hoteles),
+                    error -> callback.onError(error.getMessage())
+            );
+        }
+    }
+
+    /**
+     * Interfaces para callbacks (compatibles con ClientePaginaPrincipal)
+     */
+    public interface OnCiudadesObtenidas {
+        void onSuccess(List<String> ciudades);
+        void onError(String error);
+    }
+
+    public interface OnHotelesObtenidos {
+        void onSuccess(List<Hotel> hoteles);
+        void onError(String error);
+    }
+
 }
-
-
 

@@ -2,6 +2,8 @@
 package com.example.telehotel.core.storage;
 
 import android.content.Context;
+import android.util.Log;
+
 import com.example.telehotel.data.model.*;
 import java.util.List;
 import java.util.ArrayList;
@@ -420,6 +422,7 @@ public class StorageHelper {
     public int calculateDaysDifference(long startDate, long endDate) {
         return (int) ((endDate - startDate) / (1000 * 60 * 60 * 24));
     }
+
 
     /**
      * Verifica si una fecha está en el futuro

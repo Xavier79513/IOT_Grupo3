@@ -461,7 +461,7 @@ public class HotelsFragment extends Fragment {
 
         // SIEMPRE buscar con parámetros específicos
         // Si llegamos aquí, debe haber una búsqueda válida
-        buscarHotelesConParametros();
+        //buscarHotelesConParametros();
     }
 
     /**
@@ -527,7 +527,7 @@ public class HotelsFragment extends Fragment {
         // getParentFragmentManager().popBackStack();
     }
 
-    private void buscarHotelesConParametros() {
+    /*private void buscarHotelesConParametros() {
         Log.d(TAG, String.format("Buscando hoteles - Ubicación: '%s', Fechas: %d-%d, Huéspedes: %d adultos + %d niños, Habitaciones: %d",
                 searchLocation, startDate, endDate, adults, children, rooms));
 
@@ -586,7 +586,7 @@ public class HotelsFragment extends Fragment {
                     }
                 }
         );
-    }
+    }*/
 
     private void mostrarError(String mensaje) {
         progressBar.setVisibility(View.GONE);

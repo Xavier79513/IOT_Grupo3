@@ -53,6 +53,11 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
     public interface OnItemClickListener {
         void onItemClick(Hotel hotel);
     }
+    // Constructor modificado para aceptar contexto
+    public HotelAdapter(List<Hotel> hotelList, Context context) {
+        this.hotelList = hotelList;
+        this.context = context;
+    }
 
     public interface OnFavoriteClickListener {
         void onFavoriteClick(Hotel hotel, boolean isFavorite);

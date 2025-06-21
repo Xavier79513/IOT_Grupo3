@@ -45,11 +45,11 @@ public class HotelDetailActivity extends AppCompatActivity {
 
         String hotelId = getIntent().getStringExtra("hotelId");
 
-        if (hotelId != null) {
+        /*if (hotelId != null) {
             cargarDatosDelHotel(hotelId);
         } else {
             ocultarLoadingOverlay();
-        }
+        }*/
 
         loadFragment(new HotelDetailReservaFragment());
         setSelectedButton(bookingButton);
@@ -125,7 +125,7 @@ public class HotelDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void cargarDatosDelHotel(String hotelId) {
+    /*private void cargarDatosDelHotel(String hotelId) {
         HotelRepository.getHotelById(hotelId, hotel -> {
             // Nombre
             hotelNameTextView.setText(hotel.getNombre());
@@ -157,7 +157,7 @@ public class HotelDetailActivity extends AppCompatActivity {
             Log.e("HotelDetail", "Error al cargar hotel", error);
             ocultarLoadingOverlay(); // en caso de error, ocultamos igual
         });
-    }
+    }*/
 
     private void ocultarLoadingOverlay() {
         if (loadingOverlay.getVisibility() == View.VISIBLE) {

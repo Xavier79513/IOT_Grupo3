@@ -43,16 +43,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp" />
 
-        <!--EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Buscar"
-            android:textColorHint="#625555"
-            android:drawableStart="@android:drawable/ic_menu_search"
-            android:drawableTint="#FF333333"
-            android:padding="12dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/search_background" /-->
 
         <!-- Contenedor principal con etiquetas -->
         <LinearLayout

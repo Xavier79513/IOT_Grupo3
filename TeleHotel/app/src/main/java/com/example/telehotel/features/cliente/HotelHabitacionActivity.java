@@ -55,10 +55,10 @@ public class HotelHabitacionActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(adapter);
 
-        cargarHotelYHabitaciones();
+        //cargarHotelYHabitaciones();
     }
 
-    private void cargarHotelYHabitaciones() {
+    /*private void cargarHotelYHabitaciones() {
         HotelRepository.getHotelById(hotelId, hotel -> {
             if (hotel != null && hotel.getHabitaciones() != null) {
                 listaHabitaciones.clear();
@@ -68,5 +68,5 @@ public class HotelHabitacionActivity extends AppCompatActivity {
         }, error -> {
             Toast.makeText(this, "Error al cargar habitaciones: " + error.getMessage(), Toast.LENGTH_LONG).show();
         });
-    }
+    }*/
 }

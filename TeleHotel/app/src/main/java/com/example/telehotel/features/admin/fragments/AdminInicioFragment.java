@@ -139,12 +139,19 @@ import java.util.Map;
 }*/
 public class AdminInicioFragment extends Fragment {
 
-    private TextView tvBienvenida, tvHotelNombre, tvReservasHoy, tvOcupacion;
-    private Button btnConfigurarUbicacion;
+    private static final String TAG = "AdminInicioFragment";
+
+    // UI Components
+    private TextView tvBienvenida, tvHotelNombre;
+    private Button btnConfigurarUbicacion, btnGestionarImagenes;
 
     // Firebase
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+
+    // Variables para almacenar datos del admin y hotel
+    private String hotelAsignadoId;
+    private String nombreAdmin;
 
     @Nullable
     @Override
@@ -163,28 +170,113 @@ public class AdminInicioFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
 
         initViews(view);
+        setupClickListeners();
         loadAdminData();
     }
 
     private void initViews(View view) {
-        tvBienvenida = view.findViewById(R.id.tvBienvenida);
-        tvHotelNombre = view.findViewById(R.id.tvHotelNombre);
-        btnConfigurarUbicacion = view.findViewById(R.id.btnConfigurarUbicacion);
+        try {
+            tvBienvenida = view.findViewById(R.id.tvBienvenida);
+            tvHotelNombre = view.findViewById(R.id.tvHotelNombre);
+            btnConfigurarUbicacion = view.findViewById(R.id.btnConfigurarUbicacion);
+            btnGestionarImagenes = view.findViewById(R.id.btnGestionarImagenes);
 
-        // Configurar listener para el botón
-        btnConfigurarUbicacion.setOnClickListener(v -> abrirConfiguracionUbicacion());
+            Log.d(TAG, "Vistas inicializadas correctamente");
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error inicializando vistas: " + e.getMessage());
+            Toast.makeText(getContext(), "Error inicializando la interfaz", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void setupClickListeners() {
+        try {
+            // Listener para configurar ubicación
+            btnConfigurarUbicacion.setOnClickListener(v -> {
+                Log.d(TAG, "Botón Configurar Ubicación presionado");
+                abrirConfiguracionUbicacion();
+            });
+
+            // Listener para gestionar imágenes
+            btnGestionarImagenes.setOnClickListener(v -> {
+                Log.d(TAG, "Botón Gestionar Imágenes presionado");
+                abrirGestionImagenes();
+            });
+
+            Log.d(TAG, "Click listeners configurados");
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error configurando listeners: " + e.getMessage());
+        }
     }
 
     private void abrirConfiguracionUbicacion() {
-        // Navegar al fragment de ubicación
-        if (getActivity() != null) {
-            // CAMBIA 'fragment_container' por el ID correcto de tu contenedor
-            // Posibles IDs comunes: R.id.container, R.id.main_container, R.id.frameLayout
-            getActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.nav_host_fragment, new AdminUbicacionFragment())// Cambia aquí el ID
-                    .addToBackStack(null)
-                    .commit();
+        try {
+            if (getActivity() != null) {
+                Log.d(TAG, "Navegando a AdminUbicacionFragment");
+
+                // Verificar que el admin tenga un hotel asignado
+                if (hotelAsignadoId == null || hotelAsignadoId.isEmpty()) {
+                    Toast.makeText(getContext(),
+                            "No tienes un hotel asignado. Contacta al administrador del sistema.",
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                // Crear fragment con argumentos del hotel
+                AdminUbicacionFragment ubicacionFragment = new AdminUbicacionFragment();
+                Bundle args = new Bundle();
+                args.putString("hotel_id", hotelAsignadoId);
+                args.putString("admin_name", nombreAdmin);
+                ubicacionFragment.setArguments(args);
+
+                // Navegar al fragment
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.nav_host_fragment, ubicacionFragment)
+                        .addToBackStack("AdminUbicacion")
+                        .commit();
+
+                Toast.makeText(getContext(), "Abriendo configuración de ubicación...", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error navegando a configuración de ubicación: " + e.getMessage());
+            Toast.makeText(getContext(), "Error abriendo configuración de ubicación", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void abrirGestionImagenes() {
+        try {
+            if (getActivity() != null) {
+                Log.d(TAG, "Navegando a AdminImagenesFragment");
+
+                // Verificar que el admin tenga un hotel asignado
+                if (hotelAsignadoId == null || hotelAsignadoId.isEmpty()) {
+                    Toast.makeText(getContext(),
+                            "No tienes un hotel asignado. Contacta al administrador del sistema.",
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                // Crear fragment para gestión de imágenes
+                AdminImagenesFragment imagenesFragment = new AdminImagenesFragment();
+                Bundle args = new Bundle();
+                args.putString("hotel_id", hotelAsignadoId);
+                args.putString("admin_name", nombreAdmin);
+                imagenesFragment.setArguments(args);
+
+                // Navegar al fragment
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.nav_host_fragment, imagenesFragment)
+                        .addToBackStack("AdminImagenes")
+                        .commit();
+
+                Toast.makeText(getContext(), "Abriendo gestión de imágenes...", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error navegando a gestión de imágenes: " + e.getMessage());
+            Toast.makeText(getContext(), "Error abriendo gestión de imágenes", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -192,46 +284,62 @@ public class AdminInicioFragment extends Fragment {
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         if (currentUser == null) {
-            Log.e("AdminInicio", "Usuario no autenticado");
+            Log.e(TAG, "Usuario no autenticado");
             Toast.makeText(getContext(), "Error: Usuario no autenticado", Toast.LENGTH_SHORT).show();
             return;
         }
 
         String userId = currentUser.getUid();
+        Log.d(TAG, "Cargando datos para usuario: " + userId);
 
-        // 1. Obtener datos del administrador
+        // Obtener datos del administrador
         db.collection("usuarios").document(userId)
                 .get()
                 .addOnSuccessListener(userDoc -> {
-                    if (userDoc.exists()) {
-                        String nombreAdmin = userDoc.getString("nombres");
-                        String hotelAsignado = userDoc.getString("hotelAsignado");
+                    try {
+                        if (userDoc.exists()) {
+                            nombreAdmin = userDoc.getString("nombres");
+                            hotelAsignadoId = userDoc.getString("hotelAsignado");
 
-                        // Mostrar bienvenida con nombre del admin
-                        if (nombreAdmin != null && !nombreAdmin.isEmpty()) {
-                            tvBienvenida.setText("¡Bienvenido " + nombreAdmin + "!");
+                            // Si no existe hotelAsignado, intentar con hotelId
+                            if (hotelAsignadoId == null || hotelAsignadoId.isEmpty()) {
+                                hotelAsignadoId = userDoc.getString("hotelId");
+                            }
+
+                            Log.d(TAG, "Datos admin cargados - Nombre: " + nombreAdmin + ", Hotel: " + hotelAsignadoId);
+
+                            // Mostrar bienvenida con nombre del admin
+                            if (nombreAdmin != null && !nombreAdmin.isEmpty()) {
+                                tvBienvenida.setText("¡Bienvenido " + nombreAdmin + "!");
+                            } else {
+                                tvBienvenida.setText("¡Bienvenido Administrador!");
+                            }
+
+                            // Cargar datos del hotel asignado
+                            if (hotelAsignadoId != null && !hotelAsignadoId.isEmpty()) {
+                                loadHotelData(hotelAsignadoId);
+                            } else {
+                                Log.w(TAG, "Administrador sin hotel asignado");
+                                tvHotelNombre.setText("Sin hotel asignado");
+                                // Deshabilitar botones si no hay hotel
+                                btnConfigurarUbicacion.setEnabled(false);
+                                btnGestionarImagenes.setEnabled(false);
+                                btnConfigurarUbicacion.setText("Hotel no asignado");
+                                btnGestionarImagenes.setText("Hotel no asignado");
+                            }
+
                         } else {
+                            Log.e(TAG, "Documento del usuario no encontrado");
                             tvBienvenida.setText("¡Bienvenido Administrador!");
+                            tvHotelNombre.setText("Usuario no encontrado");
                         }
-
-                        // 2. Obtener datos del hotel asignado
-                        if (hotelAsignado != null && !hotelAsignado.isEmpty()) {
-                            loadHotelData(hotelAsignado);
-                        } else {
-                            Log.w("AdminInicio", "Administrador sin hotel asignado");
-                            tvHotelNombre.setText("Sin hotel asignado");
-                        }
-
-                        Log.d("AdminInicio", "Datos del admin cargados: " + nombreAdmin + ", Hotel: " + hotelAsignado);
-
-                    } else {
-                        Log.e("AdminInicio", "Documento del usuario no encontrado");
-                        tvBienvenida.setText("¡Bienvenido Administrador!");
-                        tvHotelNombre.setText("Hotel no encontrado");
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error procesando datos del usuario: " + e.getMessage());
+                        Toast.makeText(getContext(), "Error procesando datos del usuario", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("AdminInicio", "Error al cargar datos del usuario: " + e.getMessage());
+                    Log.e(TAG, "Error al cargar datos del usuario: " + e.getMessage());
                     Toast.makeText(getContext(), "Error al cargar datos del administrador", Toast.LENGTH_SHORT).show();
                     tvBienvenida.setText("¡Bienvenido Administrador!");
                     tvHotelNombre.setText("Error al cargar hotel");
@@ -239,28 +347,52 @@ public class AdminInicioFragment extends Fragment {
     }
 
     private void loadHotelData(String hotelId) {
+        Log.d(TAG, "Cargando datos del hotel: " + hotelId);
+
         db.collection("hoteles").document(hotelId)
                 .get()
                 .addOnSuccessListener(hotelDoc -> {
-                    if (hotelDoc.exists()) {
-                        String nombreHotel = hotelDoc.getString("nombre");
+                    try {
+                        if (hotelDoc.exists()) {
+                            String nombreHotel = hotelDoc.getString("nombre");
 
-                        if (nombreHotel != null && !nombreHotel.isEmpty()) {
-                            tvHotelNombre.setText(nombreHotel);
+                            if (nombreHotel != null && !nombreHotel.isEmpty()) {
+                                tvHotelNombre.setText(nombreHotel);
+                            } else {
+                                tvHotelNombre.setText("Hotel sin nombre");
+                            }
+
+                            Log.d(TAG, "Hotel cargado exitosamente: " + nombreHotel);
+
                         } else {
-                            tvHotelNombre.setText("Hotel sin nombre");
+                            Log.w(TAG, "Documento del hotel no encontrado: " + hotelId);
+                            tvHotelNombre.setText("Hotel no encontrado");
                         }
-
-                        Log.d("AdminInicio", "Hotel cargado: " + nombreHotel);
-
-                    } else {
-                        Log.w("AdminInicio", "Documento del hotel no encontrado");
-                        tvHotelNombre.setText("Hotel no encontrado");
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error procesando datos del hotel: " + e.getMessage());
+                        tvHotelNombre.setText("Error procesando hotel");
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("AdminInicio", "Error al cargar datos del hotel: " + e.getMessage());
+                    Log.e(TAG, "Error al cargar datos del hotel: " + e.getMessage());
                     tvHotelNombre.setText("Error al cargar hotel");
                 });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "Fragment resumed, recargando datos...");
+
+        // Recargar datos cuando el fragment vuelve a estar visible
+        if (mAuth != null && mAuth.getCurrentUser() != null) {
+            loadAdminData();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "Fragment destruido");
     }
 }

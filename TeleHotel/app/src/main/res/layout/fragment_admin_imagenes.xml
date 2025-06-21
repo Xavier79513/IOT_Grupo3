@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tvTituloHotel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="📷 Gestión de Imágenes del Hotel"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Contador de imágenes -->
+    <TextView
+        android:id="@+id/tvContadorImagenes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="0 imágenes"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Botón cambiar vista -->
+    <Button
+        android:id="@+id/btnCambiarVista"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🖼️ Modo Galería"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
+
+    <!-- Botones de administración -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/btnAgregarImagen"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="📂 Agregar Imagen"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@android:color/black" />
+
+        <Button
+            android:id="@+id/btnTomarFoto"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="📷 Tomar Foto"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@android:color/black" />
+
+    </LinearLayout>
+
+    <!-- RecyclerView para imágenes -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerImagenes"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:padding="4dp" />
+
+</LinearLayout>

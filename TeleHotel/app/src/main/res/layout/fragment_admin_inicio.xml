@@ -49,7 +49,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Botón para configurar ubicación -->
+        <!-- Configuración del Hotel -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,32 +66,90 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🗺️ Configuración del Hotel"
+                    android:text="🛠️ Configuración del Hotel"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/textPrimary"
-                    android:layout_marginBottom="8dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Configura la ubicación de tu hotel y los lugares históricos cercanos para que los clientes puedan encontrarte."
-                    android:textSize="14sp"
-                    android:textColor="@color/textSecondary"
                     android:layout_marginBottom="12dp" />
 
-                <Button
-                    android:id="@+id/btnConfigurarUbicacion"
+                <!-- Botón para configurar ubicación -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="📍 Configurar Ubicación del Hotel"
-                    android:textColor="#FFFFFF"
-                    android:padding="12dp" />
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_card_light"
+                    android:padding="12dp"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="📍 Ubicación y Lugares Cercanos"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/textPrimary"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Configura la ubicación de tu hotel y los lugares históricos cercanos."
+                        android:textSize="13sp"
+                        android:textColor="@color/textSecondary"
+                        android:layout_marginBottom="8dp" />
+
+                    <Button
+                        android:id="@+id/btnConfigurarUbicacion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Configurar Ubicación"
+                        android:textColor="#FFFFFF"
+                        android:backgroundTint="@color/primaryColor"
+                        android:textSize="14sp"
+                        android:padding="10dp" />
+
+                </LinearLayout>
+
+                <!-- Botón para gestionar imágenes -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_card_light"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="📷 Galería del Hotel"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/textPrimary"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Gestiona las fotos de tu hotel y sus instalaciones (mínimo 4 imágenes)."
+                        android:textSize="13sp"
+                        android:textColor="@color/textSecondary"
+                        android:layout_marginBottom="8dp" />
+
+                    <Button
+                        android:id="@+id/btnGestionarImagenes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Gestionar Imágenes"
+                        android:textColor="#FFFFFF"
+                        android:backgroundTint="@color/accentColor"
+                        android:textSize="14sp"
+                        android:padding="10dp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
-
     </LinearLayout>
 
 </ScrollView>

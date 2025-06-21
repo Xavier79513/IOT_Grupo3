@@ -11,21 +11,6 @@ import com.example.telehotel.features.cliente.adapters.FullscreenPhotoAdapter;
 
 import java.util.List;
 
-/*public class FullscreenPhotoActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ImageView imageView = new ImageView(this);
-        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        setContentView(imageView);
-
-        int resId = getIntent().getIntExtra("photoResId", -1);
-        if (resId != -1) {
-            imageView.setImageResource(resId);
-        }
-    }
-}*/
 public class FullscreenPhotoActivity extends AppCompatActivity {
 
     @Override

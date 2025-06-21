@@ -97,7 +97,7 @@ public class ServicioTaxiAdapter extends RecyclerView.Adapter<ServicioTaxiAdapte
         }
 
         // Recojo (nombre del hotel)
-        if (solicitud.getHotelId() != null && !solicitud.getHotelId().isEmpty()) {
+        /*if (solicitud.getHotelId() != null && !solicitud.getHotelId().isEmpty()) {
             HotelRepository.getHotelByIdPorCampo(
                     solicitud.getHotelId(),
                     hotel -> holder.textRecojo.setText("Recojo: " + hotel.getNombre()),
@@ -110,7 +110,7 @@ public class ServicioTaxiAdapter extends RecyclerView.Adapter<ServicioTaxiAdapte
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(holder.itemView.getContext(), TaxistaDetalleViaje.class);
             holder.itemView.getContext().startActivity(intent);
-        });
+        });*/
     }
 
     @Override

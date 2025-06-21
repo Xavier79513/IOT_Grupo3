@@ -85,7 +85,7 @@ public class HotelDetailReservaFragment extends Fragment {
 
 
         // Obtener el hotelId desde la actividad
-        if (getActivity() != null && getActivity().getIntent() != null) {
+        /*if (getActivity() != null && getActivity().getIntent() != null) {
             hotelId = getActivity().getIntent().getStringExtra("hotelId");
             Log.d("HotelReserva", "hotelId recibido en fragmento: " + hotelId);
 
@@ -94,7 +94,7 @@ public class HotelDetailReservaFragment extends Fragment {
             } else {
                 Log.e("HotelReserva", "hotelId es null");
             }
-        }
+        }*/
 
         // Cargar datos guardados de fechas y huéspedes
         cargarDatosReservaGuardados();
@@ -102,7 +102,7 @@ public class HotelDetailReservaFragment extends Fragment {
         return view;
     }
 
-    private void cargarHotelDesdeRepositorio(String hotelId) {
+    /*private void cargarHotelDesdeRepositorio(String hotelId) {
         HotelRepository.getHotelById(hotelId, hotel -> {
             Log.d("HotelReserva", "Hotel cargado: " + hotel.getNombre());
             hotelDescription.setText(hotel.getDescripcion());
@@ -118,7 +118,7 @@ public class HotelDetailReservaFragment extends Fragment {
             Log.e("HotelReserva", "Error consultando hotel", error);
             Toast.makeText(getContext(), "No se pudo cargar el hotel", Toast.LENGTH_SHORT).show();
         });
-    }
+    }*/
 
     private void cargarDatosReservaGuardados() {
         long startDate = prefsManager.getStartDate();

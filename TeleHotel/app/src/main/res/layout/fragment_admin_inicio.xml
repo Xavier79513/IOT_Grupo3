@@ -49,90 +49,13 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Estadísticas del día -->
+        <!-- Botón para configurar ubicación -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:backgroundTint="#FFFFFF"
             app:cardCornerRadius="12dp"
-            app:cardElevation="2dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:weightSum="2">
-
-                <!-- Reservas Hoy -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvReservasHoy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="5"
-                        android:textColor="@color/primaryColor"
-                        android:textSize="28sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Reservas Hoy"
-                        android:textColor="#666666"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-
-                <!-- Separador -->
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="60dp"
-                    android:background="#E0E0E0" />
-
-                <!-- Ocupación -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvOcupacion"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="75%"
-                        android:textColor="#4CAF50"
-                        android:textSize="28sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Ocupación"
-                        android:textColor="#666666"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Accesos Rápidos -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#FFFFFF"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp">
+            app:cardElevation="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -141,53 +64,32 @@
                 android:padding="16dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:text="Accesos Rápidos"
-                    android:textColor="@color/primaryColor"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <!-- Grid de accesos rápidos -->
-                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
+                    android:text="🗺️ Configuración del Hotel"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/textPrimary"
+                    android:layout_marginBottom="8dp" />
 
-                    <!-- Nueva Reserva -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="100dp"
-                        android:layout_margin="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/filter_button_bg"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Configura la ubicación de tu hotel y los lugares históricos cercanos para que los clientes puedan encontrarte."
+                    android:textSize="14sp"
+                    android:textColor="@color/textSecondary"
+                    android:layout_marginBottom="12dp" />
 
-                        <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:layout_marginBottom="8dp"
-                            android:src="@drawable/ic_add"
-                            app:tint="@color/primaryColor" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="Nueva Reserva"
-                            android:textColor="#333333"
-                            android:textSize="12sp" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
+                <Button
+                    android:id="@+id/btnConfigurarUbicacion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📍 Configurar Ubicación del Hotel"
+                    android:textColor="#FFFFFF"
+                    android:padding="12dp" />
 
             </LinearLayout>
+
         </androidx.cardview.widget.CardView>
 
     </LinearLayout>

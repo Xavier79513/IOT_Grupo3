@@ -57,7 +57,7 @@ public class AdminMainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
+    /*@Override
     public void onBackPressed() {
         // Obtener NavController para manejar navegación hacia atrás
         NavHostFragment navHostFragment =
@@ -73,5 +73,15 @@ public class AdminMainActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+    }*/
+    @Override
+    public void onBackPressed() {
+        // Manejar navegación hacia atrás de forma simple
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
+
 }

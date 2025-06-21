@@ -2,6 +2,8 @@ package com.example.telehotel.data.model;
 
 import androidx.room.Ignore;
 
+import com.google.firebase.Timestamp;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,10 @@ public class Hotel {
     //private List<Servicio> servicios;
     // ✅ CAMBIO CLAVE: servicios como List<String> (IDs), NO List<Servicio>
     private List<String> servicios;
+
+    private List<LugarHistorico> lugaresHistoricos;
+    private Timestamp fechaCreacion;
+    private Timestamp fechaActualizacion;
 
 
     private List<Habitacion> habitaciones = new ArrayList<>(); // Habitaciones embebidas
@@ -120,5 +126,29 @@ public class Hotel {
     // Método para verificar si tiene administrador
     public boolean tieneAdministrador() {
         return administradorId != null && !administradorId.isEmpty();
+    }
+
+    public List<LugarHistorico> getLugaresHistoricos() {
+        return lugaresHistoricos;
+    }
+
+    public void setLugaresHistoricos(List<LugarHistorico> lugaresHistoricos) {
+        this.lugaresHistoricos = lugaresHistoricos;
+    }
+
+    public Timestamp getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(Timestamp fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public Timestamp getFechaActualizacion() {
+        return fechaActualizacion;
+    }
+
+    public void setFechaActualizacion(Timestamp fechaActualizacion) {
+        this.fechaActualizacion = fechaActualizacion;
     }
 }

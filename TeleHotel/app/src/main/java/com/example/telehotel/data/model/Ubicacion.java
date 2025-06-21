@@ -6,6 +6,8 @@ public class Ubicacion {
     private String direccion;
     private String ciudad;
     private String pais;
+    private String provincia;
+    private String codigoPostal;
     private Double latitud;
     private Double longitud;
     private String timestamp;
@@ -73,6 +75,22 @@ public class Ubicacion {
 
     public void setLongitud(Double longitud) {
         this.longitud = longitud;
+    }
+
+    public String getProvincia() {
+        return provincia;
+    }
+
+    public void setProvincia(String provincia) {
+        this.provincia = provincia;
+    }
+
+    public String getCodigoPostal() {
+        return codigoPostal;
+    }
+
+    public void setCodigoPostal(String codigoPostal) {
+        this.codigoPostal = codigoPostal;
     }
 }
 

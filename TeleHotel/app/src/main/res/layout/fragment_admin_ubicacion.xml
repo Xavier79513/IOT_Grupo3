@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8F9FA"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Título -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📍 Configurar Ubicación del Hotel"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/primaryColor"
+            android:layout_marginBottom="16dp"
+            android:textAlignment="center" />
+
+        <!-- Card para Datos del Hotel -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🏨 Información del Hotel"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Dirección -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:hint="Dirección completa del hotel">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etDireccion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPostalAddress"
+                        android:maxLines="2" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Ciudad -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:hint="Ciudad">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etCiudad"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapWords" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- País -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:hint="País">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPais"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapWords" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Botón buscar coordenadas -->
+                <Button
+                    android:id="@+id/btnBuscarCoordenadas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🔍 Buscar Coordenadas"
+                    android:backgroundTint="@color/primaryColor"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Información de coordenadas -->
+                <LinearLayout
+                    android:id="@+id/layoutUbicacionInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📍 Coordenadas encontradas:"
+                        android:textStyle="bold"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvCoordenadas"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Lat: 0.000000, Lng: 0.000000"
+                        android:textSize="14sp"
+                        android:textColor="@color/textSecondary"
+                        android:layout_marginTop="4dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Estado de búsqueda -->
+        <TextView
+            android:id="@+id/tvEstadoBusqueda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="💡 Ingresa los datos del hotel y busca las coordenadas"
+            android:textSize="14sp"
+            android:textColor="@color/textSecondary"
+            android:textAlignment="center"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Progress Bar -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Card para Lugares Históricos -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="🏛️ Lugares Históricos Cercanos"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btnBuscarLugares"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🔍 Buscar"
+                        android:textSize="12sp"
+                        android:minHeight="36dp"
+                        android:enabled="false" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="💡 Se buscarán automáticamente los 8 lugares históricos más cercanos (museos, monumentos, sitios arqueológicos) en un radio de 3km usando OpenStreetMap."
+                    android:textSize="12sp"
+                    android:textColor="@color/textSecondary"
+                    android:padding="8dp"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Lista de lugares históricos -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvLugaresHistoricos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:layout_marginBottom="8dp" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Botón guardar -->
+        <Button
+            android:id="@+id/btnGuardarUbicacion"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="💾 Guardar Configuración"
+            android:backgroundTint="@color/primaryColor"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:enabled="false" />
+
+        <!-- Información adicional -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ℹ️ Los clientes podrán buscar tu hotel por ciudad y país. Los lugares históricos seleccionados aparecerán como atractivos cercanos. Servicio gratuito usando OpenStreetMap."
+            android:textSize="12sp"
+            android:textColor="@color/textSecondary"
+            android:padding="12dp"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+
+</ScrollView>

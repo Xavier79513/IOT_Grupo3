@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardFoto"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:layout_margin="4dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="3dp"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Imagen principal -->
+        <ImageView
+            android:id="@+id/ivFotoHotel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_hotel" />
+
+        <!-- Overlay con información -->
+        <LinearLayout
+            android:id="@+id/overlayInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/gradient_overlay"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <!-- Título de la foto -->
+            <TextView
+                android:id="@+id/tvTituloFoto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lobby Principal"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <!-- Tipo de instalación -->
+            <TextView
+                android:id="@+id/tvTipoInstalacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="🏛️ Lobby"
+                android:textColor="#E0FFFFFF"
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+        </LinearLayout>
+
+        <!-- Botón eliminar -->
+        <ImageButton
+            android:id="@+id/btnEliminar"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="8dp"
+            android:background="@drawable/circular_button_background"
+            android:backgroundTint="#80F44336"
+            android:padding="6dp"
+            android:scaleType="centerInside" />
+
+        <!-- Indicador de carga (opcional) -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:indeterminateTint="@color/primaryColor" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

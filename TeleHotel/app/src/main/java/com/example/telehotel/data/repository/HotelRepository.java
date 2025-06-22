@@ -323,9 +323,6 @@ public class HotelRepository {
         }
     }
 
-    /**
-     * Verifica si un hotel está disponible según los criterios especificados
-     */
     private static boolean isHotelAvailable(Hotel hotel, long fechaInicio, long fechaFin,
                                             int adultos, int ninos, int habitacionesRequeridas) {
 
@@ -345,14 +342,11 @@ public class HotelRepository {
             return false;
         }
 
-        // Contar habitaciones que pueden acomodar los huéspedes requeridos
-        int habitacionesDisponibles = 0;
+        // CAMBIO: Solo buscar que tenga AL MENOS UNA habitación con capacidad suficiente
+        // Ignorar el número de habitaciones requeridas
         for (Habitacion habitacion : habitaciones) {
             if (isHabitacionSuitable(habitacion, adultos, ninos, fechaInicio, fechaFin)) {
-                habitacionesDisponibles++;
-                if (habitacionesDisponibles >= habitacionesRequeridas) {
-                    return true; // Encontramos suficientes habitaciones
-                }
+                return true; // Con que haya UNA habitación que cumpla, el hotel está disponible
             }
         }
 
@@ -361,8 +355,9 @@ public class HotelRepository {
 
     /**
      * Verifica si una habitación es adecuada para los huéspedes especificados
+     * CORREGIDO: Capacidad debe ser mayor o igual (no exacta)
      */
-    private static boolean isHabitacionSuitable(Habitacion habitacion, int adultos, int ninos,
+    /*private static boolean isHabitacionSuitable(Habitacion habitacion, int adultos, int ninos,
                                                 long fechaInicio, long fechaFin) {
         if (habitacion == null || habitacion.getCapacidad() == null) {
             return false;
@@ -375,22 +370,44 @@ public class HotelRepository {
 
         Capacidad capacidad = habitacion.getCapacidad();
 
-        // Verificar capacidad de adultos (debe ser mayor o igual)
+        // CORREGIDO: Verificar capacidad de adultos (debe ser MAYOR O IGUAL)
         if (capacidad.getAdultos() == null || capacidad.getAdultos() < adultos) {
             return false;
         }
 
-        // Verificar capacidad de niños (debe ser mayor o igual)
+        // CORREGIDO: Verificar capacidad de niños (debe ser MAYOR O IGUAL)
         if (capacidad.getNinos() == null || capacidad.getNinos() < ninos) {
             return false;
         }
 
-        // TODO: Aquí se puede agregar lógica para verificar disponibilidad por fechas
-        // Por ejemplo, consultar una colección de reservas para verificar si la habitación
-        // está libre en las fechas especificadas
-
         return true;
+    }*/
+    private static boolean isHabitacionSuitable(Habitacion habitacion, int adultos, int ninos,
+                                                long fechaInicio, long fechaFin) {
+        if (habitacion == null) {
+            return false;
+        }
+
+        // Verificar que la habitación esté disponible
+        if (!"disponible".equalsIgnoreCase(habitacion.getEstado())) {
+            return false;
+        }
+
+        // Usar la función robusta para obtener capacidad
+        int[] capacidad = getHabitacionCapacity(habitacion);
+        int capacidadAdultos = capacidad[0];
+        int capacidadNinos = capacidad[1];
+
+        // Log para debug
+        Log.d("HotelRepository", String.format(
+                "isHabitacionSuitable: [%d adultos, %d niños] vs requerido [%d adultos, %d niños]",
+                capacidadAdultos, capacidadNinos, adultos, ninos
+        ));
+
+        // VERIFICACIÓN ESTRICTA: Debe tener AL MENOS la capacidad requerida
+        return (capacidadAdultos >= adultos) && (capacidadNinos >= ninos);
     }
+
 
     /**
      * Busca hoteles utilizando parámetros guardados en PrefsManager
@@ -627,9 +644,6 @@ public class HotelRepository {
         return score;
     }
 
-
-    // Agregar estas funciones a tu HotelRepository.java existente
-
     /**
      * Busca hoteles usando texto flexible (para búsquedas personalizadas)
      * Esta función permite buscar cuando el usuario escribe texto que no coincide
@@ -680,7 +694,7 @@ public class HotelRepository {
 
                     onSuccess.accept(hotelesEncontrados);
                 })
-                .addOnFailureListener((OnFailureListener) onError);
+                .addOnFailureListener(e -> onError.accept(e)); // ✅ CORREGIDO: Usar lambda en lugar de cast
     }
 
     /**
@@ -754,10 +768,6 @@ public class HotelRepository {
         return false;
     }
 
-    /**
-     * Versión simplificada de verificación de disponibilidad para búsquedas flexibles
-     * (reutiliza lógica existente pero sin fechas)
-     */
     private static boolean isHotelAvailableForGuests(Hotel hotel, int adults, int children, int rooms) {
         // Verificar que el hotel permita reservas
         if (hotel.getPermiteReservas() == null || !hotel.getPermiteReservas()) {
@@ -775,25 +785,19 @@ public class HotelRepository {
             return false;
         }
 
-        // Contar habitaciones que pueden acomodar los huéspedes requeridos
-        int habitacionesDisponibles = 0;
+        // CAMBIO: Solo buscar que tenga AL MENOS UNA habitación con capacidad suficiente
+        // Ignorar el parámetro 'rooms'
         for (Habitacion habitacion : habitaciones) {
             if (isHabitacionSuitableForGuests(habitacion, adults, children)) {
-                habitacionesDisponibles++;
-                if (habitacionesDisponibles >= rooms) {
-                    return true; // Encontramos suficientes habitaciones
-                }
+                return true; // Con que haya UNA habitación que cumpla, el hotel está disponible
             }
         }
 
         return false;
     }
 
-    /**
-     * Versión simplificada de verificación de habitación (sin fechas)
-     */
     private static boolean isHabitacionSuitableForGuests(Habitacion habitacion, int adults, int children) {
-        if (habitacion == null || habitacion.getCapacidad() == null) {
+        if (habitacion == null) {
             return false;
         }
 
@@ -802,26 +806,36 @@ public class HotelRepository {
             return false;
         }
 
-        Capacidad capacidad = habitacion.getCapacidad();
+        // Usar la función robusta para obtener capacidad
+        int[] capacidad = getHabitacionCapacity(habitacion);
+        int adultos = capacidad[0];
+        int ninos = capacidad[1];
 
-        // Verificar capacidad de adultos (debe ser mayor o igual)
-        if (capacidad.getAdultos() == null || capacidad.getAdultos() < adults) {
-            return false;
+        // Log para debug
+        Log.d("HotelRepository", String.format(
+                "Verificando habitación: [%d adultos, %d niños] vs requerido [%d adultos, %d niños]",
+                adultos, ninos, adults, children
+        ));
+
+        // VERIFICACIÓN ESTRICTA: Debe tener AL MENOS la capacidad requerida
+        boolean cumple = (adultos >= adults) && (ninos >= children);
+
+        if (!cumple) {
+            Log.d("HotelRepository", String.format(
+                    "Habitación RECHAZADA: No cumple capacidad mínima. Tiene [%d,%d], necesita [%d,%d]",
+                    adultos, ninos, adults, children
+            ));
         }
 
-        // Verificar capacidad de niños (debe ser mayor o igual)
-        if (capacidad.getNinos() == null || capacidad.getNinos() < children) {
-            return false;
-        }
-
-        return true;
+        return cumple;
     }
+
 
     /**
      * Mejora de la función searchHotelsWithCustomParams existente
      * Ahora también maneja búsquedas flexibles como fallback
      */
-    public static void searchHotelsWithCustomParamsEnhanced(@NonNull android.content.Context context,
+    /*public static void searchHotelsWithCustomParamsEnhanced(@NonNull android.content.Context context,
                                                             @NonNull String locationInput,
                                                             int adults,
                                                             int children,
@@ -852,6 +866,50 @@ public class HotelRepository {
             }
 
         } catch (Exception e) {
+            onError.accept(new Exception("Error en búsqueda mejorada: " + e.getMessage()));
+        }
+    }*/
+    public static void searchHotelsWithCustomParamsEnhanced(@NonNull android.content.Context context,
+                                                            @NonNull String locationInput,
+                                                            int adults,
+                                                            int children,
+                                                            int rooms,
+                                                            @NonNull Consumer<List<Hotel>> onSuccess,
+                                                            @NonNull Consumer<Exception> onError) {
+        try {
+            Log.d("HotelRepository", "=== BÚSQUEDA ENHANCED ===");
+            Log.d("HotelRepository", String.format("Ubicación: %s, Adultos: %d, Niños: %d", locationInput, adults, children));
+
+            // Primero intentar búsqueda estándar (formato "Ciudad, País")
+            if (locationInput.contains(",") && locationInput.split(",").length == 2) {
+                Log.d("HotelRepository", "Usando formato estándar 'Ciudad, País'");
+
+                // CAMBIO: Usar DIRECTAMENTE la función con colección separada
+                searchHotelsWithExactCapacityFromDB(context, locationInput, adults, children, rooms,
+                        hoteles -> {
+                            Log.d("HotelRepository", "Búsqueda estándar completada: " + hoteles.size() + " hoteles");
+                            if (!hoteles.isEmpty()) {
+                                onSuccess.accept(hoteles);
+                            } else {
+                                // Si no hay resultados con búsqueda estándar, intentar búsqueda flexible
+                                Log.d("HotelRepository", "Sin resultados en búsqueda estándar, intentando flexible...");
+                                searchHotelsByFlexibleText(locationInput, adults, children, rooms, onSuccess, onError);
+                            }
+                        },
+                        error -> {
+                            Log.e("HotelRepository", "Error en búsqueda estándar: " + error.getMessage());
+                            // Si falla la búsqueda estándar, intentar búsqueda flexible
+                            searchHotelsByFlexibleText(locationInput, adults, children, rooms, onSuccess, onError);
+                        }
+                );
+            } else {
+                Log.d("HotelRepository", "Input no tiene formato estándar, usando búsqueda flexible");
+                // Input no tiene formato estándar, usar directamente búsqueda flexible
+                searchHotelsByFlexibleText(locationInput, adults, children, rooms, onSuccess, onError);
+            }
+
+        } catch (Exception e) {
+            Log.e("HotelRepository", "Error en búsqueda mejorada: " + e.getMessage(), e);
             onError.accept(new Exception("Error en búsqueda mejorada: " + e.getMessage()));
         }
     }
@@ -946,22 +1004,12 @@ public class HotelRepository {
         return false;
     }
     /// ////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Busca hoteles con filtro EXACTO de capacidad
-     * Solo muestra hoteles que tienen habitaciones para exactamente X adultos y Y niños
-     */
-    /**
-     * Método para obtener todas las ciudades únicas para el AutoComplete
-     * Compatible con el formato que espera ClientePaginaPrincipal
-     */
-    /**
-     * Busca hoteles con filtro EXACTO incluyendo habitaciones desde colección separada
-     */
+
     public static void searchHotelsWithExactCapacityFromDB(@NonNull android.content.Context context,
                                                            @NonNull String ubicacionCompleta,
-                                                           int exactAdults,
-                                                           int exactChildren,
-                                                           int rooms,
+                                                           int minAdults,        // CAMBIO: minAdults en lugar de exactAdults
+                                                           int minChildren,      // CAMBIO: minChildren en lugar de exactChildren
+                                                           int rooms,            // IGNORAR: Este parámetro ya no se usa
                                                            @NonNull Consumer<List<Hotel>> onSuccess,
                                                            @NonNull Consumer<Exception> onError) {
         try {
@@ -984,32 +1032,41 @@ public class HotelRepository {
                             return;
                         }
 
-                        // Buscar habitaciones para cada hotel
-                        buscarHabitacionesParaHoteles(hoteles, exactAdults, exactChildren, rooms, onSuccess, onError);
+                        // CAMBIO: Usar la nueva función que ignora el número de habitaciones
+                        buscarHabitacionesParaHoteles(hoteles, minAdults, minChildren, 1, onSuccess, onError);
+                        // Nota: pasamos 1 como roomsNeeded pero la función lo ignora
                     },
                     onError
             );
 
         } catch (Exception e) {
-            onError.accept(new Exception("Error en búsqueda exacta: " + e.getMessage()));
+            onError.accept(new Exception("Error en búsqueda de capacidad mínima: " + e.getMessage()));
         }
     }
 
-    /**
-     * Busca habitaciones en la colección separada para cada hotel
-     */
     private static void buscarHabitacionesParaHoteles(List<Hotel> hoteles,
-                                                      int exactAdults,
-                                                      int exactChildren,
-                                                      int roomsNeeded,
+                                                      int requiredAdults,
+                                                      int requiredChildren,
+                                                      int roomsNeeded, // IGNORADO
                                                       Consumer<List<Hotel>> onSuccess,
                                                       Consumer<Exception> onError) {
+
+        Log.d("HotelRepository", String.format(
+                "=== BUSCANDO HABITACIONES ===\nRequerido: %d adultos, %d niños\nHoteles a verificar: %d",
+                requiredAdults, requiredChildren, hoteles.size()
+        ));
 
         List<Hotel> hotelesConHabitaciones = new ArrayList<>();
         AtomicInteger contador = new AtomicInteger(hoteles.size());
 
         for (Hotel hotel : hoteles) {
-            // Buscar habitaciones para este hotel específico
+            Log.d("HotelRepository", "Verificando hotel: " + hotel.getNombre() + " (ID: " + hotel.getId() + ")");
+
+            // 🔍 DEBUG: Buscar habitaciones para este hotel específico
+            Log.d("HotelRepository", "=== CONSULTANDO FIREBASE ===");
+            Log.d("HotelRepository", "Hotel ID a buscar: '" + hotel.getId() + "'");
+            Log.d("HotelRepository", "Estado requerido: 'disponible'");
+
             FirebaseUtil.getFirestore()
                     .collection("habitaciones")
                     .whereEqualTo("hotelId", hotel.getId())
@@ -1017,19 +1074,67 @@ public class HotelRepository {
                     .get()
                     .addOnSuccessListener(querySnapshot -> {
                         try {
+                            Log.d("HotelRepository", "📊 RESULTADO DE FIREBASE:");
+                            Log.d("HotelRepository", "Documentos encontrados: " + querySnapshot.size());
+
+                            // 🔍 DEBUG: Mostrar TODOS los documentos encontrados
+                            for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                                Log.d("HotelRepository", "--- Documento " + doc.getId() + " ---");
+                                Log.d("HotelRepository", "hotelId: '" + doc.getString("hotelId") + "'");
+                                Log.d("HotelRepository", "estado: '" + doc.getString("estado") + "'");
+                                Log.d("HotelRepository", "numero: '" + doc.getString("numero") + "'");
+                                Log.d("HotelRepository", "capacidadAdultos: " + doc.getLong("capacidadAdultos"));
+                                Log.d("HotelRepository", "capacidadNinos: " + doc.getLong("capacidadNinos"));
+
+                                // Verificar si es la habitación 500 específicamente
+                                if ("500".equals(doc.getString("numero"))) {
+                                    Log.d("HotelRepository", "🎯 ENCONTRADA HABITACIÓN 500!");
+                                    Log.d("HotelRepository", "¿hotelId coincide? " + hotel.getId().equals(doc.getString("hotelId")));
+                                    Log.d("HotelRepository", "¿estado correcto? " + "disponible".equals(doc.getString("estado")));
+                                }
+                            }
+
                             List<Habitacion> habitacionesHotel = new ArrayList<>();
+
+                            Log.d("HotelRepository", "Habitaciones encontradas para hotel " + hotel.getNombre() + ": " + querySnapshot.size());
 
                             for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
                                 Habitacion habitacion = doc.toObject(Habitacion.class);
                                 if (habitacion != null) {
                                     habitacion.setId(doc.getId());
                                     habitacionesHotel.add(habitacion);
+
+                                    // DEBUG: Mostrar datos de cada habitación
+                                    debugHabitacionData(habitacion);
                                 }
                             }
 
-                            // Verificar si tiene habitaciones con capacidad exacta
-                            if (hasExactCapacityRoomsFromList(habitacionesHotel, exactAdults, exactChildren, roomsNeeded)) {
-                                hotel.setHabitaciones(habitacionesHotel); // Asignar habitaciones al hotel
+                            // Resto de tu código existente...
+                            boolean tieneCapacidadSuficiente = hasAtLeastOneRoomWithCapacity(habitacionesHotel, requiredAdults, requiredChildren);
+
+                            Log.d("HotelRepository", String.format(
+                                    "Hotel %s: %s (habitaciones verificadas: %d)",
+                                    hotel.getNombre(),
+                                    tieneCapacidadSuficiente ? "✅ INCLUIDO" : "❌ RECHAZADO",
+                                    habitacionesHotel.size()
+                            ));
+
+                            if (tieneCapacidadSuficiente) {
+                                // Filtrar habitaciones antes de asignar al hotel
+                                List<Habitacion> habitacionesFiltradas = new ArrayList<>();
+                                for (Habitacion habitacion : habitacionesHotel) {
+                                    if (hasMinimumCapacityFromHabitacion(habitacion, requiredAdults, requiredChildren)) {
+                                        habitacionesFiltradas.add(habitacion);
+                                    }
+                                }
+
+                                hotel.setHabitaciones(habitacionesFiltradas);
+
+                                Log.d("HotelRepository", String.format(
+                                        "Hotel %s: Habitaciones filtradas de %d a %d",
+                                        hotel.getNombre(), habitacionesHotel.size(), habitacionesFiltradas.size()
+                                ));
+
                                 synchronized (hotelesConHabitaciones) {
                                     hotelesConHabitaciones.add(hotel);
                                 }
@@ -1037,6 +1142,21 @@ public class HotelRepository {
 
                             // Verificar si terminamos de procesar todos los hoteles
                             if (contador.decrementAndGet() == 0) {
+                                Log.d("HotelRepository", String.format(
+                                        "=== RESULTADO FINAL ===\nHoteles que cumplen criterio: %d de %d",
+                                        hotelesConHabitaciones.size(), hoteles.size()
+                                ));
+
+                                // Log final de habitaciones filtradas
+                                for (Hotel hotelFinal : hotelesConHabitaciones) {
+                                    if (hotelFinal.getHabitaciones() != null) {
+                                        Log.d("HotelRepository", String.format(
+                                                "Hotel final %s: %d habitaciones que cumplen criterio",
+                                                hotelFinal.getNombre(), hotelFinal.getHabitaciones().size()
+                                        ));
+                                    }
+                                }
+
                                 onSuccess.accept(hotelesConHabitaciones);
                             }
 
@@ -1055,6 +1175,71 @@ public class HotelRepository {
                     });
         }
     }
+
+    private static boolean hasAtLeastOneRoomWithCapacity(List<Habitacion> habitaciones,
+                                                         int requiredAdults,
+                                                         int requiredChildren) {
+        if (habitaciones == null || habitaciones.isEmpty()) {
+            Log.d("HotelRepository", "No hay habitaciones para verificar");
+            return false;
+        }
+
+        Log.d("HotelRepository", String.format(
+                "Verificando %d habitaciones para capacidad mínima: %d adultos, %d niños",
+                habitaciones.size(), requiredAdults, requiredChildren
+        ));
+
+        for (Habitacion habitacion : habitaciones) {
+            boolean cumple = hasMinimumCapacityFromHabitacion(habitacion, requiredAdults, requiredChildren);
+            if (cumple) {
+                Log.d("HotelRepository", "✅ Habitación " + habitacion.getNumero() + " cumple los requisitos");
+                return true; // Con una habitación que cumpla es suficiente
+            }
+        }
+
+        Log.d("HotelRepository", "❌ Ninguna habitación cumple los requisitos de capacidad");
+        return false;
+    }
+    private static boolean hasMinimumCapacityFromHabitacion(Habitacion habitacion, int minAdults, int minChildren) {
+        if (habitacion == null) {
+            Log.d("HotelRepository", "Habitación es null");
+            return false;
+        }
+
+        // Verificar que la habitación esté disponible
+        if (!"disponible".equalsIgnoreCase(habitacion.getEstado())) {
+            Log.d("HotelRepository", "Habitación " + habitacion.getId() + " no está disponible: " + habitacion.getEstado());
+            return false;
+        }
+
+        // Obtener capacidad real
+        int[] capacidad = getHabitacionCapacity(habitacion);
+        int adultos = capacidad[0];
+        int ninos = capacidad[1];
+
+        // Log para debug
+        Log.d("HotelRepository", String.format(
+                "Habitación %s: Capacidad real [%d adultos, %d niños] vs Requerido [%d adultos, %d niños]",
+                habitacion.getNumero() != null ? habitacion.getNumero() : habitacion.getId(),
+                adultos, ninos, minAdults, minChildren
+        ));
+
+        // VERIFICACIÓN ESTRICTA: Debe tener AL MENOS la capacidad requerida
+        boolean adultosMinimos = adultos >= minAdults;
+        boolean ninosMinimos = ninos >= minChildren;
+
+        boolean cumple = adultosMinimos && ninosMinimos;
+
+        Log.d("HotelRepository", String.format(
+                "Habitación %s: Adultos OK=%b, Niños OK=%b, Cumple=%b",
+                habitacion.getNumero() != null ? habitacion.getNumero() : habitacion.getId(),
+                adultosMinimos, ninosMinimos, cumple
+        ));
+
+        return cumple;
+    }
+
+
 
     /**
      * Verifica capacidad exacta desde lista de habitaciones
@@ -1188,7 +1373,7 @@ public class HotelRepository {
     /**
      * Obtiene habitaciones filtradas por capacidad específica
      */
-    public static void getHabitacionesByHotelIdAndCapacity(@NonNull String hotelId,
+    /*public static void getHabitacionesByHotelIdAndCapacity(@NonNull String hotelId,
                                                            int adultos,
                                                            int ninos,
                                                            @NonNull Consumer<List<Habitacion>> onSuccess,
@@ -1210,11 +1395,63 @@ public class HotelRepository {
                 },
                 onError
         );
-    }
+    }*/
 
     /**
-     * Verifica si una habitación puede acomodar la capacidad requerida
+     * VERSIÓN CORREGIDA: Obtiene habitaciones filtradas por capacidad específica
      */
+    public static void getHabitacionesByHotelIdAndCapacity(@NonNull String hotelId,
+                                                           int adultos,
+                                                           int ninos,
+                                                           @NonNull Consumer<List<Habitacion>> onSuccess,
+                                                           @NonNull Consumer<Exception> onError) {
+
+        Log.d("HotelRepository", "=== FILTRO DE HABITACIONES ===");
+        Log.d("HotelRepository", "Hotel ID: " + hotelId);
+        Log.d("HotelRepository", "Buscando habitaciones para: " + adultos + "+ adultos, " + ninos + "+ niños");
+
+        getHabitacionesByHotelId(hotelId,
+                habitaciones -> {
+                    Log.d("HotelRepository", "Habitaciones obtenidas de Firebase: " + habitaciones.size());
+
+                    // Filtrar por capacidad CON LOGS DETALLADOS
+                    List<Habitacion> habitacionesFiltradas = new ArrayList<>();
+
+                    for (int i = 0; i < habitaciones.size(); i++) {
+                        Habitacion habitacion = habitaciones.get(i);
+
+                        // Obtener capacidad real usando función robusta
+                        int[] capacidad = getHabitacionCapacity(habitacion);
+                        int capacidadAdultos = capacidad[0];
+                        int capacidadNinos = capacidad[1];
+
+                        // Verificar criterio
+                        boolean cumpleAdultos = capacidadAdultos >= adultos;
+                        boolean cumpleNinos = capacidadNinos >= ninos;
+                        boolean cumpleCriterio = cumpleAdultos && cumpleNinos;
+
+                        Log.d("HotelRepository", String.format(
+                                "Habitación %s: [%d adultos, %d niños] vs [%d+, %d+] → Adultos:%s, Niños:%s, Final:%s",
+                                habitacion.getNumero(), capacidadAdultos, capacidadNinos,
+                                adultos, ninos, cumpleAdultos ? "✅" : "❌",
+                                cumpleNinos ? "✅" : "❌", cumpleCriterio ? "INCLUIDA" : "FILTRADA"
+                        ));
+
+                        if (cumpleCriterio) {
+                            habitacionesFiltradas.add(habitacion);
+                        }
+                    }
+
+                    Log.d("HotelRepository", "Resultado: " + habitaciones.size() + " → " + habitacionesFiltradas.size() + " habitaciones");
+                    Log.d("HotelRepository", "===============================");
+
+                    onSuccess.accept(habitacionesFiltradas);
+                },
+                onError
+        );
+    }
+
+
     private static boolean puedeAcomodarCapacidad(Habitacion habitacion, int adultosRequeridos, int ninosRequeridos) {
         Integer capacidadAdultos = habitacion.getCapacidadAdultos();
         Integer capacidadNinos = habitacion.getCapacidadNinos();
@@ -1223,8 +1460,167 @@ public class HotelRepository {
             return false;
         }
 
-        // Puede acomodar AL MENOS la capacidad requerida
+        // CORREGIDO: Puede acomodar AL MENOS la capacidad requerida (mayor o igual)
         return capacidadAdultos >= adultosRequeridos && capacidadNinos >= ninosRequeridos;
     }
+    /**
+     * FUNCIÓN ROBUSTA: Obtiene la capacidad real de una habitación
+     * Verifica múltiples fuentes de datos
+     */
+    /*private static int[] getHabitacionCapacity(Habitacion habitacion) {
+        if (habitacion == null) {
+            return new int[]{0, 0}; // [adultos, niños]
+        }
+
+        Integer adultos = null;
+        Integer ninos = null;
+
+        // Estrategia 1: Intentar con campos directos
+        if (habitacion.getCapacidadAdultos() != null) {
+            adultos = habitacion.getCapacidadAdultos();
+        }
+        if (habitacion.getCapacidadNinos() != null) {
+            ninos = habitacion.getCapacidadNinos();
+        }
+
+        // Estrategia 2: Intentar con objeto Capacidad
+        if ((adultos == null || ninos == null) && habitacion.getCapacidad() != null) {
+            if (adultos == null && habitacion.getCapacidad().getAdultos() != null) {
+                adultos = habitacion.getCapacidad().getAdultos();
+            }
+            if (ninos == null && habitacion.getCapacidad().getNinos() != null) {
+                ninos = habitacion.getCapacidad().getNinos();
+            }
+        }
+
+        // Valores por defecto solo si es absolutamente necesario
+        if (adultos == null) adultos = 0;
+        if (ninos == null) ninos = 0;
+
+        return new int[]{adultos, ninos};
+    }*/
+    /**
+     * FUNCIÓN ROBUSTA ACTUALIZADA: Obtiene la capacidad real de una habitación
+     */
+    private static int[] getHabitacionCapacity(Habitacion habitacion) {
+        if (habitacion == null) {
+            Log.w("HotelRepository", "getHabitacionCapacity: habitacion es null");
+            return new int[]{0, 0};
+        }
+
+        Integer adultos = null;
+        Integer ninos = null;
+
+        // Estrategia 1: Campos directos (más confiable)
+        if (habitacion.getCapacidadAdultos() != null) {
+            adultos = habitacion.getCapacidadAdultos();
+            Log.d("HotelRepository", "Capacidad adultos desde campo directo: " + adultos);
+        }
+        if (habitacion.getCapacidadNinos() != null) {
+            ninos = habitacion.getCapacidadNinos();
+            Log.d("HotelRepository", "Capacidad niños desde campo directo: " + ninos);
+        }
+
+        // Estrategia 2: Objeto Capacidad (fallback)
+        if ((adultos == null || ninos == null) && habitacion.getCapacidad() != null) {
+            if (adultos == null && habitacion.getCapacidad().getAdultos() != null) {
+                adultos = habitacion.getCapacidad().getAdultos();
+                Log.d("HotelRepository", "Capacidad adultos desde objeto Capacidad: " + adultos);
+            }
+            if (ninos == null && habitacion.getCapacidad().getNinos() != null) {
+                ninos = habitacion.getCapacidad().getNinos();
+                Log.d("HotelRepository", "Capacidad niños desde objeto Capacidad: " + ninos);
+            }
+        }
+
+        // Valores por defecto SOLO si no hay datos
+        if (adultos == null) {
+            adultos = 0;
+            Log.w("HotelRepository", "Sin datos de capacidad adultos, usando 0");
+        }
+        if (ninos == null) {
+            ninos = 0;
+            Log.w("HotelRepository", "Sin datos de capacidad niños, usando 0");
+        }
+
+        Log.d("HotelRepository", "Capacidad final habitación " + habitacion.getNumero() +
+                ": [" + adultos + " adultos, " + ninos + " niños]");
+
+        return new int[]{adultos, ninos};
+    }
+    /**
+     * FUNCIÓN ADICIONAL: Debug para verificar datos de habitación
+     */
+    private static void debugHabitacionData(Habitacion habitacion) {
+        if (habitacion == null) {
+            Log.d("HotelRepository", "DEBUG: Habitación es null");
+            return;
+        }
+
+        Log.d("HotelRepository", "=== DEBUG HABITACIÓN ===");
+        Log.d("HotelRepository", "ID: " + habitacion.getId());
+        Log.d("HotelRepository", "Número: " + habitacion.getNumero());
+        Log.d("HotelRepository", "Estado: " + habitacion.getEstado());
+
+        // Verificar campos directos
+        Log.d("HotelRepository", "CapacidadAdultos directo: " + habitacion.getCapacidadAdultos());
+        Log.d("HotelRepository", "CapacidadNinos directo: " + habitacion.getCapacidadNinos());
+
+        // Verificar objeto Capacidad
+        if (habitacion.getCapacidad() != null) {
+            Log.d("HotelRepository", "Capacidad.adultos: " + habitacion.getCapacidad().getAdultos());
+            Log.d("HotelRepository", "Capacidad.ninos: " + habitacion.getCapacidad().getNinos());
+        } else {
+            Log.d("HotelRepository", "Objeto Capacidad es null");
+        }
+
+        // Capacidad final calculada
+        int[] capacidad = getHabitacionCapacity(habitacion);
+        Log.d("HotelRepository", "Capacidad FINAL: [" + capacidad[0] + " adultos, " + capacidad[1] + " niños]");
+        Log.d("HotelRepository", "========================");
+    }
+    /**
+     * NUEVA FUNCIÓN: Filtra las habitaciones de un hotel para mostrar solo las que cumplen criterio
+     * Llama a esta función antes de enviar los hoteles al adapter
+     */
+    private static void filtrarHabitacionesQueNoComplean(List<Hotel> hoteles, int requiredAdults, int requiredChildren) {
+        Log.d("HotelRepository", "=== FILTRANDO HABITACIONES QUE NO CUMPLEN ===");
+
+        for (Hotel hotel : hoteles) {
+            if (hotel.getHabitaciones() != null && !hotel.getHabitaciones().isEmpty()) {
+                List<Habitacion> habitacionesOriginales = new ArrayList<>(hotel.getHabitaciones());
+                List<Habitacion> habitacionesFiltradas = new ArrayList<>();
+
+                Log.d("HotelRepository", String.format(
+                        "Hotel %s: Filtrando %d habitaciones",
+                        hotel.getNombre(), habitacionesOriginales.size()
+                ));
+
+                for (Habitacion habitacion : habitacionesOriginales) {
+                    if (hasMinimumCapacityFromHabitacion(habitacion, requiredAdults, requiredChildren)) {
+                        habitacionesFiltradas.add(habitacion);
+                        Log.d("HotelRepository", String.format(
+                                "✅ Habitación %s incluida", habitacion.getNumero()
+                        ));
+                    } else {
+                        Log.d("HotelRepository", String.format(
+                                "❌ Habitación %s filtrada (no cumple capacidad)", habitacion.getNumero()
+                        ));
+                    }
+                }
+
+                // Actualizar las habitaciones del hotel con solo las que cumplen
+                hotel.setHabitaciones(habitacionesFiltradas);
+
+                Log.d("HotelRepository", String.format(
+                        "Hotel %s: %d habitaciones originales → %d habitaciones filtradas",
+                        hotel.getNombre(), habitacionesOriginales.size(), habitacionesFiltradas.size()
+                ));
+            }
+        }
+    }
+
+
+
 
 }

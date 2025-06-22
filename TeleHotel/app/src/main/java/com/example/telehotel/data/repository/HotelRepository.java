@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class HotelRepository {
@@ -215,6 +216,17 @@ public class HotelRepository {
                 })
                 .addOnFailureListener(onError::accept);
     }
+    /**
+     * Busca hoteles por ciudad y país (compatible con ambos formatos)
+     */
+
+
+    /**
+     * Busca hoteles por una ubicación completa (formato: "Ciudad, País")
+     * @param ubicacionCompleta La ubicación en formato "Ciudad, País"
+     * @param onSuccess Callback que recibe la lista de hoteles encontrados
+     * @param onError Callback que recibe la excepción en caso de error
+     */
     public static void searchHotelsByLocationString(@NonNull String ubicacionCompleta,
                                                     @NonNull Consumer<List<Hotel>> onSuccess,
                                                     @NonNull Consumer<Exception> onError) {
@@ -227,6 +239,19 @@ public class HotelRepository {
             onError.accept(new Exception("Formato de ubicación inválido. Use: 'Ciudad, País'"));
         }
     }
+
+    /**
+     * Busca hoteles con filtros avanzados basados en parámetros de búsqueda
+     * @param ciudad La ciudad a buscar
+     * @param pais El país a buscar
+     * @param fechaInicio Fecha de inicio de la estadía (timestamp)
+     * @param fechaFin Fecha de fin de la estadía (timestamp)
+     * @param adultos Número mínimo de adultos que debe soportar
+     * @param ninos Número mínimo de niños que debe soportar
+     * @param habitacionesRequeridas Número mínimo de habitaciones requeridas
+     * @param onSuccess Callback que recibe la lista de hoteles filtrados
+     * @param onError Callback que recibe la excepción en caso de error
+     */
     public static void searchHotelsWithFilters(@NonNull String ciudad,
                                                @NonNull String pais,
                                                long fechaInicio,
@@ -267,6 +292,17 @@ public class HotelRepository {
         );
     }
 
+    /**
+     * Busca hoteles con filtros usando string de ubicación completa
+     * @param ubicacionCompleta La ubicación en formato "Ciudad, País"
+     * @param fechaInicio Fecha de inicio de la estadía (timestamp)
+     * @param fechaFin Fecha de fin de la estadía (timestamp)
+     * @param adultos Número mínimo de adultos que debe soportar
+     * @param ninos Número mínimo de niños que debe soportar
+     * @param habitacionesRequeridas Número mínimo de habitaciones requeridas
+     * @param onSuccess Callback que recibe la lista de hoteles filtrados
+     * @param onError Callback que recibe la excepción en caso de error
+     */
     public static void searchHotelsWithFiltersString(@NonNull String ubicacionCompleta,
                                                      long fechaInicio,
                                                      long fechaFin,
@@ -287,6 +323,9 @@ public class HotelRepository {
         }
     }
 
+    /**
+     * Verifica si un hotel está disponible según los criterios especificados
+     */
     private static boolean isHotelAvailable(Hotel hotel, long fechaInicio, long fechaFin,
                                             int adultos, int ninos, int habitacionesRequeridas) {
 
@@ -320,6 +359,9 @@ public class HotelRepository {
         return false;
     }
 
+    /**
+     * Verifica si una habitación es adecuada para los huéspedes especificados
+     */
     private static boolean isHabitacionSuitable(Habitacion habitacion, int adultos, int ninos,
                                                 long fechaInicio, long fechaFin) {
         if (habitacion == null || habitacion.getCapacidad() == null) {
@@ -903,59 +945,175 @@ public class HotelRepository {
 
         return false;
     }
-    // Agregar estos métodos al final de tu clase HotelRepository existente
-
+    /// ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Busca hoteles con filtro EXACTO de capacidad
+     * Solo muestra hoteles que tienen habitaciones para exactamente X adultos y Y niños
+     */
     /**
      * Método para obtener todas las ciudades únicas para el AutoComplete
      * Compatible con el formato que espera ClientePaginaPrincipal
      */
-    public static void obtenerCiudadesDisponibles(@NonNull OnCiudadesObtenidas callback) {
-        getUniqueLocations(
-                ciudades -> callback.onSuccess(ciudades),
-                error -> callback.onError(error.getMessage())
-        );
+    /**
+     * Busca hoteles con filtro EXACTO incluyendo habitaciones desde colección separada
+     */
+    public static void searchHotelsWithExactCapacityFromDB(@NonNull android.content.Context context,
+                                                           @NonNull String ubicacionCompleta,
+                                                           int exactAdults,
+                                                           int exactChildren,
+                                                           int rooms,
+                                                           @NonNull Consumer<List<Hotel>> onSuccess,
+                                                           @NonNull Consumer<Exception> onError) {
+        try {
+            com.example.telehotel.core.storage.PrefsManager prefsManager =
+                    new com.example.telehotel.core.storage.PrefsManager(context);
+
+            long fechaInicio = prefsManager.getStartDate();
+            long fechaFin = prefsManager.getEndDate();
+
+            if (fechaInicio == 0 || fechaFin == 0) {
+                onError.accept(new Exception("Fechas no configuradas"));
+                return;
+            }
+
+            // Primero buscar hoteles por ubicación
+            searchHotelsByLocationString(ubicacionCompleta,
+                    hoteles -> {
+                        if (hoteles.isEmpty()) {
+                            onSuccess.accept(new ArrayList<>());
+                            return;
+                        }
+
+                        // Buscar habitaciones para cada hotel
+                        buscarHabitacionesParaHoteles(hoteles, exactAdults, exactChildren, rooms, onSuccess, onError);
+                    },
+                    onError
+            );
+
+        } catch (Exception e) {
+            onError.accept(new Exception("Error en búsqueda exacta: " + e.getMessage()));
+        }
     }
 
     /**
-     * Método para buscar hoteles por ubicación (compatible con ClientePaginaPrincipal)
-     * @param busqueda Texto de búsqueda (puede ser ciudad, país o "Ciudad, País")
-     * @param callback Callback con los resultados
+     * Busca habitaciones en la colección separada para cada hotel
      */
-    public static void buscarHotelesPorUbicacion(@NonNull String busqueda,
-                                                 @NonNull OnHotelesObtenidos callback) {
+    private static void buscarHabitacionesParaHoteles(List<Hotel> hoteles,
+                                                      int exactAdults,
+                                                      int exactChildren,
+                                                      int roomsNeeded,
+                                                      Consumer<List<Hotel>> onSuccess,
+                                                      Consumer<Exception> onError) {
 
-        if (busqueda == null || busqueda.trim().isEmpty()) {
-            callback.onError("Texto de búsqueda vacío");
-            return;
-        }
+        List<Hotel> hotelesConHabitaciones = new ArrayList<>();
+        AtomicInteger contador = new AtomicInteger(hoteles.size());
 
-        // Si tiene formato "Ciudad, País", usar búsqueda directa
-        if (busqueda.contains(",") && busqueda.split(",").length == 2) {
-            searchHotelsByLocationString(busqueda,
-                    hoteles -> callback.onSuccess(hoteles),
-                    error -> callback.onError(error.getMessage())
-            );
-        } else {
-            // Si no tiene formato estándar, usar búsqueda flexible
-            searchHotelsByFlexibleText(busqueda, 0, 0, 1, // Sin restricciones de capacidad
-                    hoteles -> callback.onSuccess(hoteles),
-                    error -> callback.onError(error.getMessage())
-            );
+        for (Hotel hotel : hoteles) {
+            // Buscar habitaciones para este hotel específico
+            FirebaseUtil.getFirestore()
+                    .collection("habitaciones")
+                    .whereEqualTo("hotelId", hotel.getId())
+                    .whereEqualTo("estado", "disponible")
+                    .get()
+                    .addOnSuccessListener(querySnapshot -> {
+                        try {
+                            List<Habitacion> habitacionesHotel = new ArrayList<>();
+
+                            for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                                Habitacion habitacion = doc.toObject(Habitacion.class);
+                                if (habitacion != null) {
+                                    habitacion.setId(doc.getId());
+                                    habitacionesHotel.add(habitacion);
+                                }
+                            }
+
+                            // Verificar si tiene habitaciones con capacidad exacta
+                            if (hasExactCapacityRoomsFromList(habitacionesHotel, exactAdults, exactChildren, roomsNeeded)) {
+                                hotel.setHabitaciones(habitacionesHotel); // Asignar habitaciones al hotel
+                                synchronized (hotelesConHabitaciones) {
+                                    hotelesConHabitaciones.add(hotel);
+                                }
+                            }
+
+                            // Verificar si terminamos de procesar todos los hoteles
+                            if (contador.decrementAndGet() == 0) {
+                                onSuccess.accept(hotelesConHabitaciones);
+                            }
+
+                        } catch (Exception e) {
+                            Log.e("HotelRepository", "Error procesando habitaciones para hotel: " + hotel.getId(), e);
+                            if (contador.decrementAndGet() == 0) {
+                                onSuccess.accept(hotelesConHabitaciones);
+                            }
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("HotelRepository", "Error buscando habitaciones para hotel: " + hotel.getId(), e);
+                        if (contador.decrementAndGet() == 0) {
+                            onSuccess.accept(hotelesConHabitaciones);
+                        }
+                    });
         }
     }
 
     /**
-     * Interfaces para callbacks (compatibles con ClientePaginaPrincipal)
+     * Verifica capacidad exacta desde lista de habitaciones
      */
-    public interface OnCiudadesObtenidas {
-        void onSuccess(List<String> ciudades);
-        void onError(String error);
+    private static boolean hasExactCapacityRoomsFromList(List<Habitacion> habitaciones,
+                                                         int exactAdults,
+                                                         int exactChildren,
+                                                         int roomsNeeded) {
+        if (habitaciones == null || habitaciones.isEmpty()) {
+            return false;
+        }
+
+        int habitacionesExactas = 0;
+        for (Habitacion habitacion : habitaciones) {
+            if (hasExactCapacityFromHabitacion(habitacion, exactAdults, exactChildren)) {
+                habitacionesExactas++;
+                if (habitacionesExactas >= roomsNeeded) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
-    public interface OnHotelesObtenidos {
-        void onSuccess(List<Hotel> hoteles);
-        void onError(String error);
+    /**
+     * Verifica capacidad exacta de una habitación específica usando los campos correctos
+     */
+    private static boolean hasExactCapacityFromHabitacion(Habitacion habitacion, int exactAdults, int exactChildren) {
+        if (habitacion == null) {
+            return false;
+        }
+
+        // Verificar que la habitación esté disponible
+        if (!"disponible".equalsIgnoreCase(habitacion.getEstado())) {
+            return false;
+        }
+
+        // Obtener capacidad desde los campos específicos que vimos en Firebase
+        Integer adultos = habitacion.getCapacidadAdultos();
+        Integer ninos = habitacion.getCapacidadNinos();
+
+        // Si no tiene estos campos, intentar con el objeto capacidad
+        if (adultos == null && habitacion.getCapacidad() != null) {
+            adultos = habitacion.getCapacidad().getAdultos();
+        }
+        if (ninos == null && habitacion.getCapacidad() != null) {
+            ninos = habitacion.getCapacidad().getNinos();
+        }
+
+        // Valores por defecto si aún no hay datos
+        if (adultos == null) adultos = 2;
+        if (ninos == null) ninos = 0;
+
+        // EXACTO: debe coincidir exactamente
+        boolean adultosExactos = adultos.equals(exactAdults);
+        boolean ninosExactos = ninos.equals(exactChildren);
+
+        return adultosExactos && ninosExactos;
     }
 
 }
-

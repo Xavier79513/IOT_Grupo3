@@ -291,7 +291,8 @@ public class HotelsFragment extends Fragment {
 
     private void configurarRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new HotelAdapter(listaHotelesFiltrada);
+        //adapter = new HotelAdapter(listaHotelesFiltrada);
+        adapter = new HotelAdapter(listaHotelesFiltrada, getContext());
         recyclerView.setAdapter(adapter);
 
         Log.d(TAG, "RecyclerView configurado");
@@ -461,7 +462,7 @@ public class HotelsFragment extends Fragment {
 
         // SIEMPRE buscar con parámetros específicos
         // Si llegamos aquí, debe haber una búsqueda válida
-        //buscarHotelesConParametros();
+        buscarHotelesConParametros();
     }
 
     /**
@@ -526,12 +527,12 @@ public class HotelsFragment extends Fragment {
         // Opcional: Navegar de vuelta a la pantalla de búsqueda
         // getParentFragmentManager().popBackStack();
     }
-
-    /*private void buscarHotelesConParametros() {
+    private void buscarHotelesConParametros() {
         Log.d(TAG, String.format("Buscando hoteles - Ubicación: '%s', Fechas: %d-%d, Huéspedes: %d adultos + %d niños, Habitaciones: %d",
                 searchLocation, startDate, endDate, adults, children, rooms));
 
-        HotelRepository.searchHotelsWithCustomParamsEnhanced(
+        // USAR EL NUEVO MÉTODO DE BÚSQUEDA EXACTA
+        HotelRepository.searchHotelsWithExactCapacityFromDB(
                 requireContext(),
                 searchLocation,
                 adults,
@@ -544,8 +545,8 @@ public class HotelsFragment extends Fragment {
                                 listaHotelesOriginal.clear();
                                 listaHotelesOriginal.addAll(hoteles);
 
-                                Log.d(TAG, String.format("Búsqueda completada - Encontrados: %d hoteles para '%s'",
-                                        hoteles.size(), searchLocation));
+                                Log.d(TAG, String.format("Búsqueda exacta completada - Encontrados: %d hoteles para '%s' con %d adultos y %d niños exactos",
+                                        hoteles.size(), searchLocation, adults, children));
 
                                 // Aplicar filtros adicionales (amenidades, puntuación)
                                 aplicarFiltros();
@@ -553,9 +554,8 @@ public class HotelsFragment extends Fragment {
                                 progressBar.setVisibility(View.GONE);
                                 recyclerView.setVisibility(View.VISIBLE);
 
-                                // Log adicional para debugging
                                 if (hoteles.isEmpty()) {
-                                    Log.w(TAG, "No se encontraron hoteles que cumplan los criterios de búsqueda");
+                                    Log.w(TAG, String.format("No se encontraron hoteles con capacidad exacta para %d adultos y %d niños", adults, children));
                                 }
 
                             } catch (Exception e) {
@@ -568,7 +568,7 @@ public class HotelsFragment extends Fragment {
                 error -> {
                     if (isAdded()) {
                         requireActivity().runOnUiThread(() -> {
-                            Log.e(TAG, String.format("Error en búsqueda para '%s': %s", searchLocation, error.getMessage()));
+                            Log.e(TAG, String.format("Error en búsqueda exacta para '%s': %s", searchLocation, error.getMessage()));
 
                             progressBar.setVisibility(View.GONE);
                             recyclerView.setVisibility(View.VISIBLE);
@@ -576,17 +576,18 @@ public class HotelsFragment extends Fragment {
                             listaHotelesOriginal.clear();
                             aplicarFiltros();
 
-                            // Mensaje de error más específico
                             String errorMessage = String.format(
-                                    "No se encontraron hoteles disponibles en '%s' para las fechas y criterios seleccionados",
-                                    searchLocation);
+                                    "No se encontraron hoteles en '%s' con habitaciones para exactamente %d adultos y %d niños",
+                                    searchLocation, adults, children);
 
                             Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
                         });
                     }
                 }
         );
-    }*/
+    }
+
+
 
     private void mostrarError(String mensaje) {
         progressBar.setVisibility(View.GONE);

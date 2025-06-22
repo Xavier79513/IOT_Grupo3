@@ -344,4 +344,22 @@ public class PrefsManager {
                 .remove(KEY_TOTAL_PRICE)
                 .apply();
     }
+    // Claves adicionales
+    private static final String KEY_LOCATION = "search_location";
+
+    public void saveLocation(String location) {
+        prefs.edit().putString(KEY_LOCATION, location).apply();
+    }
+
+    public String getLocation() {
+        return prefs.getString(KEY_LOCATION, null);
+    }
+
+    public void saveStartDate(long startDate) {
+        prefs.edit().putLong(KEY_START_DATE, startDate).apply();
+    }
+
+    public void saveEndDate(long endDate) {
+        prefs.edit().putLong(KEY_END_DATE, endDate).apply();
+    }
 }

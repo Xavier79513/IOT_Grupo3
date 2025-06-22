@@ -21,15 +21,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Icono de seguridad en el toolbar -->
-        <!--ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_lock"
-            android:layout_gravity="end"
-            android:layout_marginEnd="16dp"
-            app:tint="@android:color/white" /-->
-
     </androidx.appcompat.widget.Toolbar>
 
     <!-- ScrollView debajo del toolbar -->
@@ -79,7 +70,8 @@
                             android:alpha="0.8" />
 
                         <TextView
-                            android:text="S/.406.00"
+                            android:id="@+id/tvTotalAmount"
+                            android:text="S/.0.00"
                             android:textColor="#FFFFFF"
                             android:textSize="28sp"
                             android:textStyle="bold"

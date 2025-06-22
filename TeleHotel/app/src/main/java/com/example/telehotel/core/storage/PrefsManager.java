@@ -362,4 +362,5 @@ public class PrefsManager {
     public void saveEndDate(long endDate) {
         prefs.edit().putLong(KEY_END_DATE, endDate).apply();
     }
+
 }

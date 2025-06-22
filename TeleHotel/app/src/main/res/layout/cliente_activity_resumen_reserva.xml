@@ -338,20 +338,20 @@
                         android:orientation="horizontal"
                         android:layout_marginBottom="8dp">
 
-                        <TextView
+                        <!--TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="3 noches × $127"
                             android:textSize="14sp"
-                            android:textColor="#6C757D" />
+                            android:textColor="#6C757D" /-->
 
-                        <TextView
+                        <!--TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="$381"
                             android:textSize="14sp"
-                            android:textColor="#2E3A59" />
+                            android:textColor="#2E3A59" /-->
                     </LinearLayout>
 
                     <!--LinearLayout

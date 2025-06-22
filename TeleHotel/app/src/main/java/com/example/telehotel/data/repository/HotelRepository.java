@@ -1115,5 +1115,116 @@ public class HotelRepository {
 
         return adultosExactos && ninosExactos;
     }
+    /**
+     * Obtiene servicios de un hotel desde la colección separada de servicios
+     */
+    public static void getServiciosByHotelId(@NonNull String hotelId,
+                                             @NonNull Consumer<List<String>> onSuccess,
+                                             @NonNull Consumer<Exception> onError) {
+
+        FirebaseUtil.getFirestore()
+                .collection("servicios")
+                .whereEqualTo("hotelId", hotelId)
+                .whereEqualTo("disponible", true)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    List<String> servicios = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                        try {
+                            // Obtener el nombre del servicio
+                            String nombre = doc.getString("nombre");
+                            String descripcion = doc.getString("descripcion");
+
+                            if (nombre != null && !nombre.trim().isEmpty()) {
+                                // Si hay descripción, agregarla
+                                if (descripcion != null && !descripcion.trim().isEmpty()) {
+                                    servicios.add(nombre + " - " + descripcion);
+                                } else {
+                                    servicios.add(nombre);
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e("HotelRepository", "Error procesando servicio: " + doc.getId(), e);
+                        }
+                    }
+
+                    onSuccess.accept(servicios);
+                })
+                .addOnFailureListener(onError::accept);
+    }
+    /**
+     * Obtiene habitaciones de un hotel específico desde la colección separada
+     */
+    public static void getHabitacionesByHotelId(@NonNull String hotelId,
+                                                @NonNull Consumer<List<Habitacion>> onSuccess,
+                                                @NonNull Consumer<Exception> onError) {
+
+        FirebaseUtil.getFirestore()
+                .collection("habitaciones")
+                .whereEqualTo("hotelId", hotelId)
+                .whereEqualTo("estado", "disponible")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    List<Habitacion> habitaciones = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                        try {
+                            Habitacion habitacion = doc.toObject(Habitacion.class);
+                            if (habitacion != null) {
+                                habitacion.setId(doc.getId());
+                                habitaciones.add(habitacion);
+                            }
+                        } catch (Exception e) {
+                            Log.e("HotelRepository", "Error procesando habitación: " + doc.getId(), e);
+                        }
+                    }
+
+                    onSuccess.accept(habitaciones);
+                })
+                .addOnFailureListener(onError::accept);
+    }
+
+    /**
+     * Obtiene habitaciones filtradas por capacidad específica
+     */
+    public static void getHabitacionesByHotelIdAndCapacity(@NonNull String hotelId,
+                                                           int adultos,
+                                                           int ninos,
+                                                           @NonNull Consumer<List<Habitacion>> onSuccess,
+                                                           @NonNull Consumer<Exception> onError) {
+
+        getHabitacionesByHotelId(hotelId,
+                habitaciones -> {
+                    // Filtrar por capacidad
+                    List<Habitacion> habitacionesFiltradas = new ArrayList<>();
+
+                    for (Habitacion habitacion : habitaciones) {
+                        // Verificar si puede acomodar exactamente o al menos la capacidad requerida
+                        if (puedeAcomodarCapacidad(habitacion, adultos, ninos)) {
+                            habitacionesFiltradas.add(habitacion);
+                        }
+                    }
+
+                    onSuccess.accept(habitacionesFiltradas);
+                },
+                onError
+        );
+    }
+
+    /**
+     * Verifica si una habitación puede acomodar la capacidad requerida
+     */
+    private static boolean puedeAcomodarCapacidad(Habitacion habitacion, int adultosRequeridos, int ninosRequeridos) {
+        Integer capacidadAdultos = habitacion.getCapacidadAdultos();
+        Integer capacidadNinos = habitacion.getCapacidadNinos();
+
+        if (capacidadAdultos == null || capacidadNinos == null) {
+            return false;
+        }
+
+        // Puede acomodar AL MENOS la capacidad requerida
+        return capacidadAdultos >= adultosRequeridos && capacidadNinos >= ninosRequeridos;
+    }
 
 }

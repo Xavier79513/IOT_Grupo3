@@ -64,12 +64,12 @@ public class HistorialReservaAdapter extends RecyclerView.Adapter<HistorialReser
         holder.precio.setText("$" + String.format("%.2f", reserva.getMontoTotal()));
 
         // Formatear fecha de reserva
-        if (reserva.getFechaReserva() != null) {
+        /*if (reserva.getFechaReserva() != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
             holder.fechaReserva.setText("Booked on: " + reserva.getFechaReserva().format(formatter));
         } else {
             holder.fechaReserva.setText("Fecha desconocida");
-        }
+        }*/
 
         // Acción al pulsar el botón
         holder.btnBookAgain.setOnClickListener(v -> {

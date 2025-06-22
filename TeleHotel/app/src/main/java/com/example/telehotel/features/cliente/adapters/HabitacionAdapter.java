@@ -39,17 +39,45 @@ public class HabitacionAdapter extends RecyclerView.Adapter<HabitacionAdapter.Vi
         return new ViewHolder(view);
     }
 
-    @Override
+    /*@Override
     public void onBindViewHolder(@NonNull HabitacionAdapter.ViewHolder holder, int position) {
         Habitacion hab = lista.get(position);
         holder.tvRoomTitle.setText(hab.getDescripcion());
         holder.tvRoomDetails.setText("Tipo: " + hab.getTipo() + " - Número: " + hab.getNumero());
-        holder.tvBenefits.setText(TextUtils.join(" · ", hab.getServiciosIncluidos()));
         holder.tvPolicy.setText(hab.getEstado().equalsIgnoreCase("disponible") ? "Disponible" : "No disponible");
-        holder.tvDiscount.setVisibility(View.GONE);
         holder.tvPrice.setText(String.format("S/ %.2f", hab.getPrecio()));
-        holder.tvTaxes.setVisibility(View.GONE);
-        holder.tvWarning.setVisibility(View.GONE);
+
+        holder.btnSelect.setEnabled(hab.getEstado().equalsIgnoreCase("disponible"));
+        holder.btnSelect.setOnClickListener(v -> listener.onHabitacionClick(hab));
+    }*/
+    @Override
+    public void onBindViewHolder(@NonNull HabitacionAdapter.ViewHolder holder, int position) {
+        Habitacion hab = lista.get(position);
+
+        // Título
+        holder.tvRoomTitle.setText(hab.getDescripcion() != null ? hab.getDescripcion() : "Habitación " + hab.getNumero());
+
+        // Detalles - AGREGAR CAPACIDAD Y TAMAÑO
+        StringBuilder detalles = new StringBuilder();
+        detalles.append("Tipo: ").append(hab.getTipo()).append(" - Número: ").append(hab.getNumero());
+
+        // Agregar capacidad
+        if (hab.getCapacidadAdultos() != null || hab.getCapacidadNinos() != null) {
+            int adultos = hab.getCapacidadAdultos() != null ? hab.getCapacidadAdultos() : 0;
+            int ninos = hab.getCapacidadNinos() != null ? hab.getCapacidadNinos() : 0;
+            detalles.append("\nCapacidad: ").append(adultos).append(" adultos, ").append(ninos).append(" niños");
+        }
+
+        // Agregar tamaño
+        if (hab.getTamaño() != null && hab.getTamaño() > 0) {
+            detalles.append("\nTamaño: ").append(String.format("%.0f m²", hab.getTamaño()));
+        }
+
+        holder.tvRoomDetails.setText(detalles.toString());
+
+        // Resto del código igual
+        holder.tvPolicy.setText(hab.getEstado().equalsIgnoreCase("disponible") ? "Disponible" : "No disponible");
+        holder.tvPrice.setText(String.format("S/ %.2f", hab.getPrecio()));
 
         holder.btnSelect.setEnabled(hab.getEstado().equalsIgnoreCase("disponible"));
         holder.btnSelect.setOnClickListener(v -> listener.onHabitacionClick(hab));
@@ -68,12 +96,8 @@ public class HabitacionAdapter extends RecyclerView.Adapter<HabitacionAdapter.Vi
             super(itemView);
             tvRoomTitle = itemView.findViewById(R.id.tvRoomTitle);
             tvRoomDetails = itemView.findViewById(R.id.tvRoomDetails);
-            tvBenefits = itemView.findViewById(R.id.tvBenefits);
             tvPolicy = itemView.findViewById(R.id.tvPolicy);
-            tvDiscount = itemView.findViewById(R.id.tvDiscount);
             tvPrice = itemView.findViewById(R.id.tvPrice);
-            tvTaxes = itemView.findViewById(R.id.tvTaxes);
-            tvWarning = itemView.findViewById(R.id.tvWarning);
             btnSelect = itemView.findViewById(R.id.btnSelect);
         }
     }

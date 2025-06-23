@@ -1,32 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_cliente"
     app:startDestination="@id/nav_rooms">
 
     <fragment
         android:id="@+id/nav_rooms"
         android:name="com.example.telehotel.features.cliente.fragments.HotelsFragment"
-        android:label="Hoteles" />
+        android:label="Hoteles"
+        tools:layout="@layout/cliente_fragment_rooms">
+
+        <!-- Acciones desde Hoteles -->
+        <action
+            android:id="@+id/action_nav_rooms_to_nav_car"
+            app:destination="@id/nav_car" />
+        <action
+            android:id="@+id/action_nav_rooms_to_nav_profile"
+            app:destination="@id/nav_profile" />
+        <action
+            android:id="@+id/action_nav_rooms_to_nav_history"
+            app:destination="@id/nav_history_reservation" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_car"
         android:name="com.example.telehotel.features.cliente.fragments.TaxiReservationFragment"
-        android:label="Taxi" />
+        android:label="Taxi"
+        tools:layout="@layout/cliente_fragment_taxi">
+
+        <!-- Acciones desde Taxi -->
+        <action
+            android:id="@+id/action_nav_car_to_nav_rooms"
+            app:destination="@id/nav_rooms" />
+        <action
+            android:id="@+id/action_taxiFragment_to_hotelesFragment"
+            app:destination="@id/nav_rooms" />
+        <action
+            android:id="@+id/action_nav_car_to_nav_profile"
+            app:destination="@id/nav_profile" />
+        <action
+            android:id="@+id/action_nav_car_to_nav_history"
+            app:destination="@id/nav_history_reservation" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_profile"
         android:name="com.example.telehotel.features.cliente.fragments.ProfileFragment"
-        android:label="Perfil" />
+        android:label="Perfil"
+        tools:layout="@layout/cliente_fragment_perfil">
+
+        <!-- Acciones desde Perfil -->
+        <action
+            android:id="@+id/action_nav_profile_to_nav_rooms"
+            app:destination="@id/nav_rooms" />
+        <action
+            android:id="@+id/action_nav_profile_to_nav_car"
+            app:destination="@id/nav_car" />
+        <action
+            android:id="@+id/action_nav_profile_to_nav_history"
+            app:destination="@id/nav_history_reservation" />
+        <action
+            android:id="@+id/action_nav_profile_to_nav_settings"
+            app:destination="@id/nav_settings" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_history_reservation"
         android:name="com.example.telehotel.features.cliente.fragments.ReservationHistoryFragment"
-        android:label="Historial" />
+        android:label="Historial"
+        tools:layout="@layout/cliente_fragment_historial_reserva">
+
+        <!-- Acciones desde Historial -->
+        <action
+            android:id="@+id/action_nav_history_to_nav_rooms"
+            app:destination="@id/nav_rooms" />
+        <action
+            android:id="@+id/action_nav_history_to_nav_car"
+            app:destination="@id/nav_car" />
+        <action
+            android:id="@+id/action_nav_history_to_nav_profile"
+            app:destination="@id/nav_profile" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_settings"
         android:name="com.example.telehotel.features.cliente.fragments.NotificationsFragment"
-        android:label="Notificaciones" />
-    <!-- Agrega más fragments si tienes -->
+        android:label="Notificaciones"
+        tools:layout="@layout/cliente_fragment_notifications">
+
+        <!-- Acciones desde Notificaciones -->
+        <action
+            android:id="@+id/action_nav_settings_to_nav_rooms"
+            app:destination="@id/nav_rooms" />
+        <action
+            android:id="@+id/action_nav_settings_to_nav_profile"
+            app:destination="@id/nav_profile" />
+    </fragment>
+
 </navigation>

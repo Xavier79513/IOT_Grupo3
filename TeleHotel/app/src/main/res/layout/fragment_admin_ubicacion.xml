@@ -13,15 +13,17 @@
         android:padding="16dp">
 
         <!-- Título -->
-        <TextView
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="📍 Configurar Ubicación del Hotel"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/primaryColor"
-            android:layout_marginBottom="16dp"
-            android:textAlignment="center" />
+            android:background="@android:color/transparent"
+            android:elevation="0dp"
+            app:title="Configurar Ubicación del Hotel"
+            app:titleTextColor="@color/primaryColor"
+            app:titleCentered="false"
+            app:navigationIcon="@drawable/ic_arrow_backk" />
+
 
         <!-- Card para Datos del Hotel -->
         <androidx.cardview.widget.CardView

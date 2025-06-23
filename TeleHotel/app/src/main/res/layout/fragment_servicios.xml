@@ -81,6 +81,13 @@
                         android:lines="3"
                         android:maxLines="5"
                         android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="recyclerServicios" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
@@ -123,14 +130,107 @@
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
-                <!-- ProgressBar de carga -->
-                <ProgressBar
-                    android:id="@+id/progressBar"
+                <!-- Sección de imagen del servicio -->
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:text="Imagen del Servicio (Opcional)"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/primaryColor"
                     android:layout_marginTop="16dp"
-                    android:visibility="gone" />
+                    android:layout_marginBottom="8dp" />
+
+                <!-- Card para seleccionar imagen -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardImagenServicio"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:layout_marginBottom="12dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="#E0E0E0"
+                    android:backgroundTint="#FAFAFA"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <!-- Imagen del servicio -->
+                        <ImageView
+                            android:id="@+id/ivImagenServicio"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_hhotel"
+                            app:tint="@color/primaryColor"
+                            android:padding="32dp" />
+
+                        <!-- Overlay con texto -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:background="@drawable/background_overlay_gradient"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:id="@+id/tvImagenServicio"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Toca para agregar imagen del servicio"
+                                android:textSize="14sp"
+                                android:textColor="@color/primaryColor"
+                                android:textStyle="bold"
+                                android:gravity="center"
+                                android:background="@drawable/background_rounded_white"
+                                android:paddingHorizontal="12dp"
+                                android:paddingVertical="8dp" />
+
+                        </LinearLayout>
+
+                        <!-- Botón para eliminar imagen -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnEliminarImagen"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_margin="8dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:insetLeft="0dp"
+                            android:insetRight="0dp"
+                            android:text="✕"
+                            android:textSize="16sp"
+                            android:textColor="#F44336"
+                            style="@style/Widget.Material3.Button.IconButton"
+                            app:backgroundTint="#FFFFFF"
+                            app:cornerRadius="18dp"
+                            android:elevation="2dp"
+                            android:visibility="gone"
+                            android:contentDescription="Eliminar imagen" />
+
+                    </RelativeLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- ProgressBar de carga -->
+                <ProgressBar
+                    android:id="@+id/progressBarImagen"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone"
+                    android:indeterminate="true"
+                    />
+
 
                 <!-- Botones alineados y del mismo tamaño -->
                 <LinearLayout

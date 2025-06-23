@@ -21,17 +21,6 @@
             android:background="?attr/colorPrimary"
             android:paddingBottom="60dp">
 
-            <!-- Botón de configuración -->
-            <!--ImageButton
-                android:id="@+id/btnSettings"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_settings"
-                app:tint="?attr/colorOnPrimary" /-->
             <TextView
                 android:id="@+id/tvCerrarSesion"
                 android:layout_width="wrap_content"
@@ -47,8 +36,6 @@
                 android:padding="8dp"
                 android:clickable="true"
                 android:focusable="true" />
-
-
 
             <!-- FOTO DE PERFIL CENTRADA -->
             <RelativeLayout
@@ -117,7 +104,7 @@
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
-                    <!-- Nombre -->
+                    <!-- Nombre (SOLO LECTURA) -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -160,30 +147,12 @@
                                 android:text="John Smith"
                                 android:textColor="?attr/colorOnSurface"
                                 android:textSize="16sp" />
-                            <!-- EditText para editar el nombre, oculto inicialmente -->
-                            <EditText
-                                android:id="@+id/etNombre"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_marginStart="16dp"
-                                android:visibility="gone"
-                                android:textSize="16sp"
-                                android:inputType="textPersonName"
-                                android:textColor="?attr/colorOnSurface" />
 
-
-                            <ImageButton
-                                android:id="@+id/btnEditName"
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:background="?attr/selectableItemBackgroundBorderless"
-                                android:src="@drawable/ic_edit"
-                                app:tint="?attr/colorOnSurfaceVariant" />
+                            <!-- NO HAY BOTÓN DE EDITAR -->
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Tipo de Dcoumento -->
+                    <!-- DNI (SOLO LECTURA) -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -216,6 +185,7 @@
                                 android:layout_marginStart="-32dp"
                                 android:src="@drawable/tipodocumento"
                                 app:tint="?attr/colorOnPrimary" />
+
                             <TextView
                                 android:id="@+id/tvDni"
                                 android:layout_width="0dp"
@@ -226,29 +196,11 @@
                                 android:textColor="?attr/colorOnSurface"
                                 android:textSize="16sp" />
 
-                            <EditText
-                                android:id="@+id/etDni"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_marginStart="16dp"
-                                android:visibility="gone"
-                                android:textSize="16sp"
-                                android:inputType="number"
-                                android:textColor="?attr/colorOnSurface" />
-
-
-                            <ImageButton
-                                android:id="@+id/btnEditDni"
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:background="?attr/selectableItemBackgroundBorderless"
-                                android:src="@drawable/ic_edit"
-                                app:tint="?attr/colorOnSurfaceVariant" />
+                            <!-- NO HAY BOTÓN DE EDITAR -->
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Correo -->
+                    <!-- Correo (SOLO LECTURA) -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -283,6 +235,7 @@
                                 app:tint="?attr/colorOnSecondary" />
 
                             <TextView
+                                android:id="@+id/tvEmail"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="16dp"
@@ -291,17 +244,11 @@
                                 android:textColor="?attr/colorOnSurface"
                                 android:textSize="16sp" />
 
-                            <ImageButton
-                                android:id="@+id/btnEditEmail"
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:background="?attr/selectableItemBackgroundBorderless"
-                                android:src="@drawable/ic_edit"
-                                app:tint="?attr/colorOnSurfaceVariant" />
+                            <!-- NO HAY BOTÓN DE EDITAR -->
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Fecha de nacimiento -->
+                    <!-- Fecha de nacimiento (EDITABLE) -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -342,6 +289,7 @@
                                 android:orientation="vertical">
 
                                 <TextView
+                                    android:id="@+id/tvFechaNacimiento"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="12 de Febrero, 2002"
@@ -349,9 +297,9 @@
                                     android:textSize="16sp" />
 
                                 <TextView
+                                    android:id="@+id/tvEdad"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="22 años"
                                     android:textColor="?attr/colorOnSurfaceVariant"
                                     android:textSize="12sp" />
                             </LinearLayout>
@@ -364,6 +312,21 @@
                                 android:src="@drawable/ic_edit"
                                 app:tint="?attr/colorOnSurfaceVariant" />
                         </LinearLayout>
+
+                        <!-- EditText para fecha -->
+                        <EditText
+                            android:id="@+id/etFechaNacimiento"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginStart="56dp"
+                            android:hint="Seleccionar fecha de nacimiento"
+                            android:inputType="none"
+                            android:focusable="false"
+                            android:clickable="true"
+                            android:visibility="gone"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="16sp" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -394,7 +357,7 @@
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
-                    <!-- Teléfono -->
+                    <!-- Teléfono (EDITABLE) -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -428,7 +391,9 @@
                                 android:src="@drawable/phone"
                                 app:tint="?attr/colorOnSecondary" />
 
+                            <!-- TextView para mostrar teléfono -->
                             <TextView
+                                android:id="@+id/tvTelefono"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="16dp"
@@ -436,6 +401,22 @@
                                 android:text="+225 698 698 966"
                                 android:textColor="?attr/colorOnSurface"
                                 android:textSize="16sp" />
+
+                            <!-- EditText para editar teléfono (en la misma línea) -->
+                            <EditText
+                                android:id="@+id/etTelefono"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:layout_weight="1"
+                                android:visibility="gone"
+                                android:textSize="16sp"
+                                android:inputType="number"
+                                android:maxLength="9"
+                                android:textColor="?attr/colorOnSurface"
+                                android:hint="Número de teléfono"
+                                android:background="@android:color/transparent"
+                                android:textColorHint="?attr/colorOnSurfaceVariant" />
 
                             <ImageButton
                                 android:id="@+id/btnCallPhone"
@@ -456,7 +437,7 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Domicilio -->
+                    <!-- Domicilio (EDITABLE) -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -489,7 +470,9 @@
                                 android:src="@drawable/home"
                                 app:tint="?attr/colorOnPrimary" />
 
+                            <!-- TextView para mostrar domicilio -->
                             <TextView
+                                android:id="@+id/tvDomicilio"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="16dp"
@@ -497,6 +480,21 @@
                                 android:text="Av. Universitaria 1234"
                                 android:textColor="?attr/colorOnSurface"
                                 android:textSize="16sp" />
+
+                            <!-- EditText para editar domicilio (en la misma línea) -->
+                            <EditText
+                                android:id="@+id/etDomicilio"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:layout_weight="1"
+                                android:visibility="gone"
+                                android:textSize="16sp"
+                                android:inputType="textPostalAddress"
+                                android:textColor="?attr/colorOnSurface"
+                                android:hint="Ingrese domicilio"
+                                android:background="@android:color/transparent"
+                                android:textColorHint="?attr/colorOnSurfaceVariant" />
 
                             <ImageButton
                                 android:id="@+id/btnOpenMap"
@@ -520,7 +518,6 @@
             </com.google.android.material.card.MaterialCardView>
 
             <!-- BOTONES DE ACCIÓN -->
-            <!-- BOTONES DE ACCIÓN -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -535,38 +532,17 @@
                     android:id="@+id/btnSaveChanges"
                     style="@style/Widget.Material3.Button"
                     android:layout_width="0dp"
-                    android:layout_height="56dp"
+                    android:layout_height="60dp"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
                     android:backgroundTint="?attr/colorPrimary"
                     android:text="Guardar Cambios"
                     android:textColor="?attr/colorOnPrimary"
-                    android:textSize="16sp"
-                    app:icon="@drawable/ic_save"
+                    android:textSize="14sp"
                     app:iconGravity="textStart"
                     app:iconPadding="8dp"
                     app:iconTint="?attr/colorOnPrimary" />
-
-                <!--com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnShareProfile"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="56dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:text="Compartir"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="16sp"
-                    app:icon="@drawable/ic_share"
-                    app:iconGravity="textStart"
-                    app:iconPadding="8dp"
-                    app:iconTint="?attr/colorPrimary"
-                    app:strokeColor="?attr/colorPrimary" /-->
             </LinearLayout>
-
         </LinearLayout>
-
-
     </LinearLayout>
-
 </ScrollView>

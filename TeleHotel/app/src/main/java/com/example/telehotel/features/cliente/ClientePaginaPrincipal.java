@@ -49,134 +49,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 
-/*public class ClientePaginaPrincipal extends AppCompatActivity {
-    private AutoCompleteTextView etCity;
-    private TextView tvDate, tvPeople;
-    private MaterialButton btnSearch;
-    private RecyclerView rvHoteles;
-
-    private HotelRepository hotelRepository;
-    private ArrayAdapter<String> ciudadesAdapter;
-    private HotelAdapter hotelAdapter;
-    private List<Hotel> listaHoteles;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.cliente_pagina_inicio);
-
-        inicializarVistas();
-        configurarRepository();
-        configurarBuscador();
-        configurarRecyclerView();
-        cargarCiudadesDisponibles();
-    }
-
-    private void inicializarVistas() {
-        etCity = findViewById(R.id.etCity);
-        tvDate = findViewById(R.id.tvDate);
-        tvPeople = findViewById(R.id.tvPeople);
-        btnSearch = findViewById(R.id.btnSearch);
-        rvHoteles = findViewById(R.id.rvHoteles);
-    }
-
-    private void configurarRepository() {
-        hotelRepository = new HotelRepository();
-    }
-
-    private void configurarBuscador() {
-        // Configurar el AutoCompleteTextView
-        ciudadesAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_dropdown_item_1line, new ArrayList<>());
-        etCity.setAdapter(ciudadesAdapter);
-        etCity.setThreshold(1); // Mostrar sugerencias desde el primer carácter
-
-        // Configurar el botón de búsqueda
-        btnSearch.setOnClickListener(v -> realizarBusqueda());
-
-        // Opcional: Buscar al seleccionar una ciudad del dropdown
-        etCity.setOnItemClickListener((parent, view, position, id) -> {
-            String ciudadSeleccionada = (String) parent.getItemAtPosition(position);
-            // Aquí podrías hacer una búsqueda automática si quieres
-        });
-    }
-
-    private void configurarRecyclerView() {
-        listaHoteles = new ArrayList<>();
-        hotelAdapter = new HotelAdapter(listaHoteles, this);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this,
-                LinearLayoutManager.HORIZONTAL, false);
-        rvHoteles.setLayoutManager(layoutManager);
-        rvHoteles.setAdapter(hotelAdapter);
-    }
-
-    private void cargarCiudadesDisponibles() {
-        hotelRepository.obtenerCiudadesDisponibles(new HotelRepository.OnCiudadesObtenidas() {
-            @Override
-            public void onSuccess(List<String> ciudades) {
-                ciudadesAdapter.clear();
-                ciudadesAdapter.addAll(ciudades);
-                ciudadesAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onError(String error) {
-                Toast.makeText(ClientePaginaPrincipal.this,
-                        "Error al cargar ciudades: " + error, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void realizarBusqueda() {
-        String ciudadBusqueda = etCity.getText().toString().trim();
-
-        if (ciudadBusqueda.isEmpty()) {
-            Toast.makeText(this, "Por favor ingresa una ciudad o país",
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Mostrar indicador de carga
-        btnSearch.setEnabled(false);
-        btnSearch.setText("Buscando...");
-
-        hotelRepository.buscarHotelesPorUbicacion(ciudadBusqueda,
-                new HotelRepository.OnHotelesObtenidos() {
-                    @Override
-                    public void onSuccess(List<Hotel> hoteles) {
-                        // Restaurar botón
-                        btnSearch.setEnabled(true);
-                        btnSearch.setText("Buscar hoteles");
-
-                        // Actualizar lista
-                        listaHoteles.clear();
-                        listaHoteles.addAll(hoteles);
-                        hotelAdapter.notifyDataSetChanged();
-
-                        if (hoteles.isEmpty()) {
-                            Toast.makeText(ClientePaginaPrincipal.this,
-                                    "No se encontraron hoteles en: " + ciudadBusqueda,
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(ClientePaginaPrincipal.this,
-                                    "Se encontraron " + hoteles.size() + " hoteles",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onError(String error) {
-                        // Restaurar botón
-                        btnSearch.setEnabled(true);
-                        btnSearch.setText("Buscar hoteles");
-
-                        Toast.makeText(ClientePaginaPrincipal.this,
-                                "Error en búsqueda: " + error, Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-}*/
 public class ClientePaginaPrincipal extends AppCompatActivity {
     private static final String TAG = "ClientePaginaPrincipal";
 
@@ -876,17 +748,18 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
     private void searchHotelsByLocationEnhanced(String location) {
         Log.d(TAG, "Buscando hoteles en: " + location);
 
-        String searchMessage = String.format("Buscando hoteles en %s para %d adultos, %d niños, %d habitación(es)...",
-                location, adultCount, childCount, roomCount);
+        // CAMBIO: Mensaje más claro sobre qué se está buscando
+        String searchMessage = String.format("Buscando hoteles con capacidad para %d+ adultos y %d+ niños en %s...",
+                adultCount, childCount, location);
         Toast.makeText(this, searchMessage, Toast.LENGTH_SHORT).show();
 
-        // Usar la función mejorada del repository que maneja tanto búsquedas estándar como flexibles
+        // CORREGIDO: Usar la función mejorada que ignora el número de habitaciones
         HotelRepository.searchHotelsWithCustomParamsEnhanced(
                 this,
                 location,
-                adultCount,
-                childCount,
-                roomCount,
+                adultCount,     // Mínimo de adultos
+                childCount,     // Mínimo de niños
+                1,              // IGNORADO: Número de habitaciones ya no importa
                 hoteles -> {
                     if (!isFinishing() && !isDestroyed()) {
                         runOnUiThread(() -> {
@@ -904,16 +777,16 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
                                         storageHelper.calculateDaysDifference(prefsManager.getStartDate(), prefsManager.getEndDate()) : 0;
 
                                 if (hoteles.isEmpty()) {
-                                    // No se encontraron hoteles
+                                    // CAMBIO: Mensaje más claro
                                     String noResultsMessage = String.format(
-                                            "No se encontraron hoteles disponibles en '%s' para %d adultos, %d niños y %d habitación(es)",
-                                            location, adultCount, childCount, roomCount);
+                                            "No se encontraron hoteles en '%s' con capacidad para %d+ adultos y %d+ niños",
+                                            location, adultCount, childCount);
                                     Toast.makeText(this, noResultsMessage, Toast.LENGTH_LONG).show();
                                 } else {
-                                    // Hoteles encontrados
+                                    // CAMBIO: Mensaje más claro sin mencionar habitaciones
                                     String successMessage = String.format(
-                                            "✅ %d hoteles encontrados en '%s' - %d días - %d habitación(es)",
-                                            hoteles.size(), location, dias, roomCount);
+                                            "✅ %d hoteles encontrados en '%s' para %d+ adultos y %d+ niños - %d días",
+                                            hoteles.size(), location, adultCount, childCount, dias);
                                     Toast.makeText(this, successMessage, Toast.LENGTH_LONG).show();
 
                                     // Navegar a resultados
@@ -1104,29 +977,6 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
     /**
      * Navega a la pantalla de resultados de búsqueda
      */
-    /*private void navigateToSearchResults(String location, long startDate, long endDate, int hotelsFound) {
-        Log.d(TAG, String.format("Navegando a resultados: %s, fechas: %d-%d, hoteles: %d",
-                location, startDate, endDate, hotelsFound));
-
-        Intent intent = new Intent(this, ClienteMainActivity.class);
-        intent.putExtra("search_location", location);
-        intent.putExtra("start_date", startDate);
-        intent.putExtra("end_date", endDate);
-        intent.putExtra("adults", adultCount);
-        intent.putExtra("children", childCount);
-        intent.putExtra("rooms", roomCount);
-        intent.putExtra("hotels_found", hotelsFound);
-        intent.putExtra("use_filters", true); // Indica que se usaron filtros
-
-        // *** NUEVO: Log para debug ***
-        Log.d(TAG, String.format("Intent extras: ubicacion='%s', adultos=%d, niños=%d, habitaciones=%d",
-                location, adultCount, childCount, roomCount));
-
-        startActivity(intent);
-    }*/
-    /**
-     * Navega a la pantalla de resultados usando ClienteMainActivity
-     */
     private void navigateToSearchResults(String location, long startDate, long endDate, int hotelsFound) {
         Log.d(TAG, String.format("Navegando a resultados: %s, fechas: %d-%d, hoteles: %d",
                 location, startDate, endDate, hotelsFound));
@@ -1287,8 +1137,4 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
             Log.e(TAG, "Error en onDestroy", e);
         }
     }
-    /**
-     * Navegación mejorada al buscar hoteles
-     */
-
 }

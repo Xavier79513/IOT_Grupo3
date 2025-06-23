@@ -38,114 +38,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-/*public class HotelDetailReservaFragment extends Fragment {
-
-    private String hotelId;
-    private TextView hotelDescription, hotelPhone, hotelLocation;
-
-    private TextView txtCheckIn, txtCheckOut, txtGuests;
-
-    private PrefsManager prefsManager;
-
-    private final String CHANNEL_ID = "hotel_booking_channel";
-    private final int NOTIFICATION_ID = 101;
-
-    public HotelDetailReservaFragment() {}
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.cliente_fragment_hotel_detail_reserva, container, false);
-
-        // Inicializar PrefsManager
-        prefsManager = new PrefsManager(requireContext());
-
-        // Referencias a los TextView del layout
-        hotelDescription = view.findViewById(R.id.hotelDescription);
-        hotelPhone = view.findViewById(R.id.hotelPhone);
-        hotelLocation = view.findViewById(R.id.hotelLocation2);
-
-        // Referencias a TextViews para fechas y huéspedes
-        txtCheckIn = view.findViewById(R.id.txtCheckIn);
-        txtCheckOut = view.findViewById(R.id.txtCheckOut);
-        txtGuests = view.findViewById(R.id.txtGuests);
-
-        // Referencia al botón de reserva
-        Button viewRooms = view.findViewById(R.id.viewRooms);
-
-        // Crear canal de notificación (solo para Android 8.0+)
-        createNotificationChannel();
-
-        // Listener para mostrar notificación al hacer click
-        viewRooms.setOnClickListener(v -> {
-            Intent intent = new Intent(requireContext(), HotelHabitacionActivity.class);
-            // Si quieres enviar datos (como hotelId), usa:
-            intent.putExtra("hotelId", hotelId);
-            startActivity(intent);
-        });
-
-
-        // Cargar datos guardados de fechas y huéspedes
-        cargarDatosReservaGuardados();
-
-        return view;
-    }
-
-
-
-    private void cargarDatosReservaGuardados() {
-        long startDate = prefsManager.getStartDate();
-        long endDate = prefsManager.getEndDate();
-        String peopleString = prefsManager.getPeopleString();
-
-        SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM yyyy", Locale.getDefault());
-
-        if (startDate != 0) {
-            String formattedStart = formatter.format(new Date(startDate));
-            txtCheckIn.setText(formattedStart);
-        }
-
-        if (endDate != 0) {
-            String formattedEnd = formatter.format(new Date(endDate));
-            txtCheckOut.setText(formattedEnd);
-        }
-
-        if (peopleString != null && !peopleString.isEmpty()) {
-            txtGuests.setText(peopleString);
-        }
-    }
-
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Booking Channel";
-            String description = "Canal para notificaciones de reserva";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-
-            NotificationManager notificationManager = requireContext().getSystemService(NotificationManager.class);
-            if (notificationManager != null) {
-                notificationManager.createNotificationChannel(channel);
-            }
-        }
-    }
-
-    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-    private void mostrarNotificacionReservaExitosa() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(requireContext(), CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_check_circle) // Cambia por un ícono válido en tu drawable
-                .setContentTitle("Reserva Confirmada")
-                .setContentText("¡Reserva realizada con éxito!")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(requireContext());
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
-    }
-}*/
 public class HotelDetailReservaFragment extends Fragment {
 
     private static final String TAG = "HotelDetailReserva";
@@ -459,13 +351,6 @@ public class HotelDetailReservaFragment extends Fragment {
         return servicioView;
     }
 
-    private void resetearServiciosVisibilidad() {
-        // Ocultar todos los servicios inicialmente
-        if (wifiLayout != null) wifiLayout.setVisibility(View.GONE);
-        if (piscinaLayout != null) piscinaLayout.setVisibility(View.GONE);
-        if (desayunoLayout != null) desayunoLayout.setVisibility(View.GONE);
-        if (gymLayout != null) gymLayout.setVisibility(View.GONE);
-    }
 
     private void mostrarErrorCarga() {
         if (hotelDescription != null) {

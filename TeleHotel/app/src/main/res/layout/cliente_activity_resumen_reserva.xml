@@ -288,6 +288,88 @@
                                 android:textColor="#2E3A59" />
                         </LinearLayout>
                     </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/rounded_backgroud_light"
+                        android:padding="16dp"
+                        android:layout_marginBottom="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="FECHAS DE ESTADÍA"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="#6C757D"
+                            android:layout_marginBottom="12dp" />
+
+                        <!-- Check-in -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="8dp">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/ic_calendar"
+                                android:layout_marginEnd="10dp"
+                                app:tint="#004D40" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Check-in: "
+                                android:textSize="14sp"
+                                android:textColor="#6C757D" />
+
+                            <TextView
+                                android:id="@+id/tvCheckInDate"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="miércoles, 09 jul 2025"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:textColor="#2E3A59" />
+                        </LinearLayout>
+
+                        <!-- Check-out -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/ic_calendar"
+                                android:layout_marginEnd="10dp"
+                                app:tint="#004D40" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Check-out: "
+                                android:textSize="14sp"
+                                android:textColor="#6C757D" />
+
+                            <TextView
+                                android:id="@+id/tvCheckOutDate"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="lunes, 14 jul 2025"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:textColor="#2E3A59" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -331,51 +413,6 @@
                             android:textColor="#2E3A59" />
                     </LinearLayout>
 
-                    <!-- Desglose de precios -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="8dp">
-
-                        <!--TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="3 noches × $127"
-                            android:textSize="14sp"
-                            android:textColor="#6C757D" /-->
-
-                        <!--TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="$381"
-                            android:textSize="14sp"
-                            android:textColor="#2E3A59" /-->
-                    </LinearLayout>
-
-                    <!--LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="12dp">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Impuestos y tasas"
-                            android:textSize="14sp"
-                            android:textColor="#6C757D" />
-
-                        <TextView
-                            android:id="@+id/tvTaxes"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="$25"
-                            android:textSize="14sp"
-                            android:textColor="#2E3A59" />
-                    </LinearLayout-->
 
                     <!-- Línea divisoria -->
                     <View

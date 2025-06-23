@@ -9,6 +9,7 @@ public class Usuario {
     private String uid;
     private String email;
     private String role;
+    private  boolean estadoViaje =false;
     private String estado;
 
     // Datos personales
@@ -121,5 +122,13 @@ public class Usuario {
 
     public String getHotelAsignado() { return hotelAsignado; }
     public void setHotelAsignado(String hotelAsignado) { this.hotelAsignado = hotelAsignado; }
+
+    public boolean isEstadoViaje() {
+        return estadoViaje;
+    }
+
+    public void setEstadoViaje(boolean estadoViaje) {
+        this.estadoViaje = estadoViaje;
+    }
 
 }

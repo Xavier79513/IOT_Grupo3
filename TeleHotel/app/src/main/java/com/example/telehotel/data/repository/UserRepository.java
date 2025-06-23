@@ -3,6 +3,7 @@ package com.example.telehotel.data.repository;
 import com.example.telehotel.core.FirebaseUtil;
 import com.example.telehotel.data.model.Usuario;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.ListenerRegistration;
 
 public class UserRepository {
 
@@ -37,6 +38,24 @@ public class UserRepository {
                 })
                 .addOnFailureListener(e -> onFailure.onFailure("Error al consultar: " + e.getMessage()));
     }
+    public static ListenerRegistration escucharEstadoUsuario(String uid, UserEstadoListener listener) {
+        return FirebaseUtil.getFirestore()
+                .collection("usuarios")
+                .document(uid)
+                .addSnapshotListener((snapshot, error) -> {
+                    if (error != null || snapshot == null || !snapshot.exists()) {
+                        listener.onError("Error al escuchar el estado del usuario.");
+                        return;
+                    }
+
+                    String estado = snapshot.getString("estadoViaje");
+                    listener.onEstadoChanged(estado);
+                });
+    }
+    public interface UserEstadoListener {
+        void onEstadoChanged(String estado);
+        void onError(String error);
+    }
 
     public static void getUserByUid(String uidBuscado, SuccessCallback onSuccess, FailureCallback onFailure) {
         FirebaseUtil.getFirestore().collection("usuarios")
@@ -59,4 +78,5 @@ public class UserRepository {
                 })
                 .addOnFailureListener(e -> onFailure.onFailure("Error al consultar: " + e.getMessage()));
     }
+
 }

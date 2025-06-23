@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.telehotel.R;
+import com.example.telehotel.core.FirebaseUtil;
 import com.example.telehotel.data.model.ServicioTaxi;
 import com.example.telehotel.data.repository.SolicitudRepository;
 import com.example.telehotel.data.repository.UserRepository;
@@ -81,8 +82,8 @@ public class TaxistaActivity extends AppCompatActivity {
                             public void onStyleLoaded(@NonNull Style style) {
                                 // Centrar la cámara en Lima con zoom 13
                                 CameraPosition position = new CameraPosition.Builder()
-                                        .target(new LatLng(-12.0464, -77.0428))  // Lima
-                                        .zoom(13.0)
+                                        .target(new LatLng(-12.073116161489578, -77.08184692648088))  // Lima
+                                        .zoom(18.0)
                                         .build();
                                 mapLibreMap.setCameraPosition(position);
                             }
@@ -91,8 +92,20 @@ public class TaxistaActivity extends AppCompatActivity {
         });
 
         // Mostrar estado de vista según viaje activo o no
-        boolean viajeEnCurso = obtenerEstadoViaje();
-        mostrarVistaSegunEstado(viajeEnCurso);
+        String uidActual = FirebaseUtil.getAuth().getCurrentUser().getUid();
+
+        UserRepository.escucharEstadoUsuario(uidActual, new UserRepository.UserEstadoListener() {
+            @Override
+            public void onEstadoChanged(String estado) {
+                boolean viajeEnCurso = "en_curso".equalsIgnoreCase(estado);
+                mostrarVistaSegunEstado(viajeEnCurso);
+            }
+
+            @Override
+            public void onError(String error) {
+                Toast.makeText(TaxistaActivity.this, error, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         setupBottomNavigation();
         setupSolicitudes();
@@ -164,11 +177,7 @@ public class TaxistaActivity extends AppCompatActivity {
         });
     }
 
-    // Leer estado guardado del viaje
-    private boolean obtenerEstadoViaje() {
-        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        return prefs.getBoolean(KEY_VIAJE_EN_CURSO, false);
-    }
+
 
     // Guardar estado del viaje
     private void guardarEstadoViaje(boolean estado) {

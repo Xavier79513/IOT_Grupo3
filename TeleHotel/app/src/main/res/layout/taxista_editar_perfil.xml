@@ -2,11 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView
     android:id="@+id/profile_scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -148,8 +147,8 @@
                                 android:id="@+id/tvNombre"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:layout_marginStart="16dp"
+                                android:layout_weight="1"
                                 android:text="John Smith"
                                 android:textColor="?attr/colorOnSurface"
                                 android:textSize="16sp" />
@@ -158,12 +157,12 @@
                                 android:id="@+id/etNombre"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:layout_marginStart="16dp"
-                                android:visibility="gone"
-                                android:textSize="16sp"
+                                android:layout_weight="1"
                                 android:inputType="textPersonName"
-                                android:textColor="?attr/colorOnSurface" />
+                                android:textColor="?attr/colorOnSurface"
+                                android:textSize="16sp"
+                                android:visibility="gone" />
 
 
                             <ImageButton
@@ -209,17 +208,18 @@
                                 android:layout_marginStart="-32dp"
                                 android:src="@drawable/tipodocumento"
                                 app:tint="?attr/colorOnPrimary" />
+
                             <TextView
                                 android:id="@+id/tvDni"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:layout_marginStart="16dp"
+                                android:layout_weight="1"
                                 android:text="71030722"
                                 android:textColor="?attr/colorOnSurface"
                                 android:textSize="16sp" />
 
-                              </LinearLayout>
+                        </LinearLayout>
                     </LinearLayout>
 
                     <!-- Correo -->
@@ -333,7 +333,7 @@
                                     android:textSize="12sp" />
                             </LinearLayout>
 
-                             </LinearLayout>
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -408,14 +408,6 @@
                                 android:textColor="?attr/colorOnSurface"
                                 android:textSize="16sp" />
 
-                            <ImageButton
-                                android:id="@+id/btnCallPhone"
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:layout_marginEnd="8dp"
-                                android:background="?attr/selectableItemBackgroundBorderless"
-                                android:src="@drawable/ic_call"
-                                app:tint="?attr/colorPrimary" />
 
                             <ImageButton
                                 android:id="@+id/btnEditPhone"
@@ -480,27 +472,27 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
+                android:layout_marginBottom="80dp"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:weightSum="2"
                 android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:gravity="center">
+                android:paddingEnd="80dp"
+                android:weightSum="2">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSaveChanges"
                     style="@style/Widget.Material3.Button"
-                    android:layout_width="0dp"
-                    android:layout_height="56dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
                     android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
                     android:backgroundTint="?attr/colorPrimary"
                     android:text="Guardar Cambios"
                     android:textColor="?attr/colorOnPrimary"
-                    android:textSize="16sp"
+                    android:textSize="13sp"
                     app:icon="@drawable/ic_save"
                     app:iconGravity="textStart"
-                    app:iconPadding="8dp"
+                    app:iconPadding="2dp"
                     app:iconTint="?attr/colorOnPrimary" />
 
             </LinearLayout>
@@ -524,6 +516,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

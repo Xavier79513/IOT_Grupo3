@@ -40,6 +40,9 @@ public class HotelsFragment extends Fragment {
     private TextView txtSeleccionarAmenidades;
     private TextView txtSeleccionarPuntuacion;
 
+    // 1. AGREGAR esta variable en la sección de vistas:
+    private TextView textCiudadTitulo; // AGREGAR ESTA LÍNEA
+
     // ============= DATOS =============
     private List<Hotel> listaHotelesOriginal = new ArrayList<>(); // Lista completa sin filtrar
     private List<Hotel> listaHotelesFiltrada = new ArrayList<>(); // Lista filtrada para mostrar
@@ -104,11 +107,11 @@ public class HotelsFragment extends Fragment {
             // Inicializar PrefsManager
             prefsManager = new PrefsManager(requireContext());
 
-            // Obtener parámetros de búsqueda
-            obtenerParametrosBusqueda();
 
             // Inicializar vistas
             inicializarVistas(view);
+            // Obtener parámetros de búsqueda
+            obtenerParametrosBusqueda();
 
             // Configurar RecyclerView
             configurarRecyclerView();
@@ -172,6 +175,7 @@ public class HotelsFragment extends Fragment {
             children = arguments.getInt("children", 0);
             rooms = arguments.getInt("rooms", 1);
 
+
             Log.d(TAG, "Parámetros obtenidos desde newInstance()");
 
         } else {
@@ -179,6 +183,7 @@ public class HotelsFragment extends Fragment {
             Log.w(TAG, "No hay argumentos, intentando obtener desde PrefsManager");
 
             searchLocation = ""; // No hay ubicación guardada en prefs por defecto
+            //searchLocation = prefsManager.getSearchLocation();
             startDate = prefsManager.getStartDate();
             endDate = prefsManager.getEndDate();
 
@@ -205,6 +210,7 @@ public class HotelsFragment extends Fragment {
         if (!hayParametrosMinimos()) {
             Log.e(TAG, "ERROR CRÍTICO: Fragment iniciado sin parámetros mínimos requeridos");
         }
+        actualizarTituloUbicacion();
     }
 
     private void parseSearchParams(String peopleString) {
@@ -283,8 +289,9 @@ public class HotelsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerHotelList);
         progressBar = view.findViewById(R.id.progressBarHotels);
         textCantidad = view.findViewById(R.id.textCantidadHoteles);
-        txtSeleccionarAmenidades = view.findViewById(R.id.txtSeleccionarAmenidades);
-        txtSeleccionarPuntuacion = view.findViewById(R.id.txtSeleccionarPuntuacion);
+        textCiudadTitulo = view.findViewById(R.id.textCiudadTitulo); // AGREGAR ESTA LÍNEA
+        //txtSeleccionarAmenidades = view.findViewById(R.id.txtSeleccionarAmenidades);
+        //txtSeleccionarPuntuacion = view.findViewById(R.id.txtSeleccionarPuntuacion);
 
         Log.d(TAG, "Vistas inicializadas");
     }
@@ -734,6 +741,8 @@ public class HotelsFragment extends Fragment {
         this.adults = adults;
         this.children = children;
         this.rooms = rooms;
+        // AGREGAR esta línea:
+        actualizarTituloUbicacion();
 
         // Limpiar filtros adicionales
         limpiarFiltrosSinRecargar();
@@ -806,5 +815,17 @@ public class HotelsFragment extends Fragment {
                 adults, adults == 1 ? "" : "s",
                 children, children == 1 ? "" : "s",
                 rooms, rooms == 1 ? "" : "es");
+    }
+    // 3. AGREGAR este método para actualizar la ubicación:
+    private void actualizarTituloUbicacion() {
+        if (textCiudadTitulo != null) {
+            if (searchLocation != null && !searchLocation.trim().isEmpty()) {
+                textCiudadTitulo.setText(searchLocation);
+                textCiudadTitulo.setVisibility(View.VISIBLE);
+            } else {
+                textCiudadTitulo.setText("Ubicación no especificada");
+                textCiudadTitulo.setVisibility(View.VISIBLE);
+            }
+        }
     }
 }

@@ -152,7 +152,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="1 habitación · 2 adultos · 0 niños"
-                                android:textSize="16sp"
+                                android:textSize="12sp"
                                 android:textColor="@color/gray" />
 
                             <ImageView
@@ -219,7 +219,7 @@
 
                 </LinearLayout>
 
-                <com.google.android.material.button.MaterialButton
+                <!--com.google.android.material.button.MaterialButton
                     android:id="@+id/btnVerTodoLugares"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
@@ -233,7 +233,7 @@
                     app:strokeColor="@color/primaryColor"
                     android:minWidth="0dp"
                     android:paddingStart="12dp"
-                    android:paddingEnd="12dp" />
+                    android:paddingEnd="12dp" /-->
 
             </LinearLayout>
 
@@ -279,7 +279,7 @@
 
                 </LinearLayout>
 
-                <com.google.android.material.button.MaterialButton
+                <!--com.google.android.material.button.MaterialButton
                     android:id="@+id/btnVerTodoHoteles"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
@@ -293,7 +293,7 @@
                     app:strokeColor="@color/primaryColor"
                     android:minWidth="0dp"
                     android:paddingStart="12dp"
-                    android:paddingEnd="12dp" />
+                    android:paddingEnd="12dp" /-->
 
             </LinearLayout>
 

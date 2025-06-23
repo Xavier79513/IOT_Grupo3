@@ -113,4 +113,27 @@
     <color name="dark_text">#333333</color>
     <color name="gray_text">#666666</color>
     <color name="light_gray">#F5F7FA</color>
+
+    <!-- Colores principales -->
+    <color name="primary">#2196F3</color>
+    <color name="primary_dark">#1976D2</color>
+    <color name="primary_light">#BBDEFB</color>
+
+    <!-- Colores de fondo -->
+    <color name="background_light">#F5F5F5</color>
+    <color name="background_white">#FFFFFF</color>
+
+    <!-- Colores de texto -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#BDBDBD</color>
+
+    <!-- Colores de estado -->
+    <color name="success">#4CAF50</color>
+    <color name="warning">#FF9800</color>
+    <color name="error">#F44336</color>
+
+    <!-- Colores adicionales -->
+    <color name="divider">#E0E0E0</color>
+    <color name="transparent">#00000000</color>
 </resources>

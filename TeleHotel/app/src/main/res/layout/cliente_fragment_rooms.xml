@@ -25,14 +25,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
+        <!--TextView
             android:id="@+id/textCiudadTitulo"
             android:text="Barcelona"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="#000000"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" /-->
+        <!-- Agregar este TextView donde quieras mostrar la ubicación -->
+        <TextView
+            android:id="@+id/textCiudadTitulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Barcelona"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:layout_marginBottom="8dp" />
 
         <TextView
             android:id="@+id/textCantidadHoteles"
@@ -43,9 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp" />
 
-
-        <!-- Contenedor principal con etiquetas -->
-        <LinearLayout
+        <!--LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -53,7 +61,6 @@
             android:paddingBottom="8dp"
             android:paddingHorizontal="16dp">
 
-            <!-- Fila de etiquetas -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -93,7 +100,6 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- Fila de botones -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -101,7 +107,6 @@
                 android:gravity="center"
                 android:weightSum="3">
 
-                <!-- Filtro: Amenidades -->
                 <TextView
                     android:id="@+id/txtSeleccionarAmenidades"
                     android:layout_width="0dp"
@@ -124,7 +129,6 @@
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground" />
 
-                <!-- Filtro: Puntuación -->
                 <TextView
                     android:id="@+id/txtSeleccionarPuntuacion"
                     android:layout_width="0dp"
@@ -147,7 +151,6 @@
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground" />
 
-                <!-- Filtro: Precio -->
                 <TextView
                     android:id="@+id/txtSeleccionarPrecio"
                     android:layout_width="0dp"
@@ -170,7 +173,7 @@
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground" />
             </LinearLayout>
-        </LinearLayout>
+        </LinearLayout-->
 
     </LinearLayout>
 

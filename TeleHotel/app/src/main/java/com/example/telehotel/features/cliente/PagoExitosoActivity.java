@@ -8,6 +8,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.telehotel.R;
+import com.example.telehotel.features.cliente.fragments.ReservationHistoryFragment;
 
 public class PagoExitosoActivity extends AppCompatActivity {
 
@@ -20,9 +21,13 @@ public class PagoExitosoActivity extends AppCompatActivity {
         btnVerReservas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(PagoExitosoActivity.this, ClientePaginaPrincipal.class);
+                /*Intent intent = new Intent(PagoExitosoActivity.this, ClienteMainActivity.class);
                 startActivity(intent);
-                finish(); // Opcional, si no quieres que regrese a esta pantalla con "Back"
+                finish(); */// Opcional, si no quieres que regrese a esta pantalla con "Back"
+                Intent intent = new Intent(PagoExitosoActivity.this, ClienteMainActivity.class);
+                intent.putExtra("navegar_a", "historial"); // 👈 esto es clave
+                startActivity(intent);
+                finish();
             }
         });
     }

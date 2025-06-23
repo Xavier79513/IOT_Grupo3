@@ -31,6 +31,7 @@ public class ClienteMainActivity extends AppCompatActivity {
     }
 
     private void procesarParametrosBusqueda(NavController navController) {
+
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
             Log.d(TAG, "No hay parámetros de búsqueda, navegación normal");
@@ -39,6 +40,14 @@ public class ClienteMainActivity extends AppCompatActivity {
 
         try {
             // Extraer parámetros del Intent
+
+            String destino = extras.getString("navegar_a", "");
+            if ("historial".equals(destino)) {
+                Log.d(TAG, "Navegando directamente al fragmento de historial");
+                navController.navigate(R.id.nav_history_reservation); // 👈 ID correcto confirmado
+                return;
+            }
+
             String searchLocation = extras.getString("search_location", "");
             long startDate = extras.getLong("start_date", 0);
             long endDate = extras.getLong("end_date", 0);

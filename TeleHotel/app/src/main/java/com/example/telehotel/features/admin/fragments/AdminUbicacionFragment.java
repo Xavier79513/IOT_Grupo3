@@ -26,6 +26,7 @@ import com.example.telehotel.data.model.LugarHistorico;
 import com.example.telehotel.features.admin.LugarHistoricoAdapter;
 import com.example.telehotel.features.admin.OpenStreetMapService;
 import com.example.telehotel.core.utils.LogUtils; // ✅ AGREGAR IMPORT
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -88,6 +89,9 @@ public class AdminUbicacionFragment extends Fragment {
                 adminId,
                 "Accedió al módulo de gestión de ubicación (Admin: " + adminName + ")"
         );
+        // ✅ CONFIGURAR FLECHA DE REGRESO
+        MaterialToolbar topAppBar = view.findViewById(R.id.topAppBar);
+        topAppBar.setNavigationOnClickListener(v -> requireActivity().onBackPressed());
     }
 
     private void initFirebase() {

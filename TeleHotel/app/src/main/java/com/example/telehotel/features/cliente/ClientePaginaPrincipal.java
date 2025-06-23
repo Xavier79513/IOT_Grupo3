@@ -147,8 +147,8 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
             rvHoteles = findViewById(R.id.rvHoteles);
 
             // Botones adicionales
-            btnVerTodoLugares = findViewById(R.id.btnVerTodoLugares);
-            btnVerTodoHoteles = findViewById(R.id.btnVerTodoHoteles);
+            //btnVerTodoLugares = findViewById(R.id.btnVerTodoLugares);
+            //btnVerTodoHoteles = findViewById(R.id.btnVerTodoHoteles);
             ivLogout = findViewById(R.id.ivLogout);
 
             Log.d(TAG, "initializeViews - Completado");

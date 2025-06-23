@@ -38,8 +38,10 @@ import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
 import com.example.telehotel.R;
 import com.example.telehotel.core.CloudinaryManager;
+import com.example.telehotel.core.storage.PrefsManager; // ✅ AGREGAR IMPORT
 import com.example.telehotel.features.admin.FullscreenPhotoActivity;
 import com.example.telehotel.features.admin.adapters.PhotoAdapter;
+import com.example.telehotel.core.utils.LogUtils; // ✅ AGREGAR IMPORT
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -61,6 +63,7 @@ public class AdminImagenesFragment extends Fragment {
     // Data
     private String hotelId;
     private String adminName;
+    private String adminId; // ✅ AGREGAR para logs
     private List<String> imagenesUrls;
     private ImagenesAdapter imagenesAdapter;
     private PhotoAdapter photoAdapter;
@@ -83,10 +86,17 @@ public class AdminImagenesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Obtener argumentos
+        // Obtener argumentos y datos del usuario
         if (getArguments() != null) {
             hotelId = getArguments().getString("hotel_id");
             adminName = getArguments().getString("admin_name");
+        }
+
+        // ✅ OBTENER ID DEL ADMIN DESDE PREFERENCIAS
+        PrefsManager prefsManager = new PrefsManager(requireContext());
+        adminId = prefsManager.getUserId();
+        if (adminName == null) {
+            adminName = prefsManager.getUserName();
         }
 
         // Inicializar Firebase
@@ -103,6 +113,13 @@ public class AdminImagenesFragment extends Fragment {
         // Cargar imágenes existentes
         loadHotelImages();
 
+        // ✅ LOG: Acceso al módulo de gestión de imágenes
+        LogUtils.registrarActividad(
+                LogUtils.ActionType.SYSTEM,
+                adminId,
+                "Accedió al módulo de gestión de imágenes del hotel: " + hotelId + " (Admin: " + adminName + ")"
+        );
+
         Log.d(TAG, "Fragment inicializado para hotel: " + hotelId);
     }
 
@@ -112,6 +129,9 @@ public class AdminImagenesFragment extends Fragment {
                 Log.d(TAG, "Inicializando Cloudinary...");
                 CloudinaryManager.initialize(requireContext());
                 Log.d(TAG, "✅ Cloudinary inicializado correctamente");
+
+                // ✅ LOG: Cloudinary inicializado exitosamente
+                LogUtils.logSistema("Cloudinary inicializado correctamente para gestión de imágenes");
             } else {
                 Log.d(TAG, "✅ Cloudinary ya estaba inicializado");
             }
@@ -120,6 +140,10 @@ public class AdminImagenesFragment extends Fragment {
             Toast.makeText(getContext(),
                     "Error: No se pudo inicializar el servicio de imágenes.",
                     Toast.LENGTH_LONG).show();
+
+            // ✅ LOG: Error inicializando Cloudinary
+            LogUtils.logError("Error inicializando Cloudinary: " + e.getMessage(), adminId);
+
             deshabilitarFuncionalidadImagenes();
         }
     }
@@ -173,6 +197,13 @@ public class AdminImagenesFragment extends Fragment {
         intent.putStringArrayListExtra("image_urls", new ArrayList<>(urls));
         intent.putExtra("position", position);
         startActivity(intent);
+
+        // ✅ LOG: Visualización de imagen en pantalla completa
+        LogUtils.registrarActividad(
+                LogUtils.ActionType.SYSTEM,
+                adminId,
+                "Visualizó imagen en pantalla completa - Hotel: " + hotelId + " - Posición: " + (position + 1)
+        );
     }
 
     // Método para cambiar entre modo administración y modo galería
@@ -188,6 +219,13 @@ public class AdminImagenesFragment extends Fragment {
             btnAgregarImagen.setVisibility(View.GONE);
             btnTomarFoto.setVisibility(View.GONE);
 
+            // ✅ LOG: Cambio a modo galería
+            LogUtils.registrarActividad(
+                    LogUtils.ActionType.SYSTEM,
+                    adminId,
+                    "Cambió a modo galería en gestión de imágenes - Hotel: " + hotelId
+            );
+
         } else {
             // Cambiar a modo administración
             recyclerImagenes.setLayoutManager(new GridLayoutManager(getContext(), 2));
@@ -196,6 +234,13 @@ public class AdminImagenesFragment extends Fragment {
             // Mostrar botones de administración
             btnAgregarImagen.setVisibility(View.VISIBLE);
             btnTomarFoto.setVisibility(View.VISIBLE);
+
+            // ✅ LOG: Cambio a modo administración
+            LogUtils.registrarActividad(
+                    LogUtils.ActionType.SYSTEM,
+                    adminId,
+                    "Cambió a modo administración en gestión de imágenes - Hotel: " + hotelId
+            );
         }
 
         updateViewModeButton();
@@ -205,11 +250,8 @@ public class AdminImagenesFragment extends Fragment {
         if (btnCambiarVista != null) {
             if (isGalleryMode) {
                 btnCambiarVista.setText("🔧 Modo Administración");
-                // Puedes agregar drawable si los tienes
-                // btnCambiarVista.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_edit, 0, 0, 0);
             } else {
                 btnCambiarVista.setText("🖼️ Modo Galería");
-                // btnCambiarVista.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_gallery, 0, 0, 0);
             }
         }
     }
@@ -218,6 +260,13 @@ public class AdminImagenesFragment extends Fragment {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
         startActivityForResult(intent, REQUEST_IMAGE_PICK);
+
+        // ✅ LOG: Inicio de selección de imagen desde galería
+        LogUtils.registrarActividad(
+                LogUtils.ActionType.SYSTEM,
+                adminId,
+                "Inició selección de imagen desde galería - Hotel: " + hotelId
+        );
     }
 
     private void abrirCamara() {
@@ -225,6 +274,13 @@ public class AdminImagenesFragment extends Fragment {
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(requireActivity(),
                     new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+
+            // ✅ LOG: Solicitud de permisos de cámara
+            LogUtils.registrarActividad(
+                    LogUtils.ActionType.SYSTEM,
+                    adminId,
+                    "Solicitó permisos de cámara - Hotel: " + hotelId
+            );
             return;
         }
         Toast.makeText(getContext(), "Funcionalidad de cámara en desarrollo", Toast.LENGTH_SHORT).show();
@@ -250,12 +306,22 @@ public class AdminImagenesFragment extends Fragment {
                             photoAdapter.notifyDataSetChanged();
 
                             actualizarContador();
+
+                            // ✅ LOG: Carga exitosa de imágenes
+                            LogUtils.registrarActividad(
+                                    LogUtils.ActionType.SYSTEM,
+                                    adminId,
+                                    "Cargó " + imagenes.size() + " imágenes del hotel: " + hotelId
+                            );
                         }
                     }
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error cargando imágenes: " + e.getMessage());
                     Toast.makeText(getContext(), "Error cargando imágenes del hotel", Toast.LENGTH_SHORT).show();
+
+                    // ✅ LOG: Error cargando imágenes
+                    LogUtils.logError("Error cargando imágenes del hotel " + hotelId + ": " + e.getMessage(), adminId);
                 });
     }
 
@@ -274,11 +340,21 @@ public class AdminImagenesFragment extends Fragment {
                 Toast.makeText(getContext(),
                         "Error: No se pudo inicializar el servicio de imágenes",
                         Toast.LENGTH_LONG).show();
+
+                // ✅ LOG: Error reinicializando Cloudinary
+                LogUtils.logError("Error reinicializando Cloudinary para subir imagen: " + e.getMessage(), adminId);
                 return;
             }
         }
 
         Toast.makeText(getContext(), "Subiendo imagen...", Toast.LENGTH_SHORT).show();
+
+        // ✅ LOG: Inicio de subida de imagen
+        LogUtils.registrarActividad(
+                LogUtils.ActionType.CREATE,
+                adminId,
+                "Inició subida de nueva imagen al hotel: " + hotelId
+        );
 
         Map<String, Object> options = new HashMap<>();
         options.put("folder", "telehotel/hoteles/" + hotelId);
@@ -307,6 +383,14 @@ public class AdminImagenesFragment extends Fragment {
                             String imageUrl = (String) resultData.get("secure_url");
                             if (imageUrl != null) {
                                 Log.d(TAG, "Imagen subida exitosamente: " + imageUrl);
+
+                                // ✅ LOG: Subida exitosa a Cloudinary
+                                LogUtils.registrarActividad(
+                                        LogUtils.ActionType.CREATE,
+                                        adminId,
+                                        "Subió imagen exitosamente a Cloudinary - Hotel: " + hotelId + " - URL: " + imageUrl.substring(0, Math.min(50, imageUrl.length())) + "..."
+                                );
+
                                 if (getActivity() != null) {
                                     getActivity().runOnUiThread(() -> agregarImagenAHotel(imageUrl));
                                 }
@@ -316,6 +400,9 @@ public class AdminImagenesFragment extends Fragment {
                                     getActivity().runOnUiThread(() ->
                                             Toast.makeText(getContext(), "Error: URL de imagen no válida", Toast.LENGTH_SHORT).show());
                                 }
+
+                                // ✅ LOG: Error URL no válida
+                                LogUtils.logError("URL de imagen no válida en respuesta de Cloudinary - Hotel: " + hotelId, adminId);
                             }
                         } catch (Exception e) {
                             Log.e(TAG, "Error procesando respuesta de Cloudinary", e);
@@ -323,6 +410,9 @@ public class AdminImagenesFragment extends Fragment {
                                 getActivity().runOnUiThread(() ->
                                         Toast.makeText(getContext(), "Error procesando imagen", Toast.LENGTH_SHORT).show());
                             }
+
+                            // ✅ LOG: Error procesando respuesta
+                            LogUtils.logError("Error procesando respuesta de Cloudinary: " + e.getMessage(), adminId);
                         }
                     }
 
@@ -338,11 +428,21 @@ public class AdminImagenesFragment extends Fragment {
                                 Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
                             });
                         }
+
+                        // ✅ LOG: Error subiendo imagen
+                        LogUtils.logError("Error subiendo imagen a Cloudinary - Hotel: " + hotelId + " - Error: " + error.getDescription(), adminId);
                     }
 
                     @Override
                     public void onReschedule(String requestId, ErrorInfo error) {
                         Log.w(TAG, "Subida reagendada: " + requestId);
+
+                        // ✅ LOG: Subida reagendada
+                        LogUtils.registrarActividad(
+                                LogUtils.ActionType.SYSTEM,
+                                adminId,
+                                "Subida de imagen reagendada - Hotel: " + hotelId + " - RequestId: " + requestId
+                        );
                     }
                 })
                 .dispatch();
@@ -362,6 +462,13 @@ public class AdminImagenesFragment extends Fragment {
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(getContext(), "✅ Imagen agregada exitosamente", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "Imagen agregada a hotel: " + imageUrl);
+
+                    // ✅ LOG: Imagen agregada exitosamente al hotel
+                    LogUtils.registrarActividad(
+                            LogUtils.ActionType.CREATE,
+                            adminId,
+                            "Agregó imagen exitosamente al hotel: " + hotelId + " - Total de imágenes: " + imagenesUrls.size()
+                    );
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error actualizando hotel: " + e.getMessage());
@@ -373,6 +480,9 @@ public class AdminImagenesFragment extends Fragment {
 
                     actualizarContador();
                     Toast.makeText(getContext(), "❌ Error guardando imagen", Toast.LENGTH_SHORT).show();
+
+                    // ✅ LOG: Error guardando imagen en Firestore
+                    LogUtils.logError("Error guardando imagen en Firestore - Hotel: " + hotelId + " - Error: " + e.getMessage(), adminId);
                 });
     }
 
@@ -383,6 +493,13 @@ public class AdminImagenesFragment extends Fragment {
 
         if (imagenesUrls.size() <= 4) {
             Toast.makeText(getContext(), "⚠️ Debe mantener al menos 4 imágenes", Toast.LENGTH_LONG).show();
+
+            // ✅ LOG: Intento de eliminar imagen violando regla mínima
+            LogUtils.registrarActividad(
+                    LogUtils.ActionType.ERROR,
+                    adminId,
+                    "Intentó eliminar imagen violando regla mínima (4 imágenes) - Hotel: " + hotelId + " - Imágenes actuales: " + imagenesUrls.size()
+            );
             return;
         }
 
@@ -400,6 +517,13 @@ public class AdminImagenesFragment extends Fragment {
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(getContext(), "🗑️ Imagen eliminada", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "Imagen eliminada: " + imageUrl);
+
+                    // ✅ LOG: Imagen eliminada exitosamente
+                    LogUtils.registrarActividad(
+                            LogUtils.ActionType.DELETE,
+                            adminId,
+                            "Eliminó imagen del hotel: " + hotelId + " - Posición: " + (position + 1) + " - Imágenes restantes: " + imagenesUrls.size()
+                    );
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error eliminando imagen: " + e.getMessage());
@@ -411,6 +535,9 @@ public class AdminImagenesFragment extends Fragment {
 
                     actualizarContador();
                     Toast.makeText(getContext(), "❌ Error eliminando imagen", Toast.LENGTH_SHORT).show();
+
+                    // ✅ LOG: Error eliminando imagen
+                    LogUtils.logError("Error eliminando imagen del hotel " + hotelId + ": " + e.getMessage(), adminId);
                 });
     }
 
@@ -435,6 +562,12 @@ public class AdminImagenesFragment extends Fragment {
         if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK && data != null) {
             Uri selectedImage = data.getData();
             if (selectedImage != null) {
+                // ✅ LOG: Imagen seleccionada desde galería
+                LogUtils.registrarActividad(
+                        LogUtils.ActionType.SYSTEM,
+                        adminId,
+                        "Seleccionó imagen desde galería para hotel: " + hotelId
+                );
                 subirImagen(selectedImage);
             }
         }
@@ -446,9 +579,22 @@ public class AdminImagenesFragment extends Fragment {
 
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // ✅ LOG: Permisos de cámara concedidos
+                LogUtils.registrarActividad(
+                        LogUtils.ActionType.SYSTEM,
+                        adminId,
+                        "Concedió permisos de cámara - Hotel: " + hotelId
+                );
                 abrirCamara();
             } else {
                 Toast.makeText(getContext(), "📷 Permiso de cámara requerido", Toast.LENGTH_SHORT).show();
+
+                // ✅ LOG: Permisos de cámara denegados
+                LogUtils.registrarActividad(
+                        LogUtils.ActionType.ERROR,
+                        adminId,
+                        "Denegó permisos de cámara - Hotel: " + hotelId
+                );
             }
         }
     }

@@ -9,8 +9,10 @@ import com.example.telehotel.data.model.Capacidad;
 import com.example.telehotel.data.model.Habitacion;
 import com.example.telehotel.data.model.Hotel;
 import com.example.telehotel.data.model.LocationSearch;
+import com.example.telehotel.data.model.Servicio;
 import com.example.telehotel.data.model.Ubicacion;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -22,6 +24,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class HotelRepository {
 
@@ -238,6 +242,43 @@ public class HotelRepository {
         } else {
             onError.accept(new Exception("Formato de ubicación inválido. Use: 'Ciudad, País'"));
         }
+    }
+
+    public static void getServiciosObjetosByHotelId(String hotelId,
+                                                    OnSuccessListener<List<Servicio>> onSuccess,
+                                                    OnFailureListener onFailure) {
+
+        if (hotelId == null || hotelId.isEmpty()) {
+            onFailure.onFailure(new Exception("Hotel ID no válido"));
+            return;
+        }
+
+        // Ejemplo de implementación con Firestore:
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("servicios")
+                .whereEqualTo("hotelId", hotelId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<Servicio> servicios = new ArrayList<>();
+
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        try {
+                            Servicio servicio = document.toObject(Servicio.class);
+                            servicio.setId(document.getId()); // Asignar ID del documento
+                            servicios.add(servicio);
+                        } catch (Exception e) {
+                            Log.e("HotelRepository", "Error parseando servicio: " + e.getMessage());
+                        }
+                    }
+
+                    Log.d("HotelRepository", "Servicios cargados: " + servicios.size() + " para hotel: " + hotelId);
+                    onSuccess.onSuccess(servicios);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("HotelRepository", "Error cargando servicios: " + e.getMessage());
+                    onFailure.onFailure(e);
+                });
     }
 
     /**

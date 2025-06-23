@@ -40,7 +40,7 @@
             android:id="@+id/btnVerReservas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Volver a la página principal"
+            android:text="Revisar historial de reservas"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:backgroundTint="#889B9A"

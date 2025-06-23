@@ -85,7 +85,7 @@
                     android:id="@+id/txtTotalUsuarios"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"
+                    android:text="18"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="#000000" />
@@ -99,13 +99,11 @@
 
             </LinearLayout>
 
-            <!-- Separador -->
             <View
                 android:layout_width="1dp"
                 android:layout_height="40dp"
                 android:background="#E0E0E0" />
 
-            <!-- Usuarios Activos -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -117,7 +115,7 @@
                     android:id="@+id/txtUsuariosActivos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"
+                    android:text="8"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="#4CAF50" />
@@ -131,7 +129,6 @@
 
             </LinearLayout>
 
-            <!-- Separador -->
             <View
                 android:layout_width="1dp"
                 android:layout_height="40dp"
@@ -149,7 +146,7 @@
                     android:id="@+id/txtUsuariosBloqueados"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"
+                    android:text="10"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="#F44336" />

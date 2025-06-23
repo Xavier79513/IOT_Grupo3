@@ -451,7 +451,7 @@
             </androidx.cardview.widget.CardView>
 
             <!-- Información de seguridad -->
-            <androidx.cardview.widget.CardView
+            <!--androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
@@ -495,7 +495,7 @@
                             android:layout_height="wrap_content" />
                     </LinearLayout>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </androidx.cardview.widget.CardView-->
 
             <!-- Botones de acción -->
             <LinearLayout

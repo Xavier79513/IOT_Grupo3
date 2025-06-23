@@ -103,5 +103,14 @@
     <color name="pink_dark">#FFC2185B</color>
 
     <color name="accentColor">#FF5722</color>
+    <!-- Colores para servicios dinámicos -->
+    <color name="blue">#2196F3</color>
+    <color name="orange">#FF9800</color>
+    <color name="pink">#E91E63</color>
+    <color name="purple">#9C27B0</color>
 
+    <!-- Colores de texto -->
+    <color name="dark_text">#333333</color>
+    <color name="gray_text">#666666</color>
+    <color name="light_gray">#F5F7FA</color>
 </resources>

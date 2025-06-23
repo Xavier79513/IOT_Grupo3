@@ -448,43 +448,114 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
         if (dateSelector == null) return;
 
         try {
+            // Configurar restricciones para el calendario
+            CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
+            // Solo fechas futuras (desde hoy)
+            constraintsBuilder.setStart(System.currentTimeMillis());
+
             MaterialDatePicker<Pair<Long, Long>> dateRangePicker = MaterialDatePicker.Builder.dateRangePicker()
                     .setTitleText("Seleccionar las fechas")
+                    .setCalendarConstraints(constraintsBuilder.build())
                     .build();
 
             dateSelector.setOnClickListener(v -> dateRangePicker.show(getSupportFragmentManager(), "DATE_PICKER"));
 
             dateRangePicker.addOnPositiveButtonClickListener(selection -> {
-                Long startDate = selection.first;
-                Long endDate = selection.second;
+                Long startDateUTC = selection.first;
+                Long endDateUTC = selection.second;
 
-                if (startDate != null && endDate != null) {
-                    if (storageHelper != null && storageHelper.isPastDate(startDate)) {
+                if (startDateUTC != null && endDateUTC != null) {
+                    // Convertir fechas UTC a zona horaria local
+                    long startDateLocal = convertirUTCaLocal(startDateUTC);
+                    long endDateLocal = convertirUTCaLocal(endDateUTC);
+
+                    // Log para debugging
+                    Log.d(TAG, "Fecha inicio UTC: " + new Date(startDateUTC));
+                    Log.d(TAG, "Fecha inicio Local: " + new Date(startDateLocal));
+                    Log.d(TAG, "Fecha fin UTC: " + new Date(endDateUTC));
+                    Log.d(TAG, "Fecha fin Local: " + new Date(endDateLocal));
+
+                    // Validación adicional de fechas pasadas usando fecha local
+                    if (storageHelper != null && storageHelper.isPastDate(startDateLocal)) {
                         Toast.makeText(this, "No puedes seleccionar fechas pasadas", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
+                    // Formatear fechas para mostrar en UI usando zona horaria local
                     SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM", Locale.getDefault());
-                    String dateText = formatter.format(new Date(startDate)) + " - " + formatter.format(new Date(endDate));
+
+                    // Usar Calendar para formateo seguro
+                    Calendar startCal = Calendar.getInstance();
+                    startCal.setTimeInMillis(startDateLocal);
+                    Calendar endCal = Calendar.getInstance();
+                    endCal.setTimeInMillis(endDateLocal);
+
+                    String dateText = formatter.format(startCal.getTime()) + " - " + formatter.format(endCal.getTime());
 
                     if (tvDate != null) {
                         tvDate.setText(dateText);
                         tvDate.setTextColor(getResources().getColor(R.color.black));
                     }
 
+                    // Guardar fechas locales en PrefsManager
                     if (prefsManager != null) {
-                        prefsManager.saveDateRange(startDate, endDate);
+                        prefsManager.saveDateRange(startDateLocal, endDateLocal);
                     }
 
+                    // Calcular días de estadía correctamente
                     if (storageHelper != null) {
-                        int days = storageHelper.calculateDaysDifference(startDate, endDate);
-                        Toast.makeText(this, "Estadía de " + days + " días seleccionada", Toast.LENGTH_SHORT).show();
+                        int days = calcularDiasEstadia(startDateLocal, endDateLocal);
+                        String dayMessage = String.format("Estadía de %d día%s seleccionada",
+                                days, days > 1 ? "s" : "");
+                        Toast.makeText(this, dayMessage, Toast.LENGTH_SHORT).show();
+
+                        Log.d(TAG, "Días calculados: " + days +
+                                " (inicio: " + startCal.get(Calendar.DAY_OF_MONTH) +
+                                ", fin: " + endCal.get(Calendar.DAY_OF_MONTH) + ")");
                     }
                 }
             });
         } catch (Exception e) {
             Log.e(TAG, "Error configurando selector de fechas", e);
         }
+    }
+
+    private long convertirUTCaLocal(long utcTimestamp) {
+        Calendar utcCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        utcCalendar.setTimeInMillis(utcTimestamp);
+
+        // Crear calendar en zona horaria local con la misma fecha
+        Calendar localCalendar = Calendar.getInstance();
+        localCalendar.set(Calendar.YEAR, utcCalendar.get(Calendar.YEAR));
+        localCalendar.set(Calendar.MONTH, utcCalendar.get(Calendar.MONTH));
+        localCalendar.set(Calendar.DAY_OF_MONTH, utcCalendar.get(Calendar.DAY_OF_MONTH));
+        localCalendar.set(Calendar.HOUR_OF_DAY, 12); // Usar mediodía para evitar problemas de DST
+        localCalendar.set(Calendar.MINUTE, 0);
+        localCalendar.set(Calendar.SECOND, 0);
+        localCalendar.set(Calendar.MILLISECOND, 0);
+
+        return localCalendar.getTimeInMillis();
+    }
+
+    private int calcularDiasEstadia(long startDate, long endDate) {
+        Calendar start = Calendar.getInstance();
+        start.setTimeInMillis(startDate);
+        start.set(Calendar.HOUR_OF_DAY, 0);
+        start.set(Calendar.MINUTE, 0);
+        start.set(Calendar.SECOND, 0);
+        start.set(Calendar.MILLISECOND, 0);
+
+        Calendar end = Calendar.getInstance();
+        end.setTimeInMillis(endDate);
+        end.set(Calendar.HOUR_OF_DAY, 0);
+        end.set(Calendar.MINUTE, 0);
+        end.set(Calendar.SECOND, 0);
+        end.set(Calendar.MILLISECOND, 0);
+
+        long diffInMillis = end.getTimeInMillis() - start.getTimeInMillis();
+        int days = (int) (diffInMillis / (1000 * 60 * 60 * 24));
+
+        return Math.max(1, days); // Mínimo 1 día
     }
 
     private void setupGuestSelector() {
@@ -1048,15 +1119,25 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
         if (prefsManager == null) return;
 
         try {
-            // Cargar fechas
+            // Cargar fechas (ya están en zona horaria local si se guardaron correctamente)
             long startDate = prefsManager.getStartDate();
             long endDate = prefsManager.getEndDate();
 
             if (startDate != 0 && endDate != 0 && tvDate != null) {
+                // Usar Calendar para formateo seguro
+                Calendar startCal = Calendar.getInstance();
+                startCal.setTimeInMillis(startDate);
+                Calendar endCal = Calendar.getInstance();
+                endCal.setTimeInMillis(endDate);
+
                 SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM", Locale.getDefault());
-                String dateText = formatter.format(new Date(startDate)) + " - " + formatter.format(new Date(endDate));
+                String dateText = formatter.format(startCal.getTime()) + " - " + formatter.format(endCal.getTime());
+
                 tvDate.setText(dateText);
                 tvDate.setTextColor(getResources().getColor(R.color.black));
+
+                Log.d(TAG, "Fechas cargadas - Inicio: " + startCal.get(Calendar.DAY_OF_MONTH) +
+                        ", Fin: " + endCal.get(Calendar.DAY_OF_MONTH));
             }
 
             // Cargar personas
@@ -1084,6 +1165,27 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
 
         } catch (Exception e) {
             Log.e(TAG, "Error cargando datos guardados", e);
+        }
+    }
+
+    private void updateDateDisplay(long startDate, long endDate) {
+        if (tvDate == null) return;
+
+        try {
+            Calendar startCal = Calendar.getInstance();
+            startCal.setTimeInMillis(startDate);
+            Calendar endCal = Calendar.getInstance();
+            endCal.setTimeInMillis(endDate);
+
+            SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM", Locale.getDefault());
+            String dateText = formatter.format(startCal.getTime()) + " - " + formatter.format(endCal.getTime());
+
+            tvDate.setText(dateText);
+            tvDate.setTextColor(getResources().getColor(R.color.black));
+
+            Log.d(TAG, "Display actualizado: " + dateText);
+        } catch (Exception e) {
+            Log.e(TAG, "Error actualizando display de fechas", e);
         }
     }
 

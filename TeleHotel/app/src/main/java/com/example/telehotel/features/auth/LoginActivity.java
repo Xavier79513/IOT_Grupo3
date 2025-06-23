@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.telehotel.R;
 import com.example.telehotel.core.storage.PrefsManager;
+import com.example.telehotel.core.utils.LogUtils;
 import com.example.telehotel.data.model.Usuario;
 import com.example.telehotel.data.repository.AuthRepository;
 import com.example.telehotel.features.admin.AdminMainActivity;
@@ -44,6 +45,9 @@ public class LoginActivity extends AppCompatActivity {
             // Usuario autenticado pero email no verificado
             Toast.makeText(this, "Por favor verifica tu email antes de continuar", Toast.LENGTH_LONG).show();
             FirebaseAuth.getInstance().signOut(); // Cerrar sesión
+
+            LogUtils.logError("Intento de acceso con email no verificado: " + user.getEmail(), user.getUid());
+
         }
         initViews();
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
@@ -119,6 +123,7 @@ public class LoginActivity extends AppCompatActivity {
                     boolean esDominioInterno = userEmail != null && userEmail.endsWith("@telehotel.com");
 
                     if (esDominioInterno || firebaseUser.isEmailVerified()) {
+                        LogUtils.logLogin(firebaseUser.getUid(), userEmail);
                         goToMain(firebaseUser);
                     } else {
                         runOnUiThread(() -> {
@@ -128,6 +133,8 @@ public class LoginActivity extends AppCompatActivity {
                                     "Por favor verifica tu email antes de iniciar sesión",
                                     Toast.LENGTH_LONG).show();
                             FirebaseAuth.getInstance().signOut();
+                            LogUtils.logError("Intento de login con email no verificado: " + userEmail, firebaseUser.getUid());
+
                         });
                     }
                 }
@@ -139,6 +146,13 @@ public class LoginActivity extends AppCompatActivity {
                     loginButton.setEnabled(true);
                     loginButton.setText("Iniciar Sesión");
                     Toast.makeText(LoginActivity.this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
+                    String email = emailEditText.getText().toString().trim();
+
+                    LogUtils.registrarActividad(
+                            LogUtils.ActionType.ERROR,
+                            null,
+                            "Intento de login fallido para email: " + email
+                    );
                 });
             }
         });
@@ -146,6 +160,11 @@ public class LoginActivity extends AppCompatActivity {
     private void forgotPassword(String email) {
         authViewModel.recoverPassword(email);
         Toast.makeText(this, "Se ha enviado un correo para restablecer tu contraseña", Toast.LENGTH_LONG).show();
+        LogUtils.registrarActividad(
+                LogUtils.ActionType.SYSTEM,
+                null,
+                "Solicitud de recuperación de contraseña para: " + email
+        );
     }
     /*private void goToMain(FirebaseUser user) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -290,6 +309,8 @@ public class LoginActivity extends AppCompatActivity {
                         if (estado != null && !"activo".equals(estado)) {
                             Toast.makeText(this, "Tu cuenta está deshabilitada. Contacta al administrador.", Toast.LENGTH_LONG).show();
                             FirebaseAuth.getInstance().signOut();
+                            LogUtils.logError("Intento de acceso con cuenta deshabilitada: " + user.getEmail(), user.getUid());
+
                             return;
                         }
 
@@ -312,7 +333,11 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d("LoginDebug", "Usuario: " + user.getEmail() + ", Rol: " + role + ", Estado: " + estado);
 
                         Toast.makeText(this, "Bienvenido " + nombre, Toast.LENGTH_SHORT).show();
-
+                        LogUtils.registrarActividad(
+                                LogUtils.ActionType.LOGIN,
+                                user.getUid(),
+                                "Acceso exitoso al sistema como " + role + " - " + nombre + " (" + user.getEmail() + ")"
+                        );
                         Intent intent = null;
                         switch (role) {
                             case "taxista":

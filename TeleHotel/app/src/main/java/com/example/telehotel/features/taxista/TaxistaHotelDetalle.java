@@ -2,15 +2,21 @@ package com.example.telehotel.features.taxista;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.telehotel.R;
 import com.example.telehotel.data.model.ServicioTaxi;
-import com.example.telehotel.data.model.Ubicacion;
-import com.example.telehotel.features.taxista.adapter.ServicioTaxiAdapter;
+import com.example.telehotel.features.taxista.adapter.SolicitudTaxiAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +24,10 @@ import java.util.List;
 public class TaxistaHotelDetalle extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private ServicioTaxiAdapter solicitudAdapter;
+    private SolicitudTaxiAdapter solicitudAdapter;
+    private List<ServicioTaxi> listaSolicitudes = new ArrayList<>();
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +44,7 @@ public class TaxistaHotelDetalle extends AppCompatActivity {
             Log.e("TaxistaHotelDetalle", "Faltan datos en el Intent");
             return;
         }
+        Log.d("Verificar",hotelId);
 
         // Mostrar los datos del hotel
         TextView titulo = findViewById(R.id.textHotelTitulo);
@@ -42,28 +52,49 @@ public class TaxistaHotelDetalle extends AppCompatActivity {
         if (titulo != null) titulo.setText(hotelNombre);
         if (direccion != null) direccion.setText(hotelDireccion);
 
-        // Inicializar RecyclerView
+        // Configurar RecyclerView
         recyclerView = findViewById(R.id.recyclerViewSolicitudes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Lista de solicitudes de taxi
-        List<ServicioTaxi> listaSolicitudes = crearListaSolicitudes();
+        // Inicializar adapter con listener
+        solicitudAdapter = new SolicitudTaxiAdapter(listaSolicitudes, new SolicitudTaxiAdapter.OnSolicitudActionListener() {
+            @Override
+            public void onAceptar(ServicioTaxi solicitud) {
+                if (solicitud.getId() != null) {
+                    db.collection("solicitudTaxi")
+                            .document(solicitud.getId())
+                            .update("estado", "en curso")
+                            .addOnSuccessListener(aVoid -> Log.d("Adapter", "Solicitud aceptada"))
+                            .addOnFailureListener(e -> Log.e("Adapter", "Error al aceptar", e));
+                }
+            }
 
-        // Filtrar las solicitudes para que solo se muestren las del hotel seleccionado
-        List<ServicioTaxi> solicitudesFiltradas = filtrarSolicitudesPorHotel(listaSolicitudes, hotelId);
+            @Override
+            public void onRechazar(ServicioTaxi solicitud) {
+                if (solicitud.getId() != null) {
+                    db.collection("solicitudTaxi")
+                            .document(solicitud.getId())
+                            .update("estado", "cancelado")
+                            .addOnSuccessListener(aVoid -> Log.d("Adapter", "Solicitud rechazada"))
+                            .addOnFailureListener(e -> Log.e("Adapter", "Error al rechazar", e));
+                }
+            }
+        });
 
-        // Verificar si se encontraron solicitudes
-        if (solicitudesFiltradas.isEmpty()) {
-            Log.e("TaxistaHotelDetalle", "No se encontraron solicitudes para el hotel con ID: " + hotelId);
+        recyclerView.setAdapter(solicitudAdapter);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            Log.d("AuthCheck", "Usuario autenticado: " + user.getUid());
+            escucharSolicitudes(hotelId);
         } else {
-            Log.d("TaxistaHotelDetalle", "Se encontraron " + solicitudesFiltradas.size() + " solicitudes.");
+            Log.e("AuthCheck", "Usuario NO autenticado, no se puede consultar Firestore");
+            // Opcional: mostrar mensaje o redirigir a login
         }
 
-        // Adapter
-        solicitudAdapter = new ServicioTaxiAdapter(solicitudesFiltradas);
-        recyclerView.setAdapter(solicitudAdapter);
+        // Obtener solicitudes en tiempo real
+        escucharSolicitudes(hotelId);
 
-        // Configuración del Bottom Navigation
+        // Bottom Navigation
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
         bottomNav.setSelectedItemId(R.id.nav_hotels);
         bottomNav.setOnItemSelectedListener(item -> {
@@ -72,22 +103,49 @@ public class TaxistaHotelDetalle extends AppCompatActivity {
         });
     }
 
-    // Metodo para crear la lista de solicitudes de taxi (simulada)
-    private List<ServicioTaxi> crearListaSolicitudes() {
-        List<ServicioTaxi> solicitudes = new ArrayList<>();    return solicitudes;
-    }
+    private void escucharSolicitudes(String hotelId) {
+        TextView emptyTextView = findViewById(R.id.textViewEmpty);
+
+        db.collection("solicitudTaxi")
+                .whereEqualTo("hotelId", hotelId)
+                .whereEqualTo("estado", "Buscando")
+                .addSnapshotListener((querySnapshot, e) -> {
+                    if (e != null) {
+                        Log.e("TaxistaHotelDetalle", "Error en listener de Firestore", e);
+                        return;
+                    }
+
+                    if (querySnapshot != null) {
+                        List<ServicioTaxi> nuevasSolicitudes = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : querySnapshot) {
+                            Log.d("FirestoreDocumento", "ID: " + document.getId() + " Datos: " + document.getData());
+                            ServicioTaxi solicitud = document.toObject(ServicioTaxi.class);
+                            solicitud.setId(document.getId());
+
+                            // Log del estado de la solicitud
+                            if (solicitud.getEstado() != null) {
+                                Log.d("SolicitudEstado", "Solicitud ID: " + solicitud.getId() + " Estado: " + solicitud.getEstado());
+                            } else {
+                                Log.d("SolicitudEstado", "Solicitud ID: " + solicitud.getId() + " Estado: null");
+                            }
+
+                            nuevasSolicitudes.add(solicitud);
+                        }
 
 
-    // Filtrar las solicitudes por el ID del hotel
-    private List<ServicioTaxi> filtrarSolicitudesPorHotel(List<ServicioTaxi> solicitudes, String hotelId) {
-        List<ServicioTaxi> solicitudesFiltradas = new ArrayList<>();
-        for (ServicioTaxi solicitud : solicitudes) {
-            // Verificar si el hotelId coincide
-            Log.d("TaxistaHotelDetalle", "Comprobando solicitud para hotel ID: " + solicitud.getHotelId());
-            if (solicitud.getHotelId().equals(hotelId)) {
-                solicitudesFiltradas.add(solicitud);
-            }
-        }
-        return solicitudesFiltradas;
+                        Log.d("TaxistaHotelDetalle", "Solicitudes actualizadas: " + nuevasSolicitudes.size());
+                        solicitudAdapter.updateSolicitudes(nuevasSolicitudes);
+
+                        // Mostrar u ocultar mensaje vacío
+                        if (nuevasSolicitudes.isEmpty()) {
+                            emptyTextView.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                        } else {
+                            emptyTextView.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
     }
+
 }

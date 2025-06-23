@@ -97,7 +97,7 @@ public class SolicitudTaxiAdapter extends RecyclerView.Adapter<SolicitudTaxiAdap
         }
 
         // Mostrar u ocultar botones Aceptar y Rechazar solo si estado es "buscando"
-        if ("buscando".equalsIgnoreCase(estado)) {
+        if ("Buscando".equalsIgnoreCase(estado)) {
             holder.btnAceptar.setVisibility(View.VISIBLE);
             holder.btnRechazar.setVisibility(View.VISIBLE);
         } else {

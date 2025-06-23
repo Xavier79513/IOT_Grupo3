@@ -73,24 +73,40 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <!-- RecyclerView -->
+
+    <!-- Bottom Navigation -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewSolicitudes"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
-        app:layout_constraintTop_toBottomOf="@id/textViewSolicitudes"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/taxista_item_solicitud_historial" />
-
-    <!-- Bottom Navigation -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewSolicitudes"
+        app:layout_constraintVertical_bias="0.0"
+         />
+    <TextView
+        android:id="@+id/textViewEmpty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/btn_gradient"
+        android:text="No se encontraron solicitudes"
+        android:textSize="16sp"
+        android:textAlignment="center"
+        android:padding="16dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/recyclerViewSolicitudes"/>
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface"
+        app:itemIconTint="@color/selector_nav_item"
+        app:itemTextColor="@color/selector_nav_item"
         app:menu="@menu/taxista_bottom_nav_menu"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"

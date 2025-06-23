@@ -52,8 +52,9 @@ public class HotelRepository {
                     List<Hotel> hoteles = new ArrayList<>();
                     for (DocumentSnapshot doc : querySnapshot) {
                         Hotel hotel = doc.toObject(Hotel.class);
+                        assert hotel != null;
+
                         if (hotel != null) {
-                            hotel.setId(doc.getId());
                             hoteles.add(hotel);
                         }
                     }

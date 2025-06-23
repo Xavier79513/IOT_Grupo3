@@ -4,7 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,10 +19,14 @@ import com.example.telehotel.core.FirebaseUtil;
 import com.example.telehotel.core.storage.PrefsManager;
 import com.example.telehotel.data.model.Habitacion;
 import com.example.telehotel.data.model.Hotel;
+import com.example.telehotel.data.model.Servicio;
+import com.example.telehotel.data.model.ServicioAdicional;
 import com.example.telehotel.data.repository.HotelRepository;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -30,7 +37,7 @@ public class ResumenReservaActivity extends AppCompatActivity {
     // Referencias a vistas - HOTEL
     private TextView tvHotelName, tvHotelLocation;
 
-    // AGREGAR estas variables a la clase
+    // Referencias a vistas - FECHAS
     private TextView tvCheckInDate, tvCheckOutDate;
 
     // Referencias a vistas - HABITACIÓN
@@ -40,7 +47,15 @@ public class ResumenReservaActivity extends AppCompatActivity {
     private TextView tvDays, tvGuests;
 
     // Referencias a vistas - PRECIOS
-    private TextView tvTotalPrice;
+    private TextView tvTotalPrice, tvSubtotal, tvServicesTotal;
+
+    // Referencias a vistas - SERVICIOS ADICIONALES
+    private LinearLayout servicesContainer;
+    private TextView tvServicesTitle;
+
+    // Referencias a vistas - TAXI
+    private CheckBox cbTaxiService;
+    private TextView tvTaxiDescription;
 
     // Referencias a vistas - CLIENTE
     private TextView tvNombre, tvEmail, tvTelefono;
@@ -55,10 +70,15 @@ public class ResumenReservaActivity extends AppCompatActivity {
     // Datos cargados
     private Hotel hotelActual;
     private Habitacion habitacionActual;
+    private List<Servicio> serviciosDisponibles = new ArrayList<>();
+    private List<ServicioAdicional> serviciosSeleccionados = new ArrayList<>();
     private long fechaInicio;
     private long fechaFin;
     private int totalDias;
+    private double precioHabitacion;
+    private double precioServicios = 0.0;
     private double precioTotal;
+    private boolean taxiRequested = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,12 +136,22 @@ public class ResumenReservaActivity extends AppCompatActivity {
         tvDays = findViewById(R.id.tvDays);
         tvGuests = findViewById(R.id.tvGuests);
 
-        // Precios
-        tvTotalPrice = findViewById(R.id.tvTotalPrice);
-
-        // AGREGAR ESTAS LÍNEAS:
+        // Fechas
         tvCheckInDate = findViewById(R.id.tvCheckInDate);
         tvCheckOutDate = findViewById(R.id.tvCheckOutDate);
+
+        // Precios
+        tvTotalPrice = findViewById(R.id.tvTotalPrice);
+        tvSubtotal = findViewById(R.id.tvSubtotal);
+        tvServicesTotal = findViewById(R.id.tvServicesTotal);
+
+        // Servicios adicionales
+        servicesContainer = findViewById(R.id.servicesContainer);
+        tvServicesTitle = findViewById(R.id.tvServicesTitle);
+
+        // Taxi
+        cbTaxiService = findViewById(R.id.cbTaxiService);
+        tvTaxiDescription = findViewById(R.id.tvTaxiDescription);
 
         // Cliente
         tvNombre = findViewById(R.id.tvNombre);
@@ -129,6 +159,14 @@ public class ResumenReservaActivity extends AppCompatActivity {
         tvTelefono = findViewById(R.id.tvTelefono);
 
         btnConfirmOrder = findViewById(R.id.btnConfirmOrder);
+
+        // Configurar listener del taxi
+        if (cbTaxiService != null) {
+            cbTaxiService.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                taxiRequested = isChecked;
+                Log.d(TAG, "Servicio de taxi " + (isChecked ? "solicitado" : "no solicitado"));
+            });
+        }
     }
 
     private void configurarBotonConfirmar() {
@@ -142,6 +180,12 @@ public class ResumenReservaActivity extends AppCompatActivity {
             intent.putExtra("habitacionId", habitacionId);
             intent.putExtra("totalAmount", precioTotal);
             intent.putExtra("totalDays", totalDias);
+            intent.putExtra("taxiRequested", taxiRequested);
+
+            // Pasar servicios seleccionados
+            ArrayList<ServicioAdicional> serviciosList = new ArrayList<>(serviciosSeleccionados);
+            intent.putParcelableArrayListExtra("serviciosSeleccionados", serviciosList);
+
             startActivity(intent);
         });
     }
@@ -157,7 +201,6 @@ public class ResumenReservaActivity extends AppCompatActivity {
         cargarDatosCliente();
     }
 
-    // MODIFICAR el método cargarFechas() para mostrar las fechas en la UI:
     private void cargarFechas() {
         fechaInicio = prefsManager.getStartDate();
         fechaFin = prefsManager.getEndDate();
@@ -174,7 +217,7 @@ public class ResumenReservaActivity extends AppCompatActivity {
                 totalDias = 1;
             }
 
-            // AGREGAR ESTAS LÍNEAS PARA MOSTRAR LAS FECHAS:
+            // Mostrar fechas en la UI
             String fechaInicioFormateada = formatter.format(new Date(fechaInicio));
             String fechaFinFormateada = formatter.format(new Date(fechaFin));
 
@@ -188,7 +231,6 @@ public class ResumenReservaActivity extends AppCompatActivity {
             Log.e(TAG, "No hay fechas válidas en PrefsManager");
             totalDias = 1; // Valor por defecto
 
-            // AGREGAR VALORES POR DEFECTO PARA LAS FECHAS:
             tvCheckInDate.setText("Fecha no disponible");
             tvCheckOutDate.setText("Fecha no disponible");
         }
@@ -204,6 +246,10 @@ public class ResumenReservaActivity extends AppCompatActivity {
                         actualizarDatosHotel(hotel);
                         // Después de cargar el hotel, cargar la habitación
                         cargarDatosHabitacion();
+                        // Cargar servicios adicionales
+                        cargarServiciosAdicionales();
+                        // Configurar información del taxi
+                        configurarInformacionTaxi();
                     });
                 },
                 error -> {
@@ -213,6 +259,187 @@ public class ResumenReservaActivity extends AppCompatActivity {
                     });
                 }
         );
+    }
+
+    private void cargarServiciosAdicionales() {
+        Log.d(TAG, "Cargando servicios adicionales para hotel: " + hotelId);
+
+        HotelRepository.getServiciosObjetosByHotelId(hotelId,
+                servicios -> {
+                    runOnUiThread(() -> {
+                        serviciosDisponibles = servicios;
+                        mostrarServiciosAdicionales(servicios);
+                    });
+                },
+                error -> {
+                    runOnUiThread(() -> {
+                        Log.e(TAG, "Error cargando servicios: " + error.getMessage());
+                        ocultarSeccionServicios();
+                    });
+                }
+        );
+    }
+
+    private void mostrarServiciosAdicionales(List<Servicio> servicios) {
+        if (servicesContainer == null || servicios == null || servicios.isEmpty()) {
+            ocultarSeccionServicios();
+            return;
+        }
+
+        // Filtrar solo servicios con precio (no gratuitos)
+        List<Servicio> serviciosPagos = new ArrayList<>();
+        for (Servicio servicio : servicios) {
+            if (servicio.getPrecio() != null && servicio.getPrecio() > 0) {
+                serviciosPagos.add(servicio);
+            }
+        }
+
+        if (serviciosPagos.isEmpty()) {
+            ocultarSeccionServicios();
+            return;
+        }
+
+        // Mostrar título de servicios
+        if (tvServicesTitle != null) {
+            tvServicesTitle.setVisibility(View.VISIBLE);
+        }
+
+        // Limpiar contenedor
+        servicesContainer.removeAllViews();
+        servicesContainer.setVisibility(View.VISIBLE);
+
+        // Agregar cada servicio como checkbox
+        for (Servicio servicio : serviciosPagos) {
+            View servicioView = crearVistaServicio(servicio);
+            if (servicioView != null) {
+                servicesContainer.addView(servicioView);
+            }
+        }
+
+        Log.d(TAG, "Servicios adicionales mostrados: " + serviciosPagos.size());
+    }
+
+    private View crearVistaServicio(Servicio servicio) {
+        // Crear container principal
+        LinearLayout container = new LinearLayout(this);
+        container.setOrientation(LinearLayout.HORIZONTAL);
+        container.setPadding(16, 12, 16, 12);
+
+        LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        containerParams.bottomMargin = 8;
+        container.setLayoutParams(containerParams);
+
+        // Crear checkbox
+        CheckBox checkbox = new CheckBox(this);
+        checkbox.setId(View.generateViewId());
+
+        LinearLayout.LayoutParams checkboxParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        checkbox.setLayoutParams(checkboxParams);
+
+        // Crear container de textos
+        LinearLayout textContainer = new LinearLayout(this);
+        textContainer.setOrientation(LinearLayout.VERTICAL);
+        textContainer.setPadding(16, 0, 0, 0);
+
+        LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1.0f
+        );
+        textContainer.setLayoutParams(textParams);
+
+        // Crear TextView para nombre
+        TextView nombreText = new TextView(this);
+        nombreText.setText(servicio.getNombre());
+        nombreText.setTextSize(16);
+        nombreText.setTypeface(null, android.graphics.Typeface.BOLD);
+        nombreText.setTextColor(getResources().getColor(R.color.dark_text, null));
+
+        // Crear TextView para descripción (si existe)
+        TextView descripcionText = new TextView(this);
+        if (servicio.getDescripcion() != null && !servicio.getDescripcion().isEmpty()) {
+            descripcionText.setText(servicio.getDescripcion());
+            descripcionText.setTextSize(14);
+            descripcionText.setTextColor(getResources().getColor(R.color.gray_text, null));
+            descripcionText.setVisibility(View.VISIBLE);
+        } else {
+            descripcionText.setVisibility(View.GONE);
+        }
+
+        // Crear TextView para precio
+        TextView precioText = new TextView(this);
+        precioText.setText(String.format(Locale.getDefault(), "S/ %.2f", servicio.getPrecio()));
+        precioText.setTextSize(16);
+        precioText.setTypeface(null, android.graphics.Typeface.BOLD);
+        precioText.setTextColor(getResources().getColor(R.color.colorPrimary, null));
+
+        // Agregar textos al container
+        textContainer.addView(nombreText);
+        if (descripcionText.getVisibility() == View.VISIBLE) {
+            textContainer.addView(descripcionText);
+        }
+
+        // Agregar todo al container principal
+        container.addView(checkbox);
+        container.addView(textContainer);
+        container.addView(precioText);
+
+        // Configurar listener del checkbox
+        checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                // Agregar servicio
+                ServicioAdicional servicioAdicional = new ServicioAdicional();
+                servicioAdicional.servicioId = servicio.getId();
+                servicioAdicional.cantidad = 1;
+                servicioAdicional.precio = servicio.getPrecio();
+                serviciosSeleccionados.add(servicioAdicional);
+
+                Log.d(TAG, "Servicio agregado: " + servicio.getNombre() + " - S/" + servicio.getPrecio());
+            } else {
+                // Remover servicio
+                serviciosSeleccionados.removeIf(s -> s.servicioId.equals(servicio.getId()));
+                Log.d(TAG, "Servicio removido: " + servicio.getNombre());
+            }
+
+            // Recalcular precios
+            calcularPrecioTotal();
+        });
+
+        return container;
+    }
+
+    private void configurarInformacionTaxi() {
+        if (hotelActual == null || cbTaxiService == null || tvTaxiDescription == null) {
+            return;
+        }
+
+        Double montoMinimo = hotelActual.getMontoMinimoTaxi();
+        if (montoMinimo != null && montoMinimo > 0) {
+            String descripcion = String.format(Locale.getDefault(),
+                    "Servicio de taxi gratuito al aeropuerto (requiere monto mínimo de reserva: S/ %.2f)",
+                    montoMinimo);
+            tvTaxiDescription.setText(descripcion);
+            cbTaxiService.setVisibility(View.VISIBLE);
+            tvTaxiDescription.setVisibility(View.VISIBLE);
+        } else {
+            cbTaxiService.setVisibility(View.GONE);
+            tvTaxiDescription.setVisibility(View.GONE);
+        }
+    }
+
+    private void ocultarSeccionServicios() {
+        if (servicesContainer != null) {
+            servicesContainer.setVisibility(View.GONE);
+        }
+        if (tvServicesTitle != null) {
+            tvServicesTitle.setVisibility(View.GONE);
+        }
     }
 
     private void cargarDatosHabitacion() {
@@ -272,7 +499,7 @@ public class ResumenReservaActivity extends AppCompatActivity {
         tvNumberRooms.setText("1 habitación");
 
         // Tipo de habitación
-        String tipo = habitacion.getTipoFormateado();
+        String tipo = habitacion.getTipo() != null ? habitacion.getTipo() : "Habitación";
         tvRoomType.setText(tipo);
 
         // Descripción de la habitación
@@ -280,12 +507,15 @@ public class ResumenReservaActivity extends AppCompatActivity {
         if (descripcion == null || descripcion.trim().isEmpty()) {
             // Generar descripción basada en capacidad y tamaño
             StringBuilder desc = new StringBuilder();
-            if (habitacion.getCapacidadAdultos() != null || habitacion.getCapacidadNinos() != null) {
-                int adultos = habitacion.getCapacidadAdultos() != null ? habitacion.getCapacidadAdultos() : 0;
-                int ninos = habitacion.getCapacidadNinos() != null ? habitacion.getCapacidadNinos() : 0;
-                desc.append("Capacidad para ").append(adultos).append(" adultos");
-                if (ninos > 0) {
-                    desc.append(" y ").append(ninos).append(" niños");
+            if (habitacion.getCapacidad() != null) {
+                Integer adultos = habitacion.getCapacidad().getAdultos();
+                Integer ninos = habitacion.getCapacidad().getNinos();
+
+                if (adultos != null) {
+                    desc.append("Capacidad para ").append(adultos).append(" adultos");
+                    if (ninos != null && ninos > 0) {
+                        desc.append(" y ").append(ninos).append(" niños");
+                    }
                 }
             }
             if (habitacion.getTamaño() != null && habitacion.getTamaño() > 0) {
@@ -316,14 +546,35 @@ public class ResumenReservaActivity extends AppCompatActivity {
     }
 
     private void calcularPrecios(Habitacion habitacion) {
-        double precioPorNoche = habitacion.getPrecio() != null ? habitacion.getPrecio() : 0.0;
-        precioTotal = precioPorNoche * totalDias;
+        precioHabitacion = (habitacion.getPrecio() != null ? habitacion.getPrecio() : 0.0) * totalDias;
+        calcularPrecioTotal();
+    }
 
-        // Actualizar precio total
+    private void calcularPrecioTotal() {
+        // Calcular precio de servicios
+        precioServicios = 0.0;
+        for (ServicioAdicional servicio : serviciosSeleccionados) {
+            precioServicios += (servicio.precio != null ? servicio.precio : 0.0) *
+                    (servicio.cantidad != null ? servicio.cantidad : 1);
+        }
+
+        // Calcular precio total
+        precioTotal = precioHabitacion + precioServicios;
+
+        // Actualizar UI
+        if (tvSubtotal != null) {
+            tvSubtotal.setText(String.format(Locale.getDefault(), "S/ %.2f", precioHabitacion));
+        }
+
+        if (tvServicesTotal != null) {
+            tvServicesTotal.setText(String.format(Locale.getDefault(), "S/ %.2f", precioServicios));
+            tvServicesTotal.setVisibility(precioServicios > 0 ? View.VISIBLE : View.GONE);
+        }
+
         tvTotalPrice.setText(String.format(Locale.getDefault(), "S/ %.2f", precioTotal));
 
-        Log.d(TAG, String.format("Precios calculados - Precio por noche: S/ %.2f, Total (%d días): S/ %.2f",
-                precioPorNoche, totalDias, precioTotal));
+        Log.d(TAG, String.format("Precios calculados - Habitación: S/ %.2f, Servicios: S/ %.2f, Total: S/ %.2f",
+                precioHabitacion, precioServicios, precioTotal));
     }
 
     private void cargarDatosCliente() {
@@ -332,12 +583,6 @@ public class ResumenReservaActivity extends AppCompatActivity {
         // Verificar si PrefsManager tiene userId
         String userId = prefsManager.getUserId();
         Log.d(TAG, "UserID desde PrefsManager: " + userId);
-
-        // También intentar obtener email directamente del PrefsManager
-        String emailPrefs = prefsManager.getUserEmail();
-        String namePrefs = prefsManager.getUserName();
-        Log.d(TAG, "Email desde PrefsManager: " + emailPrefs);
-        Log.d(TAG, "Name desde PrefsManager: " + namePrefs);
 
         if (userId != null && !userId.isEmpty()) {
             Log.d(TAG, "Buscando usuario en Firebase con ID: " + userId);
@@ -355,14 +600,9 @@ public class ResumenReservaActivity extends AppCompatActivity {
 
                             try {
                                 String nombres = documentSnapshot.getString("nombres");
-                                String apellido = documentSnapshot.getString("apellido");
+                                String apellido = documentSnapshot.getString("apellidos");
                                 String email = documentSnapshot.getString("email");
                                 String telefono = documentSnapshot.getString("telefono");
-
-                                Log.d(TAG, "Nombres extraído: " + nombres);
-                                Log.d(TAG, "Apellido extraído: " + apellido);
-                                Log.d(TAG, "Email extraído: " + email);
-                                Log.d(TAG, "Teléfono extraído: " + telefono);
 
                                 String nombreCompleto = "";
                                 if (nombres != null && !nombres.isEmpty()) {
@@ -373,8 +613,6 @@ public class ResumenReservaActivity extends AppCompatActivity {
                                 } else {
                                     nombreCompleto = "Usuario sin nombre";
                                 }
-
-                                Log.d(TAG, "Nombre completo construido: " + nombreCompleto);
 
                                 // Actualizar UI en el hilo principal
                                 String finalNombreCompleto = nombreCompleto;
@@ -434,8 +672,14 @@ public class ResumenReservaActivity extends AppCompatActivity {
                 );
             }
 
+            // Guardar servicios seleccionados
+            // TODO: Implementar método en PrefsManager para servicios adicionales
+
+            // Guardar estado del taxi
+            // TODO: Implementar método en PrefsManager para taxi
+
             // Guardar totales
-            prefsManager.saveTotals(totalDias, 0.0, precioTotal); // Sin impuestos por ahora
+            prefsManager.saveTotals(totalDias, precioServicios, precioTotal);
 
             Log.d(TAG, "Datos de la reserva guardados en PrefsManager");
 

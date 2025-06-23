@@ -617,11 +617,32 @@ public class HotelDetailReservaFragment extends Fragment {
             return;
         }
 
-        String urlImagen = servicio.getImagenes().get(0);
         String nombreServicio = servicio.getNombre() != null ? servicio.getNombre() : "servicio";
+        String urlImagen = null;
+
+        // Validar si el servicio tiene imágenes
+        try {
+            // Opción 1: Si tu modelo usa getImagenes() que devuelve una lista
+            List<String> imagenes = servicio.getImagenes();
+            if (imagenes != null && !imagenes.isEmpty()) {
+                urlImagen = imagenes.get(0);
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "Error obteniendo lista de imágenes para: " + nombreServicio, e);
+        }
+
+        // Opción 2: Si no hay lista, intentar con imagenUrl directamente
+        if (urlImagen == null || urlImagen.isEmpty()) {
+            try {
+                urlImagen = servicio.getImagenes().get(0);
+            } catch (Exception e) {
+                Log.w(TAG, "Error obteniendo imagenUrl para: " + nombreServicio, e);
+            }
+        }
 
         Log.d(TAG, "Cargando imagen para servicio: " + nombreServicio + ", URL: " + urlImagen);
 
+        // Verificar si tenemos una URL válida
         if (urlImagen != null && !urlImagen.isEmpty() && !urlImagen.equals("null")) {
             // Cargar imagen real con Glide
             try {
@@ -640,12 +661,11 @@ public class HotelDetailReservaFragment extends Fragment {
             }
         } else {
             // Usar icono por defecto
-            Log.d(TAG, "Usando icono por defecto para: " + nombreServicio);
+            Log.d(TAG, "Usando icono por defecto para: " + nombreServicio + " (sin imagen)");
             imageView.setImageResource(getIconoServicioPorDefecto(nombreServicio));
             imageView.setColorFilter(getColorServicio(nombreServicio));
         }
     }
-
     /**
      * Obtiene el icono por defecto basado en el nombre del servicio
      */

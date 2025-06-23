@@ -1,10 +1,11 @@
-<!-- layout/item_reserva_historial.xml -->
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="190dp"
     android:layout_marginBottom="12dp"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="3dp"
     android:clickable="true"
@@ -13,16 +14,17 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:padding="18dp">
 
         <!-- Imagen del hotel -->
         <androidx.cardview.widget.CardView
             android:layout_width="80dp"
             android:layout_height="80dp"
             app:cardCornerRadius="8dp"
-            android:layout_marginEnd="12dp">
+            android:layout_marginEnd="12dp"
+            android:layout_gravity="center_vertical">
 
             <ImageView
                 android:id="@+id/ivHotelImage"
@@ -38,31 +40,22 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
 
-            <!-- Header con nombre del hotel y estado -->
-            <LinearLayout
+            <!-- Header con nombre del hotel -->
+            <TextView
+                android:id="@+id/tvHotelName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="4dp">
-
-                <TextView
-                    android:id="@+id/tvHotelName"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="Hotel Marriott Lima"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="#1A1A1A"
-                    android:maxLines="1"
-                    android:ellipsize="end" />
-
-            </LinearLayout>
-
+                android:text="Hotel Marriott Lima"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#1A1A1A"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_marginBottom="4dp" />
 
             <!-- Fechas -->
             <LinearLayout
@@ -73,25 +66,38 @@
                 android:layout_marginBottom="4dp">
 
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
                     android:src="@drawable/ic_calendar"
                     android:layout_marginEnd="6dp"
-                    android:alpha="0.7" />
+                    app:tint="#666666" />
 
                 <TextView
                     android:id="@+id/tvFechas"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="15 - 17 Abr 2025"
-                    android:textSize="14sp"
-                    android:textColor="#333333" />
+                    android:textSize="13sp"
+                    android:textColor="#333333"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+            </LinearLayout>
+            <!-- Fechas -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+
 
                 <TextView
                     android:id="@+id/tvNoches"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="• 2 noches"
+                    android:text="2 noches"
                     android:textSize="12sp"
                     android:textColor="#666666"
                     android:layout_marginStart="8dp" />
@@ -107,62 +113,55 @@
                 android:layout_marginBottom="8dp">
 
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
                     android:src="@drawable/ic_person"
                     android:layout_marginEnd="6dp"
-                    android:alpha="0.7" />
+                    app:tint="#666666" />
 
                 <TextView
                     android:id="@+id/tvHuespedes"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="2 huéspedes"
-                    android:textSize="14sp"
-                    android:textColor="#333333" />
+                    android:textSize="13sp"
+                    android:textColor="#333333"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+
+            </LinearLayout>
+            <!-- Huéspedes y habitación -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
 
                 <TextView
                     android:id="@+id/tvTipoHabitacion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="• Suite Premium"
+                    android:text="Suite"
                     android:textSize="12sp"
                     android:textColor="#666666"
-                    android:layout_marginStart="8dp" />
+                    android:maxLines="1" />
 
             </LinearLayout>
 
-            <!-- Footer con precio y acciones -->
-            <LinearLayout
-                android:layout_width="match_parent"
+            <!-- Footer con precio -->
+            <TextView
+                android:id="@+id/tvPrecio"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:id="@+id/tvPrecio"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="S/ 480.00"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="#2E7D32" />
-
-                <TextView
-                    android:id="@+id/tvVerDetalle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Ver detalle"
-                    android:textSize="12sp"
-                    android:textColor="#1976D2"
-                    android:textStyle="bold"
-                    android:padding="8dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:clickable="true"
-                    android:focusable="true" />
-
-            </LinearLayout>
+                android:text="S/ 480.00"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#004D40"
+                android:layout_gravity="end" />
 
         </LinearLayout>
 

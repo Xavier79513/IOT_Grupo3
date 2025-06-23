@@ -454,6 +454,8 @@ public class PagoActivity extends AppCompatActivity {
         reserva.setMetodoPago("Tarjeta de crédito");
         reserva.setEstadoPago("pagado");
         reserva.setEstado("activa");
+        // AGREGAR ESTA LÍNEA - Fecha de reserva como timestamp para ordenamiento
+        reserva.setFechaReservaTimestamp(System.currentTimeMillis());
 
         // Obtener últimos dígitos de la tarjeta para guardar
         TextInputEditText etCardNumber = findViewById(R.id.etCardNumber);

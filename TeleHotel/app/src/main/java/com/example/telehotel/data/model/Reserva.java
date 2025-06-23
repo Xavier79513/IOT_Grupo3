@@ -1,5 +1,6 @@
 package com.example.telehotel.data.model;
 
+import com.google.firebase.firestore.Exclude;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -147,11 +148,20 @@ public class Reserva {
     public String clienteId;
     public String hotelId;
     public String habitacionId;
+
+
+
+    // AGREGAR ESTE CAMPO:
+    public Long fechaReservaTimestamp; // Para ordenamiento y compatibilidad
+    @Exclude
     public LocalDate fechaEntrada;
+
+    @Exclude
     public LocalDate fechaSalida;
     public List<ServicioAdicional> serviciosAdicionales = new ArrayList<>();
     public Double montoTotal;
     public String estado;
+    @Exclude
     public LocalDateTime fechaReserva;
     public String tarjetaUltimosDigitos;
     public String tipoTarjeta;
@@ -208,6 +218,13 @@ public class Reserva {
     public void setId(String id) {
         this.id = id;
     }
+    public Long getFechaReservaTimestamp() {
+        return fechaReservaTimestamp;
+    }
+
+    public void setFechaReservaTimestamp(Long fechaReservaTimestamp) {
+        this.fechaReservaTimestamp = fechaReservaTimestamp;
+    }
 
     public String getClienteId() {
         return clienteId;
@@ -232,11 +249,11 @@ public class Reserva {
     public void setHotelId(String hotelId) {
         this.hotelId = hotelId;
     }
-
+    @Exclude
     public LocalDate getFechaEntrada() {
         return fechaEntrada;
     }
-
+    @Exclude
     public void setFechaEntrada(LocalDate fechaEntrada) {
         this.fechaEntrada = fechaEntrada;
     }
@@ -248,11 +265,11 @@ public class Reserva {
     public void setMontoTotal(Double montoTotal) {
         this.montoTotal = montoTotal;
     }
-
+    @Exclude
     public LocalDate getFechaSalida() {
         return fechaSalida;
     }
-
+    @Exclude
     public void setFechaSalida(LocalDate fechaSalida) {
         this.fechaSalida = fechaSalida;
     }
@@ -272,11 +289,11 @@ public class Reserva {
     public void setEstado(String estado) {
         this.estado = estado;
     }
-
+    @Exclude
     public LocalDateTime getFechaReserva() {
         return fechaReserva;
     }
-
+    @Exclude
     public void setFechaReserva(LocalDateTime fechaReserva) {
         this.fechaReserva = fechaReserva;
     }

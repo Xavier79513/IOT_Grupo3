@@ -1,4 +1,4 @@
-package com.example.telehotel.features.cliente.adapters;
+/*package com.example.telehotel.features.cliente.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -63,14 +63,6 @@ public class HistorialReservaAdapter extends RecyclerView.Adapter<HistorialReser
         // Mostrar monto total
         holder.precio.setText("$" + String.format("%.2f", reserva.getMontoTotal()));
 
-        // Formatear fecha de reserva
-        /*if (reserva.getFechaReserva() != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
-            holder.fechaReserva.setText("Booked on: " + reserva.getFechaReserva().format(formatter));
-        } else {
-            holder.fechaReserva.setText("Fecha desconocida");
-        }*/
-
         // Acción al pulsar el botón
         holder.btnBookAgain.setOnClickListener(v -> {
             if (listener != null) {
@@ -101,5 +93,129 @@ public class HistorialReservaAdapter extends RecyclerView.Adapter<HistorialReser
             fechaReserva = itemView.findViewById(R.id.txtFecha); // <-- corregido
         }
 
+    }
+}*/
+package com.example.telehotel.features.cliente.adapters;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.telehotel.R;
+import com.example.telehotel.data.model.Reserva;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+public class HistorialReservaAdapter extends RecyclerView.Adapter<HistorialReservaAdapter.ReservaViewHolder> {
+
+    private List<Reserva> reservas;
+    private Context context;
+    private OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onItemClick(Reserva reserva);
+    }
+
+    public HistorialReservaAdapter(List<Reserva> reservas, Context context, OnItemClickListener listener) {
+        this.reservas = reservas;
+        this.context = context;
+        this.listener = listener;
+    }
+
+    @NonNull
+    @Override
+    public ReservaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.cliente_item_reserva, parent, false);
+        return new ReservaViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ReservaViewHolder holder, int position) {
+        Reserva reserva = reservas.get(position);
+
+        // Nombre del hotel (ya está guardado en la reserva)
+        holder.tvHotelName.setText(reserva.getHotelNombre() != null ?
+                reserva.getHotelNombre() : "Hotel no especificado");
+
+        // Formatear fechas
+        String fechasTexto = formatearFechas(reserva.getFechaInicio(), reserva.getFechaFin());
+        holder.tvFechas.setText(fechasTexto);
+
+        // Mostrar número de noches
+        int noches = reserva.getTotalDias() != null ? reserva.getTotalDias() : 1;
+        String nochesTexto = noches + (noches == 1 ? " noche" : " noches");
+        holder.tvNoches.setText("• " + nochesTexto);
+
+        // Mostrar huéspedes
+        String huespedes = reserva.getHuespedes() != null ?
+                reserva.getHuespedes() : "No especificado";
+        holder.tvHuespedes.setText(huespedes);
+
+        // Tipo de habitación
+        String tipoHabitacion = reserva.getHabitacionTipo() != null ?
+                reserva.getHabitacionTipo() : "Habitación estándar";
+        holder.tvTipoHabitacion.setText("• " + tipoHabitacion);
+
+        // Precio total
+        double precio = reserva.getMontoTotal() != null ? reserva.getMontoTotal() : 0.0;
+        holder.tvPrecio.setText(String.format(Locale.getDefault(), "S/ %.2f", precio));
+
+        // Click en toda la card
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(reserva);
+            }
+        });
+    }
+
+    private String formatearFechas(Long fechaInicio, Long fechaFin) {
+        if (fechaInicio == null || fechaFin == null || fechaInicio == 0 || fechaFin == 0) {
+            return "Fechas no disponibles";
+        }
+
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+            String inicio = formatter.format(new Date(fechaInicio));
+            String fin = formatter.format(new Date(fechaFin));
+            return inicio + " - " + fin;
+        } catch (Exception e) {
+            return "Fechas no válidas";
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return reservas.size();
+    }
+
+    public void eliminarItem(int position) {
+        reservas.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public static class ReservaViewHolder extends RecyclerView.ViewHolder {
+        ImageView ivHotelImage;
+        TextView tvHotelName, tvFechas, tvNoches, tvHuespedes, tvTipoHabitacion, tvPrecio;
+
+        public ReservaViewHolder(@NonNull View itemView) {
+            super(itemView);
+            // IDs del XML que proporcionaste
+            ivHotelImage = itemView.findViewById(R.id.ivHotelImage);
+            tvHotelName = itemView.findViewById(R.id.tvHotelName);
+            tvFechas = itemView.findViewById(R.id.tvFechas);
+            tvNoches = itemView.findViewById(R.id.tvNoches);
+            tvHuespedes = itemView.findViewById(R.id.tvHuespedes);
+            tvTipoHabitacion = itemView.findViewById(R.id.tvTipoHabitacion);
+            tvPrecio = itemView.findViewById(R.id.tvPrecio);
+        }
     }
 }

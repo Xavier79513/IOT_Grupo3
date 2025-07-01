@@ -35,6 +35,7 @@ import com.example.telehotel.core.FirebaseUtil;
 import com.example.telehotel.core.storage.PrefsManager;
 import com.example.telehotel.data.model.Reserva;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -198,7 +199,7 @@ public class PagoActivity extends AppCompatActivity {
         TextInputEditText etCvv = findViewById(R.id.etCvv);
 
         // Validar número de tarjeta
-        String cardNumber = etCardNumber.getText().toString().trim();
+        /*String cardNumber = etCardNumber.getText().toString().trim();
         if (cardNumber.isEmpty() || cardNumber.length() < 16) {
             etCardNumber.setError("Ingresa un número de tarjeta válido");
             etCardNumber.requestFocus();
@@ -227,6 +228,51 @@ public class PagoActivity extends AppCompatActivity {
             etCvv.setError("Ingresa un CVV válido");
             etCvv.requestFocus();
             return false;
+        }*/
+        // Primero necesitas tener referencias a los TextInputLayout
+        TextInputLayout tilCardNumber = findViewById(R.id.tilCardNumber);
+        TextInputLayout tilCardHolder = findViewById(R.id.tilCardHolder);
+        TextInputLayout tilExpiryDate = findViewById(R.id.tilExpiryDate);
+        TextInputLayout tilCvv = findViewById(R.id.tilCvv);
+
+// Validar número de tarjeta
+        String cardNumber = etCardNumber.getText().toString().trim();
+        if (cardNumber.isEmpty() || cardNumber.length() < 16) {
+            tilCardNumber.setError("Ingresa un número de tarjeta válido");
+            etCardNumber.requestFocus();
+            return false;
+        } else {
+            tilCardNumber.setError(null); // Limpiar error si es válido
+        }
+
+// Validar nombre del titular
+        String cardHolder = etCardHolder.getText().toString().trim();
+        if (cardHolder.isEmpty()) {
+            tilCardHolder.setError("Ingresa el nombre del titular");
+            etCardHolder.requestFocus();
+            return false;
+        } else {
+            tilCardHolder.setError(null); // Limpiar error si es válido
+        }
+
+// Validar fecha de vencimiento
+        String expiryDate = etExpiryDate.getText().toString().trim();
+        if (expiryDate.isEmpty() || !expiryDate.matches("\\d{2}/\\d{2}")) {
+            tilExpiryDate.setError("Formato MM/YY");
+            etExpiryDate.requestFocus();
+            return false;
+        } else {
+            tilExpiryDate.setError(null); // Limpiar error si es válido
+        }
+
+// Validar CVV
+        String cvv = etCvv.getText().toString().trim();
+        if (cvv.isEmpty() || cvv.length() < 3) {
+            tilCvv.setError("Ingresa un CVV válido");
+            etCvv.requestFocus();
+            return false;
+        } else {
+            tilCvv.setError(null); // Limpiar error si es válido
         }
 
         return true;
@@ -246,114 +292,6 @@ public class PagoActivity extends AppCompatActivity {
         }, 2000);
     }
 
-
-    /*private void guardarReservaEnFirebase() {
-        Log.d(TAG, "=== GUARDANDO RESERVA EN FIREBASE ===");
-
-        // Obtener usuario actual
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            Log.e(TAG, "No hay usuario autenticado");
-            mostrarErrorPago("Error: Usuario no autenticado");
-            return;
-        }
-
-        String userId = currentUser.getUid();
-        String userEmail = currentUser.getEmail();
-
-        // Obtener datos adicionales del PrefsManager
-        String userName = prefsManager.getUserName();
-        if (userName == null || userName.isEmpty()) {
-            userName = "Usuario";
-        }
-
-        String hotelName = prefsManager.getHotelName();
-        String hotelLocation = prefsManager.getHotelLocation();
-        String roomType = prefsManager.getRoomType();
-        String roomNumber = prefsManager.getRoomNumber();
-        String roomDescription = prefsManager.getRoomDescription();
-        double roomPrice = prefsManager.getRoomPrice();
-        long startDate = prefsManager.getStartDate();
-        long endDate = prefsManager.getEndDate();
-        String guests = prefsManager.getPeopleString();
-
-        Log.d(TAG, "Datos para la reserva:");
-        Log.d(TAG, "- Usuario: " + userName + " (" + userEmail + ")");
-        Log.d(TAG, "- Hotel: " + hotelName + " (" + hotelLocation + ")");
-        Log.d(TAG, "- Habitación: " + roomNumber + " - " + roomType);
-        Log.d(TAG, "- Fechas: " + startDate + " a " + endDate);
-        Log.d(TAG, "- Total: S/ " + totalAmount);
-
-        // Crear objeto Reserva
-        Reserva reserva = new Reserva();
-
-        // Datos del cliente
-        reserva.setClienteId(userId);
-        reserva.setClienteNombre(userName);
-        reserva.setClienteEmail(userEmail);
-
-        // Datos del hotel
-        reserva.setHotelId(hotelId);
-        reserva.setHotelNombre(hotelName != null ? hotelName : "Hotel no especificado");
-        reserva.setHotelUbicacion(hotelLocation);
-
-        // Datos de la habitación
-        reserva.setHabitacionId(habitacionId);
-        reserva.setHabitacionNumero(roomNumber != null ? roomNumber : "N/A");
-        reserva.setHabitacionTipo(roomType != null ? roomType : "Habitación estándar");
-        reserva.setHabitacionDescripcion(roomDescription);
-        reserva.setHabitacionPrecio(roomPrice); // Double acepta double automáticamente
-
-        // Datos de la estadía - CORREGIDO
-        reserva.setFechaInicio(startDate); // Esto actualiza tanto timestamp como LocalDate
-        reserva.setFechaFin(endDate); // Esto actualiza tanto timestamp como LocalDate
-        reserva.setTotalDias(totalDays); // Integer acepta int automáticamente
-        reserva.setHuespedes(guests != null ? guests : "No especificado");
-
-        // Datos del pago
-        reserva.setMontoTotal(totalAmount); // Double acepta double automáticamente
-        reserva.setMetodoPago("Tarjeta de crédito");
-        reserva.setEstadoPago("pagado");
-        reserva.setEstado("activa");
-
-        // Obtener últimos dígitos de la tarjeta para guardar
-        TextInputEditText etCardNumber = findViewById(R.id.etCardNumber);
-        String cardNumber = etCardNumber.getText().toString().trim();
-        if (cardNumber.length() >= 4) {
-            reserva.setTarjetaUltimosDigitos(cardNumber.substring(cardNumber.length() - 4));
-        }
-        reserva.setTipoTarjeta("VISA"); // Por defecto, podrías detectar el tipo
-
-        // Guardar en Firebase
-        FirebaseFirestore.getInstance()
-                .collection("reservas")
-                .add(reserva)
-                .addOnSuccessListener(documentReference -> {
-                    String reservaId = documentReference.getId();
-                    reserva.setId(reservaId);
-
-                    // Actualizar el documento con el ID
-                    documentReference.update("id", reservaId)
-                            .addOnSuccessListener(aVoid -> {
-                                Log.d(TAG, "✅ Reserva guardada exitosamente con ID: " + reservaId);
-                                Log.d(TAG, "📋 Código de reserva: " + reserva.getCodigoReserva());
-
-                                // Limpiar datos de búsqueda del PrefsManager
-                                prefsManager.clearSearchData();
-
-                                // Mostrar éxito
-                                pagoExitoso(reserva);
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.e(TAG, "Error actualizando ID de reserva", e);
-                                pagoExitoso(reserva); // Continuar aunque falle la actualización del ID
-                            });
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "❌ Error guardando reserva: " + e.getMessage(), e);
-                    mostrarErrorPago("Error al guardar la reserva: " + e.getMessage());
-                });
-    }*/
     // REEMPLAZA el método guardarReservaEnFirebase() con este:
 
     private void guardarReservaEnFirebase() {

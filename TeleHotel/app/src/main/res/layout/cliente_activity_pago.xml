@@ -320,11 +320,14 @@
 
                     <!-- Número de tarjeta -->
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilCardNumber"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         app:boxStrokeColor="#004D40"
                         app:hintTextColor="#004D40"
+                        app:errorTextColor="#F44336"
+                        app:errorEnabled="true"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -334,17 +337,21 @@
                             android:hint="Número de tarjeta"
                             android:inputType="number"
                             android:maxLength="16"
+                            android:textColor="#000000"
                             android:drawableEnd="@drawable/ic_credit_card"
                             android:drawablePadding="12dp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <!-- Nombre del titular -->
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilCardHolder"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         app:boxStrokeColor="#004D40"
                         app:hintTextColor="#004D40"
+                        app:errorTextColor="#F44336"
+                        app:errorEnabled="true"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -353,6 +360,7 @@
                             android:layout_height="wrap_content"
                             android:hint="Nombre del titular"
                             android:inputType="textPersonName|textCapWords"
+                            android:textColor="#000000"
                             android:drawableEnd="@drawable/ic_person"
                             android:drawablePadding="12dp" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -365,12 +373,15 @@
                         android:layout_marginBottom="16dp">
 
                         <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilExpiryDate"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginEnd="8dp"
                             app:boxStrokeColor="#004D40"
                             app:hintTextColor="#004D40"
+                            app:errorTextColor="#F44336"
+                            app:errorEnabled="true"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -380,17 +391,21 @@
                                 android:hint="MM/YY"
                                 android:inputType="text"
                                 android:maxLength="5"
+                                android:textColor="#000000"
                                 android:drawableEnd="@drawable/ic_calendar"
                                 android:drawablePadding="12dp" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilCvv"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginStart="8dp"
                             app:boxStrokeColor="#004D40"
                             app:hintTextColor="#004D40"
+                            app:errorTextColor="#F44336"
+                            app:errorEnabled="true"
                             app:endIconMode="password_toggle"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -400,7 +415,8 @@
                                 android:layout_height="wrap_content"
                                 android:hint="CVV"
                                 android:inputType="numberPassword"
-                                android:maxLength="3" />
+                                android:maxLength="3"
+                                android:textColor="#000000" />
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
 
@@ -434,7 +450,7 @@
                                 android:layout_height="wrap_content" />
 
                             <TextView
-                                android:text="Tus datos estarán seguros y encriptados"
+                                android:text="Tus datos estarán seguros"
                                 android:textSize="12sp"
                                 android:textColor="#6C757D"
                                 android:layout_width="wrap_content"
@@ -450,52 +466,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Información de seguridad -->
-            <!--androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="#E8F5E8">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_lock"
-                        app:tint="#28A745"
-                        android:layout_marginEnd="12dp" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:text="Pago 100% seguro"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:textColor="#155724"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                        <TextView
-                            android:text="Tus datos están protegidos con encriptación SSL de 256 bits"
-                            android:textSize="12sp"
-                            android:textColor="#155724"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView-->
 
             <!-- Botones de acción -->
             <LinearLayout

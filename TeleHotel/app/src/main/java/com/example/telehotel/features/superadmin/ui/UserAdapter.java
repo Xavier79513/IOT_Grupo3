@@ -48,7 +48,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     }
 
     static class UserViewHolder extends RecyclerView.ViewHolder {
-        TextView txtNombre, txtCorreo, txtEstado;
+        TextView txtNombre, txtCorreo, txtEstado,txtRol;
         Button btnToggleEstado;
 
         public UserViewHolder(@NonNull View itemView) {
@@ -56,6 +56,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             txtNombre = itemView.findViewById(R.id.txtNombre);
             txtCorreo = itemView.findViewById(R.id.txtCorreo);
             txtEstado = itemView.findViewById(R.id.txtEstado);
+            txtRol=itemView.findViewById(R.id.txtRol);
             btnToggleEstado = itemView.findViewById(R.id.btnToggleEstado);
         }
 
@@ -63,12 +64,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             txtNombre.setText(usuario.getName());
             txtCorreo.setText(usuario.getEmail());
             txtEstado.setText("Estado: " + usuario.getEstado());
+            txtRol.setText(usuario.getRole());
 
             boolean esActivo = "Activo".equalsIgnoreCase(usuario.getEstado());
 
             btnToggleEstado.setText(esActivo ? "Desactivar" : "Activar");
             btnToggleEstado.setBackgroundColor(esActivo ? Color.RED : Color.GREEN);
-
             btnToggleEstado.setOnClickListener(v -> listener.onToggleEstadoClick(usuario));
         }
     }

@@ -252,7 +252,7 @@ public class PagoActivity extends AppCompatActivity {
         return true;
     }
 
-    private void procesarPago() {
+    /*private void procesarPago() {
         Log.d(TAG, "=== INICIANDO PROCESO DE PAGO ===");
 
         // Mostrar loading
@@ -269,6 +269,50 @@ public class PagoActivity extends AppCompatActivity {
             // Guardar la reserva en Firebase
             guardarReservaEnFirebase();
         }, 2000);
+    }*/
+    private void procesarPago() {
+        Log.d(TAG, "=== INICIANDO PROCESO DE PAGO ===");
+
+        // Mostrar loading
+        btnProcessPayment.setEnabled(false);
+        btnProcessPayment.setText("Procesando...");
+
+        // ⭐ VERIFICAR DISPONIBILIDAD ANTES DE PROCESAR
+        verificarDisponibilidadHabitacion(hotelId, habitacionId,
+                () -> {
+                    // Habitación disponible - continuar con el pago
+                    Log.d(TAG, "Habitación disponible, continuando con el pago");
+
+                    // Verificar si debe guardar/actualizar la tarjeta
+                    if (cbSaveCard.isChecked()) {
+                        guardarDatosTarjeta();
+                    }
+
+                    // Simular procesamiento del pago (2 segundos)
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                        guardarReservaEnFirebase();
+                    }, 2000);
+                },
+                () -> {
+                    // Habitación no disponible - mostrar error
+                    Log.e(TAG, "Habitación ya no está disponible");
+
+                    // Restaurar botón
+                    btnProcessPayment.setEnabled(true);
+                    btnProcessPayment.setText(String.format(Locale.getDefault(), "Realizar Pago - S/ %.2f", totalAmount));
+
+                    // Mostrar error al usuario
+                    new AlertDialog.Builder(this)
+                            .setTitle("Habitación no disponible")
+                            .setMessage("Lo sentimos, esta habitación ya fue reservada por otro usuario. Por favor, selecciona otra habitación.")
+                            .setPositiveButton("Entendido", (dialog, which) -> {
+                                // Regresar a la pantalla anterior
+                                onBackPressed();
+                            })
+                            .setCancelable(false)
+                            .show();
+                }
+        );
     }
 
     // REEMPLAZA el método guardarReservaEnFirebase() con este:
@@ -394,6 +438,8 @@ public class PagoActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentReference -> {
                     String reservaId = documentReference.getId();
                     reserva.setId(reservaId);
+                    // ⭐ ACTUALIZAR ESTADO DE LA HABITACIÓN DESPUÉS DE GUARDAR LA RESERVA
+                    actualizarEstadoHabitacion(hotelId, habitacionId, "ocupada");
 
                     // Actualizar el documento con el ID
                     documentReference.update("id", reservaId)
@@ -409,12 +455,133 @@ public class PagoActivity extends AppCompatActivity {
                             })
                             .addOnFailureListener(e -> {
                                 Log.e(TAG, "Error actualizando ID de reserva", e);
+                                // Limpiar datos de búsqueda del PrefsManager
+                                prefsManager.clearSearchData();
+
                                 pagoExitoso(reserva); // Continuar aunque falle la actualización del ID
                             });
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "❌ Error guardando reserva: " + e.getMessage(), e);
                     mostrarErrorPago("Error al guardar la reserva: " + e.getMessage());
+                });
+    }
+    /*private void actualizarEstadoHabitacion(String hotelId, String habitacionId, String nuevoEstado) {
+        Log.d(TAG, "=== ACTUALIZANDO ESTADO DE HABITACIÓN ===");
+        Log.d(TAG, "Hotel ID: " + hotelId);
+        Log.d(TAG, "Habitación ID: " + habitacionId);
+        Log.d(TAG, "Nuevo estado: " + nuevoEstado);
+
+        if (hotelId == null || habitacionId == null) {
+            Log.e(TAG, "❌ Hotel ID o Habitación ID son nulos");
+            return;
+        }
+
+        // Crear map con el nuevo estado
+        java.util.Map<String, Object> actualizacion = new java.util.HashMap<>();
+        actualizacion.put("estado", nuevoEstado);
+        actualizacion.put("fechaUltimaActualizacion", System.currentTimeMillis());
+
+        // Actualizar el estado de la habitación en Firebase
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Primero obtener el hotel para actualizar la habitación específica
+        db.collection("hoteles")
+                .document(hotelId)
+                .get()
+                .addOnSuccessListener(hotelDoc -> {
+                    if (hotelDoc.exists()) {
+                        // Obtener la lista de habitaciones
+                        @SuppressWarnings("unchecked")
+                        java.util.List<java.util.Map<String, Object>> habitaciones =
+                                (java.util.List<java.util.Map<String, Object>>) hotelDoc.get("habitaciones");
+
+                        if (habitaciones != null) {
+                            boolean habitacionEncontrada = false;
+
+                            // Buscar y actualizar la habitación específica
+                            for (java.util.Map<String, Object> habitacion : habitaciones) {
+                                String id = (String) habitacion.get("id");
+                                if (habitacionId.equals(id)) {
+                                    habitacion.put("estado", nuevoEstado);
+                                    habitacion.put("fechaUltimaActualizacion", System.currentTimeMillis());
+                                    habitacionEncontrada = true;
+                                    Log.d(TAG, "✅ Habitación encontrada y actualizada en memoria");
+                                    break;
+                                }
+                            }
+
+                            if (habitacionEncontrada) {
+                                // Guardar la lista actualizada en Firebase
+                                db.collection("hoteles")
+                                        .document(hotelId)
+                                        .update("habitaciones", habitaciones)
+                                        .addOnSuccessListener(aVoid -> {
+                                            Log.d(TAG, "✅ Estado de habitación actualizado exitosamente");
+                                            Log.d(TAG, "🏨 Habitación " + habitacionId + " ahora está: " + nuevoEstado);
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.e(TAG, "❌ Error actualizando estado de habitación: " + e.getMessage());
+                                            // El pago ya se procesó, así que solo logueamos el error
+                                        });
+                            } else {
+                                Log.e(TAG, "❌ No se encontró la habitación con ID: " + habitacionId);
+                            }
+                        } else {
+                            Log.e(TAG, "❌ El hotel no tiene habitaciones definidas");
+                        }
+                    } else {
+                        Log.e(TAG, "❌ No se encontró el hotel con ID: " + hotelId);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "❌ Error obteniendo hotel para actualizar habitación: " + e.getMessage());
+                });
+    }*/
+    private void actualizarEstadoHabitacion(String hotelId, String habitacionId, String nuevoEstado) {
+        Log.d(TAG, "=== ACTUALIZANDO ESTADO DE HABITACIÓN ===");
+        Log.d(TAG, "Hotel ID: " + hotelId);
+        Log.d(TAG, "Habitación ID: " + habitacionId);
+        Log.d(TAG, "Nuevo estado: " + nuevoEstado);
+
+        if (hotelId == null || habitacionId == null) {
+            Log.e(TAG, "❌ Hotel ID o Habitación ID son nulos");
+            return;
+        }
+
+        // Crear map con el nuevo estado
+        java.util.Map<String, Object> actualizacion = new java.util.HashMap<>();
+        actualizacion.put("estado", nuevoEstado);
+        actualizacion.put("fechaUltimaActualizacion", System.currentTimeMillis());
+
+        // ACTUALIZAR DIRECTAMENTE EN LA COLECCIÓN "habitaciones"
+        FirebaseFirestore.getInstance()
+                .collection("habitaciones")
+                .document(habitacionId.trim())
+                .update(actualizacion)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "✅ Estado de habitación actualizado exitosamente");
+                    Log.d(TAG, "🏨 Habitación " + habitacionId + " ahora está: " + nuevoEstado);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "❌ Error actualizando estado de habitación: " + e.getMessage());
+
+                    // Intentar verificar si la habitación existe
+                    FirebaseFirestore.getInstance()
+                            .collection("habitaciones")
+                            .document(habitacionId.trim())
+                            .get()
+                            .addOnSuccessListener(doc -> {
+                                if (doc.exists()) {
+                                    Log.e(TAG, "La habitación existe, pero falló la actualización");
+                                    Log.e(TAG, "Datos actuales: " + doc.getData());
+                                } else {
+                                    Log.e(TAG, "La habitación no existe en la colección");
+                                }
+                            })
+                            .addOnFailureListener(e2 -> {
+                                Log.e(TAG, "Error verificando existencia de habitación: " + e2.getMessage());
+                            });
                 });
     }
     private void pagoExitoso(Reserva reserva) {
@@ -718,6 +885,121 @@ public class PagoActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error eliminando datos de tarjeta: " + e.getMessage());
+                });
+    }
+    // OPCIONAL - Agregar método para liberar habitación (cuando se cancela una reserva)
+
+    private void liberarHabitacion(String hotelId, String habitacionId) {
+        Log.d(TAG, "=== LIBERANDO HABITACIÓN ===");
+        actualizarEstadoHabitacion(hotelId, habitacionId, "disponible");
+    }
+
+// OPCIONAL - Agregar método para verificar disponibilidad antes del pago
+
+    /*private void verificarDisponibilidadHabitacion(String hotelId, String habitacionId, Runnable onDisponible, Runnable onNoDisponible) {
+        Log.d(TAG, "=== VERIFICANDO DISPONIBILIDAD DE HABITACIÓN ===");
+
+        FirebaseFirestore.getInstance()
+                .collection("hoteles")
+                .document(hotelId)
+                .get()
+                .addOnSuccessListener(hotelDoc -> {
+                    if (hotelDoc.exists()) {
+                        @SuppressWarnings("unchecked")
+                        java.util.List<java.util.Map<String, Object>> habitaciones =
+                                (java.util.List<java.util.Map<String, Object>>) hotelDoc.get("habitaciones");
+
+                        if (habitaciones != null) {
+                            for (java.util.Map<String, Object> habitacion : habitaciones) {
+                                String id = (String) habitacion.get("id");
+                                if (habitacionId.equals(id)) {
+                                    String estado = (String) habitacion.get("estado");
+
+                                    if ("disponible".equals(estado)) {
+                                        Log.d(TAG, "✅ Habitación disponible");
+                                        onDisponible.run();
+                                    } else {
+                                        Log.d(TAG, "❌ Habitación no disponible. Estado actual: " + estado);
+                                        onNoDisponible.run();
+                                    }
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                    Log.e(TAG, "❌ No se pudo verificar la disponibilidad");
+                    onNoDisponible.run();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "❌ Error verificando disponibilidad: " + e.getMessage());
+                    onNoDisponible.run();
+                });
+    }*/
+    private void verificarDisponibilidadHabitacion(String hotelId, String habitacionId, Runnable onDisponible, Runnable onNoDisponible) {
+        Log.d(TAG, "=== VERIFICANDO DISPONIBILIDAD DE HABITACIÓN ===");
+        Log.d(TAG, "HotelId recibido: '" + hotelId + "'");
+        Log.d(TAG, "HabitacionId recibido: '" + habitacionId + "'");
+
+        if (hotelId == null || hotelId.trim().isEmpty()) {
+            Log.e(TAG, "❌ Hotel ID es nulo o vacío");
+            onNoDisponible.run();
+            return;
+        }
+
+        if (habitacionId == null || habitacionId.trim().isEmpty()) {
+            Log.e(TAG, "❌ Habitación ID es nulo o vacío");
+            onNoDisponible.run();
+            return;
+        }
+
+        // BUSCAR DIRECTAMENTE EN LA COLECCIÓN "habitaciones" por el ID del documento
+        FirebaseFirestore.getInstance()
+                .collection("habitaciones")
+                .document(habitacionId.trim())
+                .get()
+                .addOnSuccessListener(habitacionDoc -> {
+                    Log.d(TAG, "Consulta de habitación completada");
+                    Log.d(TAG, "Documento de habitación existe: " + habitacionDoc.exists());
+
+                    if (habitacionDoc.exists()) {
+                        Log.d(TAG, "✅ Habitación encontrada");
+
+                        // Imprimir todos los datos de la habitación
+                        Log.d(TAG, "Datos de la habitación: " + habitacionDoc.getData());
+
+                        // Verificar que pertenece al hotel correcto
+                        String hotelIdEnHabitacion = habitacionDoc.getString("hotelId");
+                        Log.d(TAG, "Hotel ID en habitación: '" + hotelIdEnHabitacion + "'");
+
+                        if (hotelIdEnHabitacion != null && hotelId.trim().equals(hotelIdEnHabitacion.trim())) {
+                            Log.d(TAG, "✅ La habitación pertenece al hotel correcto");
+
+                            String estado = habitacionDoc.getString("estado");
+                            Log.d(TAG, "Estado de la habitación: '" + estado + "'");
+
+                            if (estado != null && "disponible".equals(estado.trim())) {
+                                Log.d(TAG, "✅ Habitación disponible para reservar");
+                                onDisponible.run();
+                            } else {
+                                Log.d(TAG, "❌ Habitación no disponible. Estado actual: '" + estado + "'");
+                                onNoDisponible.run();
+                            }
+                        } else {
+                            Log.e(TAG, "❌ La habitación no pertenece al hotel especificado");
+                            Log.e(TAG, "Hotel esperado: '" + hotelId + "'");
+                            Log.e(TAG, "Hotel en habitación: '" + hotelIdEnHabitacion + "'");
+                            onNoDisponible.run();
+                        }
+                    } else {
+                        Log.e(TAG, "❌ No se encontró la habitación con ID: '" + habitacionId + "'");
+                        onNoDisponible.run();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "❌ Error obteniendo habitación: " + e.getMessage());
+                    Log.e(TAG, "Habitación ID usado: '" + habitacionId + "'");
+                    e.printStackTrace();
+                    onNoDisponible.run();
                 });
     }
 }

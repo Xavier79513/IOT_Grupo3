@@ -1442,7 +1442,7 @@ public class HotelRepository {
     /**
      * VERSIÓN CORREGIDA: Obtiene habitaciones filtradas por capacidad específica
      */
-    public static void getHabitacionesByHotelIdAndCapacity(@NonNull String hotelId,
+    /*public static void getHabitacionesByHotelIdAndCapacity(@NonNull String hotelId,
                                                            int adultos,
                                                            int ninos,
                                                            @NonNull Consumer<List<Habitacion>> onSuccess,
@@ -1490,6 +1490,169 @@ public class HotelRepository {
                     onSuccess.accept(habitacionesFiltradas);
                 },
                 onError
+        );
+    }*/
+    public static void getHabitacionesByHotelIdAndCapacity(@NonNull String hotelId,
+                                                           int adultos,
+                                                           int ninos,
+                                                           @NonNull Consumer<List<Habitacion>> onSuccess,
+                                                           @NonNull Consumer<Exception> onError) {
+
+        Log.d("HotelRepository", "=== FILTRO DE HABITACIONES CON ESTADO ===");
+        Log.d("HotelRepository", "Hotel ID: " + hotelId);
+        Log.d("HotelRepository", "Buscando habitaciones para: " + adultos + "+ adultos, " + ninos + "+ niños");
+        Log.d("HotelRepository", "Solo habitaciones con estado 'disponible'");
+
+        getHabitacionesByHotelId(hotelId,
+                habitaciones -> {
+                    Log.d("HotelRepository", "Habitaciones obtenidas de Firebase: " + habitaciones.size());
+
+                    // ✅ FILTRAR POR CAPACIDAD Y ESTADO DISPONIBLE
+                    List<Habitacion> habitacionesFiltradas = new ArrayList<>();
+
+                    for (int i = 0; i < habitaciones.size(); i++) {
+                        Habitacion habitacion = habitaciones.get(i);
+
+                        // ✅ VERIFICAR ESTADO PRIMERO
+                        String estado = habitacion.getEstado();
+                        boolean estaDisponible = estado != null && estado.equalsIgnoreCase("disponible");
+
+                        // Obtener capacidad real usando función robusta
+                        int[] capacidad = getHabitacionCapacity(habitacion);
+                        int capacidadAdultos = capacidad[0];
+                        int capacidadNinos = capacidad[1];
+
+                        // Verificar criterio de capacidad
+                        boolean cumpleAdultos = capacidadAdultos >= adultos;
+                        boolean cumpleNinos = capacidadNinos >= ninos;
+                        boolean cumpleCapacidad = cumpleAdultos && cumpleNinos;
+
+                        // ✅ CRITERIO FINAL: CAPACIDAD + ESTADO DISPONIBLE
+                        boolean cumpleCriterioFinal = cumpleCapacidad && estaDisponible;
+
+                        Log.d("HotelRepository", String.format(
+                                "Habitación %s: [%d adultos, %d niños] vs [%d+, %d+] | Estado: '%s'",
+                                habitacion.getNumero(), capacidadAdultos, capacidadNinos,
+                                adultos, ninos, estado
+                        ));
+
+                        Log.d("HotelRepository", String.format(
+                                "  → Adultos:%s, Niños:%s, Disponible:%s, Final:%s",
+                                cumpleAdultos ? "✅" : "❌",
+                                cumpleNinos ? "✅" : "❌",
+                                estaDisponible ? "✅" : "❌",
+                                cumpleCriterioFinal ? "INCLUIDA" : "FILTRADA"
+                        ));
+
+                        if (cumpleCriterioFinal) {
+                            habitacionesFiltradas.add(habitacion);
+                        }
+                    }
+
+                    Log.d("HotelRepository", "===============================");
+                    Log.d("HotelRepository", "RESUMEN FILTRO:");
+                    Log.d("HotelRepository", "  Habitaciones totales: " + habitaciones.size());
+                    Log.d("HotelRepository", "  Habitaciones disponibles: " + habitacionesFiltradas.size());
+
+                    // ✅ ESTADÍSTICAS ADICIONALES
+                    long habitacionesDisponibles = habitaciones.stream()
+                            .filter(h -> h.getEstado() != null && h.getEstado().equalsIgnoreCase("disponible"))
+                            .count();
+
+                    long habitacionesConCapacidad = habitaciones.stream()
+                            .filter(h -> {
+                                int[] cap = getHabitacionCapacity(h);
+                                return cap[0] >= adultos && cap[1] >= ninos;
+                            })
+                            .count();
+
+                    Log.d("HotelRepository", "  Habitaciones con estado 'disponible': " + habitacionesDisponibles);
+                    Log.d("HotelRepository", "  Habitaciones con capacidad suficiente: " + habitacionesConCapacidad);
+                    Log.d("HotelRepository", "  Habitaciones que cumplen AMBOS criterios: " + habitacionesFiltradas.size());
+
+                    if (habitacionesFiltradas.isEmpty()) {
+                        if (habitacionesDisponibles == 0) {
+                            Log.w("HotelRepository", "⚠️ No hay habitaciones disponibles (todas ocupadas)");
+                        } else if (habitacionesConCapacidad == 0) {
+                            Log.w("HotelRepository", "⚠️ No hay habitaciones con capacidad suficiente");
+                        } else {
+                            Log.w("HotelRepository", "⚠️ Hay habitaciones disponibles y con capacidad, pero no coinciden");
+                        }
+                    }
+
+                    Log.d("HotelRepository", "===============================");
+
+                    onSuccess.accept(habitacionesFiltradas);
+                },
+                onError
+        );
+    }
+
+    // ✅ MÉTODO ADICIONAL - Solo para obtener habitaciones disponibles (sin filtro de capacidad)
+    public static void getHabitacionesDisponiblesByHotelId(@NonNull String hotelId,
+                                                           @NonNull Consumer<List<Habitacion>> onSuccess,
+                                                           @NonNull Consumer<Exception> onError) {
+
+        Log.d("HotelRepository", "=== OBTENIENDO SOLO HABITACIONES DISPONIBLES ===");
+        Log.d("HotelRepository", "Hotel ID: " + hotelId);
+
+        getHabitacionesByHotelId(hotelId,
+                habitaciones -> {
+                    Log.d("HotelRepository", "Habitaciones totales: " + habitaciones.size());
+
+                    // Filtrar solo por estado disponible
+                    List<Habitacion> habitacionesDisponibles = new ArrayList<>();
+
+                    for (Habitacion habitacion : habitaciones) {
+                        String estado = habitacion.getEstado();
+                        boolean estaDisponible = estado != null && estado.equalsIgnoreCase("disponible");
+
+                        Log.d("HotelRepository", "Habitación " + habitacion.getNumero() +
+                                " - Estado: '" + estado + "' → " + (estaDisponible ? "✅" : "❌"));
+
+                        if (estaDisponible) {
+                            habitacionesDisponibles.add(habitacion);
+                        }
+                    }
+
+                    Log.d("HotelRepository", "Resultado: " + habitacionesDisponibles.size() + " habitaciones disponibles");
+                    Log.d("HotelRepository", "================================================");
+
+                    onSuccess.accept(habitacionesDisponibles);
+                },
+                onError
+        );
+    }
+
+    // ✅ MÉTODO ADICIONAL - Para debugging de estados
+    public static void debugEstadosHabitaciones(@NonNull String hotelId) {
+        Log.d("HotelRepository", "=== DEBUG ESTADOS DE HABITACIONES ===");
+
+        getHabitacionesByHotelId(hotelId,
+                habitaciones -> {
+                    Log.d("HotelRepository", "Total habitaciones en hotel: " + habitaciones.size());
+
+                    Map<String, Integer> estadisticas = new HashMap<>();
+
+                    for (int i = 0; i < habitaciones.size(); i++) {
+                        Habitacion hab = habitaciones.get(i);
+                        String estado = hab.getEstado();
+
+                        Log.d("HotelRepository", String.format("Habitación %d: %s → Estado: '%s'",
+                                i + 1, hab.getNumero(), estado));
+
+                        // Contar estadísticas
+                        String key = estado != null ? estado : "null";
+                        estadisticas.put(key, estadisticas.getOrDefault(key, 0) + 1);
+                    }
+
+                    Log.d("HotelRepository", "--- ESTADÍSTICAS DE ESTADOS ---");
+                    for (Map.Entry<String, Integer> entry : estadisticas.entrySet()) {
+                        Log.d("HotelRepository", "Estado '" + entry.getKey() + "': " + entry.getValue() + " habitaciones");
+                    }
+                    Log.d("HotelRepository", "==============================");
+                },
+                error -> Log.e("HotelRepository", "Error en debug: " + error.getMessage())
         );
     }
 

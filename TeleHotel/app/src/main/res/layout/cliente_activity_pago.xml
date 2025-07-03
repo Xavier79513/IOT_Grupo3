@@ -463,6 +463,15 @@
                             android:src="@drawable/ic_lock"
                             app:tint="#28A745" />
                     </LinearLayout>
+                    <!--Button
+                        android:id="@+id/btnLimpiarTarjeta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Limpiar datos guardados"
+                        android:textSize="12sp"
+                        android:background="@android:color/transparent"
+                        android:textColor="#FF5722"
+                        android:layout_marginTop="8dp"/-->
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

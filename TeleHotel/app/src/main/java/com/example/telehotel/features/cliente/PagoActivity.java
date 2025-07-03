@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.app.NotificationChannel;
@@ -60,6 +61,7 @@ public class PagoActivity extends AppCompatActivity {
 
     // PrefsManager para obtener datos adicionales
     private PrefsManager prefsManager;
+    private CheckBox cbSaveCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +78,8 @@ public class PagoActivity extends AppCompatActivity {
 
         // Inicializar vistas
         inicializarVistas();
+
+        cargarDatosTarjetaGuardada();
 
         // Configurar precio dinámico
         configurarPrecioDinamico();
@@ -121,6 +125,7 @@ public class PagoActivity extends AppCompatActivity {
         tvTotalAmount = findViewById(R.id.tvTotalAmount);
         btnProcessPayment = findViewById(R.id.btnProcessPayment);
         etExpiryDate = findViewById(R.id.etExpiryDate);
+        cbSaveCard = findViewById(R.id.cbSaveCard);
     }
 
     private void configurarPrecioDinamico() {
@@ -198,44 +203,13 @@ public class PagoActivity extends AppCompatActivity {
         TextInputEditText etExpiryDate = findViewById(R.id.etExpiryDate);
         TextInputEditText etCvv = findViewById(R.id.etCvv);
 
-        // Validar número de tarjeta
-        /*String cardNumber = etCardNumber.getText().toString().trim();
-        if (cardNumber.isEmpty() || cardNumber.length() < 16) {
-            etCardNumber.setError("Ingresa un número de tarjeta válido");
-            etCardNumber.requestFocus();
-            return false;
-        }
-
-        // Validar nombre del titular
-        String cardHolder = etCardHolder.getText().toString().trim();
-        if (cardHolder.isEmpty()) {
-            etCardHolder.setError("Ingresa el nombre del titular");
-            etCardHolder.requestFocus();
-            return false;
-        }
-
-        // Validar fecha de vencimiento
-        String expiryDate = etExpiryDate.getText().toString().trim();
-        if (expiryDate.isEmpty() || !expiryDate.matches("\\d{2}/\\d{2}")) {
-            etExpiryDate.setError("Formato MM/YY");
-            etExpiryDate.requestFocus();
-            return false;
-        }
-
-        // Validar CVV
-        String cvv = etCvv.getText().toString().trim();
-        if (cvv.isEmpty() || cvv.length() < 3) {
-            etCvv.setError("Ingresa un CVV válido");
-            etCvv.requestFocus();
-            return false;
-        }*/
         // Primero necesitas tener referencias a los TextInputLayout
         TextInputLayout tilCardNumber = findViewById(R.id.tilCardNumber);
         TextInputLayout tilCardHolder = findViewById(R.id.tilCardHolder);
         TextInputLayout tilExpiryDate = findViewById(R.id.tilExpiryDate);
         TextInputLayout tilCvv = findViewById(R.id.tilCvv);
 
-// Validar número de tarjeta
+        // Validar número de tarjeta
         String cardNumber = etCardNumber.getText().toString().trim();
         if (cardNumber.isEmpty() || cardNumber.length() < 16) {
             tilCardNumber.setError("Ingresa un número de tarjeta válido");
@@ -245,7 +219,7 @@ public class PagoActivity extends AppCompatActivity {
             tilCardNumber.setError(null); // Limpiar error si es válido
         }
 
-// Validar nombre del titular
+        // Validar nombre del titular
         String cardHolder = etCardHolder.getText().toString().trim();
         if (cardHolder.isEmpty()) {
             tilCardHolder.setError("Ingresa el nombre del titular");
@@ -255,7 +229,7 @@ public class PagoActivity extends AppCompatActivity {
             tilCardHolder.setError(null); // Limpiar error si es válido
         }
 
-// Validar fecha de vencimiento
+        // Validar fecha de vencimiento
         String expiryDate = etExpiryDate.getText().toString().trim();
         if (expiryDate.isEmpty() || !expiryDate.matches("\\d{2}/\\d{2}")) {
             tilExpiryDate.setError("Formato MM/YY");
@@ -265,7 +239,7 @@ public class PagoActivity extends AppCompatActivity {
             tilExpiryDate.setError(null); // Limpiar error si es válido
         }
 
-// Validar CVV
+        // Validar CVV
         String cvv = etCvv.getText().toString().trim();
         if (cvv.isEmpty() || cvv.length() < 3) {
             tilCvv.setError("Ingresa un CVV válido");
@@ -284,6 +258,11 @@ public class PagoActivity extends AppCompatActivity {
         // Mostrar loading
         btnProcessPayment.setEnabled(false);
         btnProcessPayment.setText("Procesando...");
+
+        // AGREGAR: Verificar si debe guardar/actualizar la tarjeta
+        if (cbSaveCard.isChecked()) {
+            guardarDatosTarjeta();
+        }
 
         // Simular procesamiento del pago (2 segundos)
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
@@ -539,5 +518,206 @@ public class PagoActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    /// //////////////////////////////////////////////////////////////////////////////// ////////////////////////////////////////////////////////////////////////////////
+    private void cargarDatosTarjetaGuardada() {
+        Log.d(TAG, "=== CARGANDO DATOS DE TARJETA GUARDADA ===");
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            Log.d(TAG, "No hay usuario autenticado");
+            return;
+        }
+
+        String userId = currentUser.getUid();
+
+        // Cargar datos desde Firebase
+        FirebaseFirestore.getInstance()
+                .collection("usuarios")
+                .document(userId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Intentar obtener los datos de la tarjeta guardada
+                        String numeroTarjeta = documentSnapshot.getString("tarjetaNumero");
+                        String titular = documentSnapshot.getString("tarjetaTitular");
+                        String fechaVencimiento = documentSnapshot.getString("tarjetaVencimiento");
+                        String tipoTarjeta = documentSnapshot.getString("tarjetaTipo");
+
+                        if (numeroTarjeta != null && !numeroTarjeta.isEmpty()) {
+                            Log.d(TAG, "Datos de tarjeta encontrados, pre-llenando formulario");
+                            prellenarFormularioTarjeta(numeroTarjeta, titular, fechaVencimiento, tipoTarjeta);
+                        } else {
+                            Log.d(TAG, "ℹ️ No hay tarjeta guardada para este usuario");
+                        }
+                    } else {
+                        Log.d(TAG, "Documento de usuario no existe");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error cargando datos de tarjeta: " + e.getMessage());
+                    // No mostrar error al usuario, simplemente no pre-llenar
+                });
+    }
+
+    private void prellenarFormularioTarjeta(String numeroTarjeta, String titular, String fechaVencimiento, String tipoTarjeta) {
+        try {
+            // Obtener referencias a los campos
+            TextInputEditText etCardNumber = findViewById(R.id.etCardNumber);
+            TextInputEditText etCardHolder = findViewById(R.id.etCardHolder);
+            TextInputEditText etExpiryDate = findViewById(R.id.etExpiryDate);
+            TextInputEditText etCvv = findViewById(R.id.etCvv);
+
+            // Pre-llenar los campos (excepto CVV)
+            if (etCardNumber != null && numeroTarjeta != null) {
+                etCardNumber.setText(numeroTarjeta);
+                Log.d(TAG, "📱 Número de tarjeta pre-llenado");
+            }
+
+            if (etCardHolder != null && titular != null) {
+                etCardHolder.setText(titular);
+                Log.d(TAG, "👤 Titular pre-llenado: " + titular);
+            }
+
+            if (etExpiryDate != null && fechaVencimiento != null) {
+                etExpiryDate.setText(fechaVencimiento);
+                Log.d(TAG, "📅 Fecha de vencimiento pre-llenada: " + fechaVencimiento);
+            }
+
+            // CVV siempre queda vacío por seguridad
+            if (etCvv != null) {
+                etCvv.setText("");
+                etCvv.setHint("CVV");
+            }
+
+            // Marcar checkbox como marcado ya que hay datos guardados
+            if (cbSaveCard != null) {
+                cbSaveCard.setChecked(true);
+            }
+
+            // Mostrar mensaje informativo
+            Toast.makeText(this, "Datos de tarjeta cargados. Solo ingresa tu CVV", Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error pre-llenando formulario: " + e.getMessage());
+        }
+    }
+    // 6. AGREGAR método para guardar los datos de la tarjeta:
+    private void guardarDatosTarjeta() {
+        Log.d(TAG, "=== GUARDANDO DATOS DE TARJETA ===");
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            Log.e(TAG, "No hay usuario autenticado para guardar tarjeta");
+            return;
+        }
+
+        String userId = currentUser.getUid();
+
+        try {
+            // Obtener datos del formulario
+            TextInputEditText etCardNumber = findViewById(R.id.etCardNumber);
+            TextInputEditText etCardHolder = findViewById(R.id.etCardHolder);
+            TextInputEditText etExpiryDate = findViewById(R.id.etExpiryDate);
+
+            String numeroTarjeta = etCardNumber.getText().toString().trim();
+            String titular = etCardHolder.getText().toString().trim();
+            String fechaVencimiento = etExpiryDate.getText().toString().trim();
+            String tipoTarjeta = detectarTipoTarjeta(numeroTarjeta);
+
+            Log.d(TAG, "Datos a guardar:");
+            Log.d(TAG, "- Titular: " + titular);
+            Log.d(TAG, "- Tipo: " + tipoTarjeta);
+            Log.d(TAG, "- Vencimiento: " + fechaVencimiento);
+            Log.d(TAG, "- Últimos 4 dígitos: ****" +
+                    (numeroTarjeta.length() >= 4 ? numeroTarjeta.substring(numeroTarjeta.length() - 4) : ""));
+
+            // Crear map con los datos a guardar (SIN CVV por seguridad)
+            java.util.Map<String, Object> datosTarjeta = new java.util.HashMap<>();
+            datosTarjeta.put("tarjetaNumero", numeroTarjeta);
+            datosTarjeta.put("tarjetaTitular", titular);
+            datosTarjeta.put("tarjetaVencimiento", fechaVencimiento);
+            datosTarjeta.put("tarjetaTipo", tipoTarjeta);
+            datosTarjeta.put("tarjetaUltimosDigitos", numeroTarjeta.length() >= 4 ?
+                    numeroTarjeta.substring(numeroTarjeta.length() - 4) : numeroTarjeta);
+            datosTarjeta.put("tarjetaFechaActualizacion", System.currentTimeMillis());
+
+            // Guardar en el documento del usuario
+            FirebaseFirestore.getInstance()
+                    .collection("usuarios")
+                    .document(userId)
+                    .update(datosTarjeta)
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d(TAG, "✅ Datos de tarjeta guardados exitosamente");
+                        // No mostrar mensaje para no interrumpir el flujo de pago
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "❌ Error guardando datos de tarjeta: " + e.getMessage());
+
+                        // Si falla el update, intentar crear el documento
+                        FirebaseFirestore.getInstance()
+                                .collection("usuarios")
+                                .document(userId)
+                                .set(datosTarjeta, com.google.firebase.firestore.SetOptions.merge())
+                                .addOnSuccessListener(aVoid2 -> {
+                                    Log.d(TAG, "✅ Datos de tarjeta creados exitosamente (fallback)");
+                                })
+                                .addOnFailureListener(e2 -> {
+                                    Log.e(TAG, "❌ Error en fallback guardando tarjeta: " + e2.getMessage());
+                                });
+                    });
+
+        } catch (Exception e) {
+            Log.e(TAG, "❌ Excepción guardando datos de tarjeta: " + e.getMessage());
+        }
+    }
+
+    // 7. AGREGAR método auxiliar para detectar tipo de tarjeta:
+    private String detectarTipoTarjeta(String numeroTarjeta) {
+        if (numeroTarjeta == null || numeroTarjeta.isEmpty()) {
+            return "Desconocida";
+        }
+
+        // Eliminar espacios y guiones
+        numeroTarjeta = numeroTarjeta.replaceAll("[\\s-]", "");
+
+        if (numeroTarjeta.startsWith("4")) {
+            return "VISA";
+        } else if (numeroTarjeta.startsWith("5") || numeroTarjeta.startsWith("2")) {
+            return "MasterCard";
+        } else if (numeroTarjeta.startsWith("34") || numeroTarjeta.startsWith("37")) {
+            return "American Express";
+        } else if (numeroTarjeta.startsWith("6")) {
+            return "Discover";
+        } else {
+            return "Desconocida";
+        }
+    }
+
+    // 8. OPCIONAL - Agregar método para limpiar datos guardados:
+    private void limpiarDatosTarjetaGuardada() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) return;
+
+        String userId = currentUser.getUid();
+
+        java.util.Map<String, Object> datosALimpiar = new java.util.HashMap<>();
+        datosALimpiar.put("tarjetaNumero", com.google.firebase.firestore.FieldValue.delete());
+        datosALimpiar.put("tarjetaTitular", com.google.firebase.firestore.FieldValue.delete());
+        datosALimpiar.put("tarjetaVencimiento", com.google.firebase.firestore.FieldValue.delete());
+        datosALimpiar.put("tarjetaTipo", com.google.firebase.firestore.FieldValue.delete());
+        datosALimpiar.put("tarjetaUltimosDigitos", com.google.firebase.firestore.FieldValue.delete());
+
+        FirebaseFirestore.getInstance()
+                .collection("usuarios")
+                .document(userId)
+                .update(datosALimpiar)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Datos de tarjeta eliminados");
+                    Toast.makeText(this, "Datos de tarjeta eliminados", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error eliminando datos de tarjeta: " + e.getMessage());
+                });
     }
 }

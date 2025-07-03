@@ -208,7 +208,7 @@ public class HistorialReservaAdapter extends RecyclerView.Adapter<HistorialReser
 
         public ReservaViewHolder(@NonNull View itemView) {
             super(itemView);
-            // IDs del XML que proporcionaste
+
             ivHotelImage = itemView.findViewById(R.id.ivHotelImage);
             tvHotelName = itemView.findViewById(R.id.tvHotelName);
             tvFechas = itemView.findViewById(R.id.tvFechas);

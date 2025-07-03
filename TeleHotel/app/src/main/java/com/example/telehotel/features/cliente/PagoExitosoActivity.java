@@ -25,7 +25,7 @@ public class PagoExitosoActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish(); */// Opcional, si no quieres que regrese a esta pantalla con "Back"
                 Intent intent = new Intent(PagoExitosoActivity.this, ClienteMainActivity.class);
-                intent.putExtra("navegar_a", "historial"); // 👈 esto es clave
+                intent.putExtra("navegar_a", "historial");
                 startActivity(intent);
                 finish();
             }

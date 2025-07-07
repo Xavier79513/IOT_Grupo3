@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5">
+
+    <!-- Toolbar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#004D40"
+            app:title="Procesar Checkout"
+            app:titleTextColor="@android:color/white"
+            app:navigationIcon="@drawable/ic_arrow_back" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Loading indicator -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <!-- Contenido principal en ScrollView -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Información del Cliente -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="3dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Información del Cliente"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#004D40"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Nombre del cliente -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_person"
+                            android:layout_marginEnd="8dp"
+                            app:tint="#666666" />
+
+                        <TextView
+                            android:id="@+id/tvClienteNombre"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Juan Carlos Pérez"
+                            android:textSize="14sp"
+                            android:textColor="#333333"
+                            tools:text="Juan Carlos Pérez" />
+
+                    </LinearLayout>
+
+                    <!-- Email del cliente -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_email"
+                            android:layout_marginEnd="8dp"
+                            app:tint="#666666" />
+
+                        <TextView
+                            android:id="@+id/tvClienteEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="juan.perez@email.com"
+                            android:textSize="14sp"
+                            android:textColor="#333333"
+                            tools:text="juan.perez@email.com" />
+
+                    </LinearLayout>
+
+                    <!-- Teléfono del cliente -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_telefono"
+                            android:layout_marginEnd="8dp"
+                            app:tint="#666666" />
+
+                        <TextView
+                            android:id="@+id/tvClienteTelefono"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="+51 999 888 777"
+                            android:textSize="14sp"
+                            android:textColor="#333333"
+                            tools:text="+51 999 888 777" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Información de la Reserva -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="3dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Información de la Reserva"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#004D40"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Habitación -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_hhotel"
+                            android:layout_marginEnd="8dp"
+                            app:tint="#666666" />
+
+                        <TextView
+                            android:id="@+id/tvHabitacionNumero"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="Habitación 205"
+                            android:textSize="14sp"
+                            android:textColor="#333333"
+                            tools:text="Habitación 205" />
+
+                    </LinearLayout>
+
+                    <!-- Tipo de habitación -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_bed"
+                            android:layout_marginEnd="8dp"
+                            app:tint="#666666" />
+
+                        <TextView
+                            android:id="@+id/tvHabitacionTipo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Suite Ejecutiva"
+                            android:textSize="14sp"
+                            android:textColor="#333333"
+                            tools:text="Suite Ejecutiva" />
+
+                    </LinearLayout>
+
+                    <!-- Fechas de estadía -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_calendar"
+                            android:layout_marginEnd="8dp"
+                            app:tint="#666666" />
+
+                        <TextView
+                            android:id="@+id/tvFechaEstadia"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="05/07/2025 - 07/07/2025"
+                            android:textSize="14sp"
+                            android:textColor="#333333"
+                            tools:text="05/07/2025 - 07/07/2025" />
+
+                    </LinearLayout>
+
+                    <!-- Monto original -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_dinero"
+                            android:layout_marginEnd="8dp"
+                            app:tint="#4CAF50" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="Monto original:"
+                            android:textSize="14sp"
+                            android:textColor="#333333" />
+
+                        <TextView
+                            android:id="@+id/tvMontoOriginal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="S/ 350.00"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#4CAF50"
+                            tools:text="S/ 350.00" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Cargos Adicionales -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/layoutCargosAdicionales"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="3dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cargos Adicionales"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#004D40"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Formulario para agregar cargo -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="#F8F8F8"
+                        android:padding="12dp"
+                        android:layout_marginBottom="16dp">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            app:boxBackgroundMode="outline">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etConceptoCargo"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Concepto del cargo (ej: Daño en minibar)"
+                                android:inputType="text"
+                                android:maxLines="2" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="8dp"
+                                app:boxBackgroundMode="outline">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etMontoCargo"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="Monto (S/)"
+                                    android:inputType="numberDecimal" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <Button
+                                android:id="@+id/btnAgregarCargo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Agregar"
+                                android:textColor="@android:color/white"
+                                android:background="@drawable/btn_primary_background"
+                                android:paddingStart="16dp"
+                                android:paddingEnd="16dp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!-- Lista de cargos adicionales -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerCobrosAdicionales"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        tools:listitem="@layout/item_cargo_adicional" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Resumen de Totales -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="3dp"
+                app:cardBackgroundColor="#E8F5E8">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Resumen de Facturación"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#2E7D32"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Subtotal -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="4dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="Subtotal:"
+                            android:textSize="14sp"
+                            android:textColor="#333333" />
+
+                        <TextView
+                            android:id="@+id/tvSubtotal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="S/ 350.00"
+                            android:textSize="14sp"
+                            android:textColor="#333333"
+                            tools:text="S/ 350.00" />
+
+                    </LinearLayout>
+
+                    <!-- Impuestos -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="Impuestos (18%):"
+                            android:textSize="14sp"
+                            android:textColor="#333333" />
+
+                        <TextView
+                            android:id="@+id/tvImpuestos"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="S/ 63.00"
+                            android:textSize="14sp"
+                            android:textColor="#333333"
+                            tools:text="S/ 63.00" />
+
+                    </LinearLayout>
+
+                    <!-- Línea divisoria -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#CCCCCC"
+                        android:layout_marginVertical="8dp" />
+
+                    <!-- Total -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="TOTAL A COBRAR:"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#2E7D32" />
+
+                        <TextView
+                            android:id="@+id/tvTotal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="S/ 413.00"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="#2E7D32"
+                            tools:text="S/ 413.00" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- Botones de acción fijos en la parte inferior -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="@android:color/white"
+        android:elevation="4dp">
+
+        <Button
+            android:id="@+id/btnRechazar"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="48dp"
+            android:text="Rechazar"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_danger_background"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btnProcesarCheckout"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="48dp"
+            android:text="Procesar Checkout"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_success_background"
+            android:layout_marginStart="8dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

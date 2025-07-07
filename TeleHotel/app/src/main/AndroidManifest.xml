@@ -108,6 +108,7 @@
             android:name=".features.cliente.PagoExitosoActivity"
             android:label="Cliente" />
         <activity android:name=".features.cliente.ResumenReservaActivity" />
+        <activity android:name=".features.admin.ProcesarCheckoutActivity" />
 
         <!--activity
             android:name=".features.cliente.PerfilActivity"

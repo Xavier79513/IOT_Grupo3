@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="3dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header con estado y tiempo -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <!-- Indicador de estado -->
+            <View
+                android:id="@+id/viewEstado"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:background="@drawable/circle_indicator"
+                android:layout_marginEnd="8dp"
+                app:backgroundTint="#FF9800"
+                tools:backgroundTint="#FF9800" />
+
+            <!-- Estado del checkout -->
+            <TextView
+                android:id="@+id/tvEstado"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Pendiente"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#FF9800"
+                android:textAllCaps="true"
+                tools:text="PENDIENTE" />
+
+            <!-- Tiempo transcurrido -->
+            <TextView
+                android:id="@+id/tvTiempo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hace 5 min"
+                android:textSize="11sp"
+                android:textColor="#757575"
+                tools:text="Hace 5 min" />
+
+        </LinearLayout>
+
+        <!-- Información principal -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <!-- Icono de habitación -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:cardCornerRadius="24dp"
+                app:cardBackgroundColor="#E8F5E8"
+                android:layout_marginEnd="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_hotel"
+                    android:layout_gravity="center"
+                    app:tint="#4CAF50" />
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Información del cliente y habitación -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Nombre del cliente -->
+                <TextView
+                    android:id="@+id/tvClienteNombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Juan Carlos Pérez"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1A1A"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    tools:text="Juan Carlos Pérez" />
+
+                <!-- Habitación -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="2dp">
+
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:src="@drawable/ic_hhotel"
+                        android:layout_marginEnd="4dp"
+                        app:tint="#666666" />
+
+                    <TextView
+                        android:id="@+id/tvHabitacion"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="Habitación 205 - Suite"
+                        android:textSize="13sp"
+                        android:textColor="#666666"
+                        tools:text="Habitación 205 - Suite" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Monto -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="end">
+
+                <TextView
+                    android:id="@+id/tvMonto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="S/ 350.00"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#004D40"
+                    tools:text="S/ 350.00" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total"
+                    android:textSize="11sp"
+                    android:textColor="#757575" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Información adicional -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <!-- Fecha de solicitud -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_calendar"
+                    android:layout_marginEnd="4dp"
+                    app:tint="#666666" />
+
+                <TextView
+                    android:id="@+id/tvFechaSolicitud"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="07 Jul 2025"
+                    android:textSize="12sp"
+                    android:textColor="#666666"
+                    tools:text="07 Jul 2025" />
+
+            </LinearLayout>
+
+            <!-- Hora de solicitud -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!---ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_fechanacimiento"
+                    android:layout_marginEnd="4dp"
+                    app:tint="#666666" /-->
+
+                <TextView
+                    android:id="@+id/tvHoraSolicitud"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="14:30"
+                    android:textSize="12sp"
+                    android:textColor="#666666"
+                    tools:text="14:30" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Footer con acciones rápidas (solo para solicitudes pendientes) -->
+        <LinearLayout
+            android:id="@+id/layoutAcciones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:visibility="visible"
+            tools:visibility="visible">
+
+            <!-- Botón de acción rápida -->
+            <Button
+                android:id="@+id/btnAccionRapida"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:text="Procesar"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:background="@drawable/btn_procesar_background"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginStart="8dp"
+                android:elevation="1dp" />
+
+        </LinearLayout>
+
+        <!-- Mensaje/Observaciones (si las hay) -->
+        <TextView
+            android:id="@+id/tvMensaje"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="El cliente ha solicitado checkout para la habitación 205"
+            android:textSize="13sp"
+            android:textColor="#424242"
+            android:background="#F5F5F5"
+            android:padding="8dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="El cliente ha solicitado checkout para la habitación 205" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

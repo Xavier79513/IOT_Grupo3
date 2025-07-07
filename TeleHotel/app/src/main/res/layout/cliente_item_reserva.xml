@@ -152,7 +152,7 @@
             </LinearLayout>
 
             <!-- Footer con precio -->
-            <TextView
+            <!--TextView
                 android:id="@+id/tvPrecio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -160,7 +160,40 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="#004D40"
-                android:layout_gravity="end" />
+                android:layout_gravity="end" /-->
+            <!-- Footer con precio y botón checkout -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvPrecio"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="S/ 480.00"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#004D40" />
+
+                <!-- Botón de Checkout -->
+                <Button
+                    android:id="@+id/btnCheckout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="Checkout"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/btn_checkout_background"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:layout_marginStart="8dp"
+                    android:elevation="2dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

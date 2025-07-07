@@ -60,9 +60,30 @@
         android:name="com.example.telehotel.features.admin.fragments.ReportesFragment"
         android:label="Reportes" />
 
+    <!--fragment
+        android:id="@+id/nav_admin_mas"
+        android:name="com.example.telehotel.features.admin.fragments.MasOpcionesFragment"
+        android:label="Más Opciones" /-->
     <fragment
         android:id="@+id/nav_admin_mas"
         android:name="com.example.telehotel.features.admin.fragments.MasOpcionesFragment"
-        android:label="Más Opciones" />
+        android:label="Más Opciones">
+
+        <!-- ✅ AGREGAR ESTA ACCIÓN PARA NAVEGAR A CHECKOUT -->
+        <action
+            android:id="@+id/action_masOpciones_to_checkoutAdmin"
+            app:destination="@id/nav_admin_checkout"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+
+    <!-- ✅ AGREGAR ESTE NUEVO FRAGMENT DE CHECKOUT -->
+    <fragment
+        android:id="@+id/nav_admin_checkout"
+        android:name="com.example.telehotel.features.admin.fragments.CheckoutAdminFragment"
+        android:label="Solicitudes de Checkout" />
 
 </navigation>

@@ -114,7 +114,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Nombre y Apellidos"
+                            android:text="Nombres y Apellidos"
                             android:textColor="?attr/colorOnSurfaceVariant"
                             android:textSize="12sp"
                             android:textStyle="bold" />
@@ -210,7 +210,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Correo Electrónico"
+                            android:text="Correo electrónico"
                             android:textColor="?attr/colorOnSurfaceVariant"
                             android:textSize="12sp"
                             android:textStyle="bold" />
@@ -257,7 +257,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Fecha de Nacimiento"
+                            android:text="Fecha de nacimiento"
                             android:textColor="?attr/colorOnSurfaceVariant"
                             android:textSize="12sp"
                             android:textStyle="bold" />
@@ -281,7 +281,7 @@
                                 android:src="@drawable/calendario"
                                 app:tint="?attr/colorOnPrimary" />
 
-                            <LinearLayout
+                            <!--LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="16dp"
@@ -302,7 +302,44 @@
                                     android:layout_height="wrap_content"
                                     android:textColor="?attr/colorOnSurfaceVariant"
                                     android:textSize="12sp" />
+                            </LinearLayout-->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvFechaNacimiento"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="12 de Febrero, 2002"
+                                    android:textColor="?attr/colorOnSurface"
+                                    android:textSize="16sp"
+                                    android:visibility="visible" />
+
+                                <EditText
+                                    android:id="@+id/etFechaNacimiento"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:hint="Seleccionar fecha"
+                                    android:text="12 de Febrero, 2002"
+                                    android:inputType="none"
+                                    android:focusable="false"
+                                    android:clickable="true"
+                                    android:textColor="?attr/colorOnSurface"
+                                    android:textSize="16sp"
+                                    android:visibility="gone" />
+
+                                <TextView
+                                    android:id="@+id/tvEdad"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="?attr/colorOnSurfaceVariant"
+                                    android:textSize="12sp" />
                             </LinearLayout>
+
 
                             <ImageButton
                                 android:id="@+id/btnEditBirthdate"
@@ -314,19 +351,7 @@
                         </LinearLayout>
 
                         <!-- EditText para fecha -->
-                        <EditText
-                            android:id="@+id/etFechaNacimiento"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginStart="56dp"
-                            android:hint="Seleccionar fecha de nacimiento"
-                            android:inputType="none"
-                            android:focusable="false"
-                            android:clickable="true"
-                            android:visibility="gone"
-                            android:textColor="?attr/colorOnSurface"
-                            android:textSize="16sp" />
+
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

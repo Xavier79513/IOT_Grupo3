@@ -20,4 +20,10 @@
     <style name="ProgressBarStyle">
         <item name="android:indeterminate">true</item>
     </style>
+
+    <style name="DatePickerThemeCustom" parent="Theme.MaterialComponents.Light.Dialog">
+        <!-- Color negro para días inactivos (transparentes) -->
+        <item name="android:textColorSecondary">#000000</item>
+    </style>
+
 </resources>

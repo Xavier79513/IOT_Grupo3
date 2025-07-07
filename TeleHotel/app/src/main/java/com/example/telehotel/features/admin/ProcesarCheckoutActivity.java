@@ -131,7 +131,7 @@ public class ProcesarCheckoutActivity extends AppCompatActivity implements Cobro
 
         // Totales
         tvSubtotal = findViewById(R.id.tvSubtotal);
-        tvImpuestos = findViewById(R.id.tvImpuestos);
+        //tvImpuestos = findViewById(R.id.tvImpuestos);
         tvTotal = findViewById(R.id.tvTotal);
 
         // Acciones
@@ -344,17 +344,20 @@ public class ProcesarCheckoutActivity extends AppCompatActivity implements Cobro
         subtotal = montoOriginal + totalCargos;
 
         // Calcular impuestos (18% sobre el subtotal)
-        impuestos = subtotal * 0.18;
+        //impuestos = subtotal * 0.18;
 
         // Calcular total
-        total = subtotal + impuestos;
+        //total = subtotal + impuestos;
+        total = subtotal;
 
         // Actualizar UI
         tvSubtotal.setText(String.format(Locale.getDefault(), "S/ %.2f", subtotal));
-        tvImpuestos.setText(String.format(Locale.getDefault(), "S/ %.2f", impuestos));
+        //tvImpuestos.setText(String.format(Locale.getDefault(), "S/ %.2f", impuestos));
         tvTotal.setText(String.format(Locale.getDefault(), "S/ %.2f", total));
 
-        Log.d(TAG, "Totales calculados - Subtotal: S/" + subtotal + ", Impuestos: S/" + impuestos + ", Total: S/" + total);
+        //Log.d(TAG, "Totales calculados - Subtotal: S/" + subtotal + ", Impuestos: S/" + impuestos + ", Total: S/" + total);
+        Log.d(TAG, "Totales calculados - Subtotal: S/" + subtotal +  ", Total: S/" + total);
+
     }
 
     private void mostrarConfirmacionProcesar() {
@@ -399,7 +402,7 @@ public class ProcesarCheckoutActivity extends AppCompatActivity implements Cobro
         Map<String, Object> updates = new HashMap<>();
         updates.put("estado", "completada");
         updates.put("montoTotal", total);
-        updates.put("impuestos", impuestos);
+        //updates.put("impuestos", impuestos);
         updates.put("fechaCheckoutProcesado", System.currentTimeMillis());
 
         // Agregar cargos adicionales si los hay

@@ -437,31 +437,6 @@
 
                     </LinearLayout>
 
-                    <!-- Impuestos -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="8dp">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text="Impuestos (18%):"
-                            android:textSize="14sp"
-                            android:textColor="#333333" />
-
-                        <TextView
-                            android:id="@+id/tvImpuestos"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="S/ 63.00"
-                            android:textSize="14sp"
-                            android:textColor="#333333"
-                            tools:text="S/ 63.00" />
-
-                    </LinearLayout>
 
                     <!-- Línea divisoria -->
                     <View

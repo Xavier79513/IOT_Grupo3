@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5">
+
+    <!-- Toolbar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#004D40"
+            app:title="Estado del Checkout"
+            app:titleTextColor="@android:color/white"
+            app:navigationIcon="@drawable/ic_arrow_back" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Loading indicator -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <!-- Contenedor principal -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <!-- ==================== ESTADO: ESPERANDO ==================== -->
+            <LinearLayout
+                android:id="@+id/layoutEsperando"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="#FFF3E0">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="24dp"
+                        android:gravity="center">
+
+                        <!-- Icono de espera -->
+                        <!--ImageView
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:src="@drawable/ic_hourglass_empty"
+                            android:layout_marginBottom="16dp"
+                            app:tint="#FF9800" /-->
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Procesando Checkout"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="#E65100"
+                            android:textAlignment="center"
+                            android:layout_marginBottom="12dp" />
+
+                        <TextView
+                            android:id="@+id/tvMensajeEspera"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="El administrador del hotel está revisando tu habitación.\n\nTe notificaremos cuando el checkout esté listo."
+                            android:textSize="14sp"
+                            android:textColor="#424242"
+                            android:textAlignment="center"
+                            android:lineSpacingExtra="4dp"
+                            tools:text="El administrador del hotel está revisando tu habitación.\n\nTe notificaremos cuando el checkout esté listo." />
+
+                        <!-- Indicador de progreso -->
+                        <ProgressBar
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:indeterminate="true"
+                            app:indicatorColor="#FF9800" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <!-- ==================== ESTADO: LISTO PARA PAGAR ==================== -->
+            <LinearLayout
+                android:id="@+id/layoutListo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="gone">
+
+                <!-- Header -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="3dp"
+                    app:cardBackgroundColor="#E8F5E8">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/ic_check_circle"
+                            android:layout_marginEnd="12dp"
+                            app:tint="#4CAF50" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="¡Checkout Listo!"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textColor="#2E7D32" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="El administrador ha revisado tu habitación"
+                                android:textSize="13sp"
+                                android:textColor="#666666" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- Resumen de pago -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="3dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Resumen de Pago"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#004D40"
+                            android:layout_marginBottom="12dp" />
+
+                        <!-- Cargos adicionales (si los hay) -->
+                        <TextView
+                            android:id="@+id/tvCargosAdicionales"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Se han agregado 2 cargo(s) adicional(es)"
+                            android:textSize="14sp"
+                            android:textColor="#FF9800"
+                            android:background="#FFF3E0"
+                            android:padding="8dp"
+                            android:layout_marginBottom="12dp"
+                            android:visibility="gone"
+                            tools:visibility="visible"
+                            tools:text="Se han agregado 2 cargo(s) adicional(es)" />
+
+                        <!-- Total a pagar -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:background="#F5F5F5"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:text="Total a pagar:"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="#333333" />
+
+                            <TextView
+                                android:id="@+id/tvMontoTotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="S/ 450.00"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:textColor="#2E7D32"
+                                tools:text="S/ 450.00" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- Botones de acción -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="16dp">
+
+                    <!-- Botón pagar -->
+                    <Button
+                        android:id="@+id/btnPagarAhora"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:text="Pagar Ahora"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/btn_success_background"
+                        android:layout_marginBottom="12dp"
+                        android:elevation="2dp" />
+
+                    <!-- Botón solicitar taxi -->
+                    <Button
+                        android:id="@+id/btnSolicitarTaxi"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:text="Solicitar Taxi al Aeropuerto"
+                        android:textColor="#004D40"
+                        android:textSize="14sp"
+                        android:background="@drawable/btn_outline_background"
+                        android:drawableStart="@drawable/ic_local_taxi"
+                        android:drawablePadding="8dp"
+                        android:gravity="center" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- ==================== ESTADO: COMPLETADO ==================== -->
+            <LinearLayout
+                android:id="@+id/layoutCompletado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:visibility="gone"
+                tools:visibility="gone">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="#E8F5E8">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="24dp"
+                        android:gravity="center">
+
+                        <!-- Icono de éxito -->
+                        <ImageView
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:src="@drawable/ic_check_circle"
+                            android:layout_marginBottom="16dp"
+                            app:tint="#4CAF50" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="¡Checkout Completado!"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:textColor="#2E7D32"
+                            android:textAlignment="center"
+                            android:layout_marginBottom="12dp" />
+
+                        <TextView
+                            android:id="@+id/tvCheckoutCompletado"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="¡Checkout completado exitosamente!\n\nGracias por hospedarte con nosotros."
+                            android:textSize="16sp"
+                            android:textColor="#424242"
+                            android:textAlignment="center"
+                            android:lineSpacingExtra="4dp"
+                            android:layout_marginBottom="24dp"
+                            tools:text="¡Checkout completado exitosamente!\n\nGracias por hospedarte con nosotros." />
+
+                        <Button
+                            android:id="@+id/btnVolverInicio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="48dp"
+                            android:text="Volver al Inicio"
+                            android:textColor="@android:color/white"
+                            android:background="@drawable/btn_success_background"
+                            android:paddingStart="24dp"
+                            android:paddingEnd="24dp" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </ScrollView>
+
+</LinearLayout>

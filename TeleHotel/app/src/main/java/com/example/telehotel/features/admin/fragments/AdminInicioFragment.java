@@ -145,6 +145,8 @@ public class AdminInicioFragment extends Fragment {
     private TextView tvBienvenida, tvHotelNombre;
     private Button btnConfigurarUbicacion, btnGestionarImagenes;
 
+    private Button btnConfigurarLugares;
+
     // Firebase
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -180,6 +182,7 @@ public class AdminInicioFragment extends Fragment {
             tvHotelNombre = view.findViewById(R.id.tvHotelNombre);
             btnConfigurarUbicacion = view.findViewById(R.id.btnConfigurarUbicacion);
             btnGestionarImagenes = view.findViewById(R.id.btnGestionarImagenes);
+            btnConfigurarLugares = view.findViewById(R.id.btnConfigurarLugares);
 
             Log.d(TAG, "Vistas inicializadas correctamente");
 
@@ -202,6 +205,8 @@ public class AdminInicioFragment extends Fragment {
                 Log.d(TAG, "Botón Gestionar Imágenes presionado");
                 abrirGestionImagenes();
             });
+
+            btnConfigurarLugares  .setOnClickListener(v -> abrirConfiguracionLugares());
 
             Log.d(TAG, "Click listeners configurados");
 
@@ -279,6 +284,40 @@ public class AdminInicioFragment extends Fragment {
             Toast.makeText(getContext(), "Error abriendo gestión de imágenes", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void abrirConfiguracionLugares() {
+        try {
+            if (getActivity() != null) {
+                Log.d(TAG, "Navegando a AdminLugaresFragment");
+
+                if (hotelAsignadoId == null || hotelAsignadoId.isEmpty()) {
+                    Toast.makeText(getContext(),
+                            "No tienes un hotel asignado. Contacta al administrador del sistema.",
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                AdminLugaresFragment lugaresFragment = new AdminLugaresFragment();
+                Bundle args = new Bundle();
+                args.putString("hotel_id", hotelAsignadoId);
+                args.putString("admin_name", nombreAdmin);
+                lugaresFragment.setArguments(args);
+
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.nav_host_fragment, lugaresFragment)
+                        .addToBackStack("AdminLugares")
+                        .commit();
+
+                Toast.makeText(getContext(), "Abriendo configuración de lugares...", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error navegando a configuración de lugares: " + e.getMessage());
+            Toast.makeText(getContext(), "Error abriendo configuración de lugares", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 
     private void loadAdminData() {
         FirebaseUser currentUser = mAuth.getCurrentUser();

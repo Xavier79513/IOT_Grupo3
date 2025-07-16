@@ -57,6 +57,7 @@
     <color name="dividerColor">#E0E0E0</color>
     <color name="borderColor">#CCCCCC</color>
     <color name="borderFocused">#00BFAE</color>
+    <color name="deleteRed">#E53935</color>
 
     <!-- Overlay y ripple -->
     <color name="overlayLight">#33000000</color>

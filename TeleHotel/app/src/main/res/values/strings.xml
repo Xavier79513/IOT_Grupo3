@@ -12,6 +12,7 @@
     <string name="create_account">¿Nuevo usuario? Crear una cuenta</string>
     <string name="cerrar_sesion_subrayado"><u>Cerrar Sesión</u></string>
 
+    <string name="desc_eliminar_lugar">Eliminar lugar</string>
 
     <string name="find_room">Find room</string>
     <string name="search">Search</string>

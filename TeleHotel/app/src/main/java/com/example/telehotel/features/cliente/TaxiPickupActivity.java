@@ -1,7 +1,5 @@
 package com.example.telehotel.features.cliente;
 
-import static androidx.browser.customtabs.CustomTabsClient.getPackageName;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,7 +30,7 @@ import java.util.Map;
 
 /**
  * Actividad para selección de lugar de recojo del taxi
- * Usa OSMDroid en lugar de Google Maps para evitar problemas de API
+ * Corregida para usar SolicitudTaxi con campos públicos
  */
 public class TaxiPickupActivity extends AppCompatActivity {
 
@@ -75,7 +73,6 @@ public class TaxiPickupActivity extends AppCompatActivity {
         // Configurar OSMDroid
         Configuration.getInstance().setUserAgentValue(getPackageName());
 
-        //setContentView(R.layout.activity_taxi_pickup_osm);
         setContentView(R.layout.cliente_activity_taxi_pickup);
 
         initializeData();
@@ -141,9 +138,8 @@ public class TaxiPickupActivity extends AppCompatActivity {
         mapController.setZoom(12.0);
 
         // Centrar en Lima por defecto
-        //GeoPya tioint limaCenter = new GeoPoint(-12.0464, -77.0428);
-        //mapController.setCenter(limaCenter);
-        mapController.setCenter(new GeoPoint(-12.0464, -77.0428));
+        GeoPoint limaCenter = new GeoPoint(-12.0464, -77.0428);
+        mapController.setCenter(limaCenter);
     }
 
     private void loadReservaData() {
@@ -335,15 +331,15 @@ public class TaxiPickupActivity extends AppCompatActivity {
         AirportInfo selectedAirport = aeropuertos[selectedAirportIndex];
         showLoading(true);
 
-        // Crear solicitud de taxi
+        // ✅ CORREGIDO: Crear solicitud de taxi con campos públicos
         SolicitudTaxi solicitudTaxi = new SolicitudTaxi();
-        solicitudTaxi.setSolicitado(true);
-        solicitudTaxi.setAeropuertoDestino(selectedAirport.name);
-        solicitudTaxi.setEstado("solicitado");
+        solicitudTaxi.solicitado = true;
+        solicitudTaxi.aeropuertoDestino = selectedAirport.name;
+        solicitudTaxi.estado = "solicitado";
 
         // Generar código QR único
         String codigoQR = "TAXI_" + reservaId + "_" + System.currentTimeMillis();
-        solicitudTaxi.setCodigoQR(codigoQR);
+        solicitudTaxi.codigoQR = codigoQR;
 
         // Actualizar reserva con la solicitud de taxi
         Map<String, Object> updates = new HashMap<>();
@@ -385,7 +381,7 @@ public class TaxiPickupActivity extends AppCompatActivity {
         servicioTaxi.put("aeropuertoLongitud", airport.longitude);
         servicioTaxi.put("fechaInicio", System.currentTimeMillis());
         servicioTaxi.put("estado", "solicitado");
-        servicioTaxi.put("qrCodigo", solicitudTaxi.getCodigoQR());
+        servicioTaxi.put("qrCodigo", solicitudTaxi.codigoQR);
 
         db.collection("servicios_taxi")
                 .add(servicioTaxi)

@@ -38,7 +38,7 @@ import java.util.Arrays;
 
 /**
  * Fragment para gestión del servicio de taxi
- * SIN dependencias de Google Maps
+ * Corregido para usar SolicitudTaxi con campos públicos
  */
 public class TaxiReservationFragment extends Fragment {
 
@@ -94,25 +94,21 @@ public class TaxiReservationFragment extends Fragment {
             }
         } catch (Exception e) {
             Log.w(TAG, "OSM MapView no encontrado o error al configurar: " + e.getMessage());
-            // Ocultar el contenedor del mapa si no está disponible
             hideMapView();
         }
     }
 
     private void setupOSMMap(org.osmdroid.views.MapView osmMapView) {
         try {
-            // Configurar mapa OSM básico
             osmMapView.setTileSource(org.osmdroid.tileprovider.tilesource.TileSourceFactory.MAPNIK);
             osmMapView.setMultiTouchControls(true);
 
             org.osmdroid.api.IMapController mapController = osmMapView.getController();
             mapController.setZoom(12.0);
 
-            // Centrar en Lima
             org.osmdroid.util.GeoPoint lima = new org.osmdroid.util.GeoPoint(-12.0464, -77.0428);
             mapController.setCenter(lima);
 
-            // Agregar marcador simple
             org.osmdroid.views.overlay.Marker marker = new org.osmdroid.views.overlay.Marker(osmMapView);
             marker.setPosition(lima);
             marker.setTitle("Lima, Perú");
@@ -138,13 +134,11 @@ public class TaxiReservationFragment extends Fragment {
     }
 
     private void setupViews() {
-        // Configurar botón para hacer reserva
         View btnReservar = rootView.findViewById(R.id.btn_ir_reservar);
         if (btnReservar != null) {
             btnReservar.setOnClickListener(v -> navegarAHoteles());
         }
 
-        // Configurar botón para agregar taxi
         View btnTaxi = rootView.findViewById(R.id.btn_agregar_taxi);
         if (btnTaxi != null) {
             btnTaxi.setOnClickListener(v -> abrirSolicitudTaxi());
@@ -165,7 +159,6 @@ public class TaxiReservationFragment extends Fragment {
                         "¡Taxi solicitado exitosamente al " + airportDestination + "!",
                         Toast.LENGTH_LONG).show();
 
-                // Refrescar vista para mostrar el estado actualizado
                 mostrarVistaApropriada();
             }
         }
@@ -243,13 +236,15 @@ public class TaxiReservationFragment extends Fragment {
                 });
     }
 
+    // ✅ CORREGIDO: Acceso directo a campos públicos
     private boolean tieneTaxiSolicitado(Reserva reserva) {
         if (reserva == null) return false;
 
         SolicitudTaxi solicitudTaxi = reserva.getSolicitudTaxi();
         if (solicitudTaxi == null) return false;
 
-        return Boolean.TRUE.equals(solicitudTaxi.getSolicitado());
+        // Acceso directo al campo público
+        return Boolean.TRUE.equals(solicitudTaxi.solicitado);
     }
 
     private boolean esReservaEnPeriodoValido(Reserva reserva) {
@@ -295,14 +290,15 @@ public class TaxiReservationFragment extends Fragment {
         return false;
     }
 
+    // ✅ CORREGIDO: Acceso directo a campos públicos
     private String obtenerEstadoDetalladoTaxi(SolicitudTaxi solicitudTaxi) {
         if (solicitudTaxi == null) return "Sin taxi solicitado";
 
-        if (!Boolean.TRUE.equals(solicitudTaxi.getSolicitado())) {
+        if (!Boolean.TRUE.equals(solicitudTaxi.solicitado)) {
             return "Taxi no solicitado";
         }
 
-        String estado = solicitudTaxi.getEstado();
+        String estado = solicitudTaxi.estado;
         if (estado == null || estado.trim().isEmpty()) {
             return "Taxi solicitado - Procesando";
         }
@@ -533,45 +529,43 @@ public class TaxiReservationFragment extends Fragment {
         Log.d(TAG, "Mostrando vista sin taxi - Reserva ID: " + reserva.getId());
     }
 
+    // ✅ CORREGIDO: Acceso directo a campos públicos
     private void mostrarVistaConTaxi(Reserva reserva, SolicitudTaxi solicitudTaxi) {
         ocultarTodasLasVistas();
         View vista = rootView.findViewById(R.id.vista_con_taxi);
         if (vista != null) {
             vista.setVisibility(View.VISIBLE);
 
-            // Título con información de fechas
             TextView titulo = vista.findViewById(R.id.tv_title);
             if (titulo != null) {
                 String fechas = obtenerFechasFormateadas(reserva);
                 titulo.setText("Taxi reservado" + (!fechas.isEmpty() ? " para " + fechas : ""));
             }
 
-            // Estado detallado del taxi
             TextView estado = vista.findViewById(R.id.tv_estado_taxi);
             if (estado != null) {
                 String estadoDetallado = obtenerEstadoDetalladoTaxi(solicitudTaxi);
                 estado.setText(estadoDetallado);
             }
 
-            // Destino del aeropuerto
             TextView destino = vista.findViewById(R.id.tv_aeropuerto_destino);
             if (destino != null) {
-                if (solicitudTaxi.getAeropuertoDestino() != null &&
-                        !solicitudTaxi.getAeropuertoDestino().trim().isEmpty()) {
-                    destino.setText("Destino: " + solicitudTaxi.getAeropuertoDestino());
+                if (solicitudTaxi.aeropuertoDestino != null &&
+                        !solicitudTaxi.aeropuertoDestino.trim().isEmpty()) {
+                    destino.setText("Destino: " + solicitudTaxi.aeropuertoDestino);
                 } else {
                     destino.setText("Destino: Por confirmar");
                 }
             }
 
             // Información del taxista si está asignado
-            if (solicitudTaxi.getTaxistaAsignadoId() != null) {
-                mostrarInformacionTaxista(solicitudTaxi.getTaxistaAsignadoId());
+            if (solicitudTaxi.taxistaAsignadoId != null) {
+                mostrarInformacionTaxista(solicitudTaxi.taxistaAsignadoId);
             }
 
             // Generar código QR
-            if (solicitudTaxi.getCodigoQR() != null && !solicitudTaxi.getCodigoQR().trim().isEmpty()) {
-                generarCodigoQR(solicitudTaxi.getCodigoQR());
+            if (solicitudTaxi.codigoQR != null && !solicitudTaxi.codigoQR.trim().isEmpty()) {
+                generarCodigoQR(solicitudTaxi.codigoQR);
             } else {
                 String codigoTemp = "TAXI_" + reserva.getId() + "_" + System.currentTimeMillis();
                 generarCodigoQR(codigoTemp);
@@ -583,13 +577,14 @@ public class TaxiReservationFragment extends Fragment {
         Log.d(TAG, "Mostrando vista con taxi - Estado: " + obtenerEstadoDetalladoTaxi(solicitudTaxi));
     }
 
+    // ✅ CORREGIDO: Acceso directo a campos públicos
     private void configurarBotonSeguimiento(View vista, SolicitudTaxi solicitudTaxi) {
         Button btnSeguimiento = vista.findViewById(R.id.btn_seguir_taxi);
         if (btnSeguimiento != null) {
             btnSeguimiento.setVisibility(View.VISIBLE);
             btnSeguimiento.setOnClickListener(v -> abrirSeguimientoTaxi());
 
-            String estado = solicitudTaxi.getEstado();
+            String estado = solicitudTaxi.estado;
             if ("asignado".equals(estado) || "en_camino".equals(estado) || "llegado".equals(estado)) {
                 btnSeguimiento.setText("Ver ubicación del conductor");
                 btnSeguimiento.setEnabled(true);
@@ -795,7 +790,6 @@ public class TaxiReservationFragment extends Fragment {
         } catch (Exception e) {
             Log.w(TAG, "Error en onResume del mapa", e);
         }
-        // Actualizar datos al volver al fragment
         mostrarVistaApropriada();
     }
 
@@ -812,7 +806,6 @@ public class TaxiReservationFragment extends Fragment {
         super.onPause();
     }
 
-
     @Override
     public void onDestroyView() {
         try {
@@ -825,7 +818,6 @@ public class TaxiReservationFragment extends Fragment {
         }
         super.onDestroyView();
     }
-
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {

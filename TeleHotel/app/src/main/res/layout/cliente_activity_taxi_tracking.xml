@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     android:background="@color/backgroundColor">
 
-    <!-- Mapa de fondo -->
-    <com.google.android.gms.maps.MapView
+    <!-- MAPA OSMDroid - CAMBIO PRINCIPAL -->
+    <org.osmdroid.views.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -144,10 +144,11 @@
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:src="@drawable/ic_car"
-                            android:background="@drawable/airport_icon_background"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="@color/colorPrimary"
                             android:padding="12dp"
                             android:layout_marginEnd="16dp"
-                            app:tint="@color/colorPrimary" />
+                            app:tint="@color/white" />
 
                         <LinearLayout
                             android:layout_width="0dp"

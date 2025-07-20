@@ -19,6 +19,10 @@
     <color name="orange_700">#F57C00</color>
     <color name="gray_500">#9E9E9E</color>
     <color name="teal_700">#018786</color>
+    <!-- Colores para estados -->
+    <color name="orange_light">#FFF3E0</color>
+    <color name="orange_dark">#EF6C00</color>
+
 
     <!-- Texto -->
     <color name="textPrimary">#212121</color>

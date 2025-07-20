@@ -53,5 +53,29 @@
         <!-- Barra de estado -->
         <item name="android:statusBarColor">@color/colorBackground</item>
     </style>
+    <style name="CustomDatePickerTheme" parent="ThemeOverlay.Material3.Dialog">
+        <!-- Fondo del diálogo -->
+        <item name="android:colorBackground">@color/white</item>
+        <item name="colorSurface">@color/white</item>
+
+        <!-- Colores de texto principales -->
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorSecondary">@color/black</item>
+        <item name="colorOnSurface">@color/black</item>
+        <item name="colorOnSurfaceVariant">@color/black</item>
+
+        <!-- Específico para números del calendario -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorOnPrimary">@color/black</item>
+
+        <!-- Para los días del mes -->
+        <item name="android:textColor">@color/black</item>
+        <item name="materialCalendarDay">@style/CustomCalendarDay</item>
+    </style>
+
+    <style name="CustomCalendarDay" parent="Widget.Material3.MaterialCalendar.Day">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorPrimary">@color/black</item>
+    </style>
 
 </resources>

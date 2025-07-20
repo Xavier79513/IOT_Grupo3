@@ -90,4 +90,7 @@ dependencies {
 
     // ✅ PHOTOVIEW PARA ZOOM EN PANTALLA COMPLETA
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+    // Para generar PDFs
+    implementation 'com.itextpdf:itext7-core:7.2.5'
+    implementation 'com.itextpdf:html2pdf:4.0.5'
 }

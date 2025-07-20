@@ -9,7 +9,15 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <!-- Permisos para escribir archivos -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!-- Para Android 11+ (API 30+) -->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
 
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <application
@@ -103,6 +111,10 @@
         <activity
             android:name=".features.cliente.TaxiTrackingActivity"
             android:exported="false" />
+        <activity
+            android:name=".features.auth.RegisterTaxiActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <!--activity
             android:name=".features.cliente.PerfilActivity"
             android:label="Cliente" />
@@ -133,6 +145,15 @@
         <meta-data
             android:name="org.maplibre.gl.accessToken"
             android:value="f9F1eTaguwkNHqDsl8d5"/>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
     </application>
 

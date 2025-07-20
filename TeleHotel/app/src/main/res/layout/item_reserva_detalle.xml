@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="?attr/colorSurface">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:gravity="center_vertical">
+
+        <!-- ESTADO BADGE -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="8dp"
+            android:layout_height="40dp"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="0dp"
+            android:layout_marginEnd="12dp">
+
+            <View
+                android:id="@+id/viewEstadoReserva"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/green_medium" />
+        </androidx.cardview.widget.CardView>
+
+        <!-- INFORMACIÓN PRINCIPAL -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvClienteNombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Juan Carlos Pérez"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorOnSurface"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/tvFechasReserva"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="15/01/2025 - 18/01/2025 (3 días)"
+                android:textSize="12sp"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:layout_marginTop="2dp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/tvHabitacionReserva"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🏠 Habitación 101 - Suite"
+                android:textSize="11sp"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:layout_marginTop="2dp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <!-- Información adicional -->
+            <TextView
+                android:id="@+id/tvHuespedesInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="👥 2 adultos, 1 niño"
+                android:textSize="10sp"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:layout_marginTop="2dp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <!-- MONTO Y ESTADO -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="end">
+
+            <TextView
+                android:id="@+id/tvMontoReserva"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="S/ 450.00"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorSecondary" />
+
+            <TextView
+                android:id="@+id/tvEstadoTexto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ACTIVA"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textColor="@color/green_dark"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/bg_estado_reserva"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp" />
+
+            <!-- Código de reserva -->
+            <TextView
+                android:id="@+id/tvCodigoReserva"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="#TH12345"
+                android:textSize="9sp"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:layout_marginTop="2dp"
+                android:visibility="gone" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

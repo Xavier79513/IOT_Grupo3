@@ -86,6 +86,7 @@ dependencies {
     // ✅ GLIDE PARA CARGAR Y MOSTRAR IMÁGENES (REQUERIDO)
     implementation 'com.github.bumptech.glide:glide:4.16.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+    implementation 'org.osmdroid:osmdroid-android:6.1.14'
 
     // ✅ PHOTOVIEW PARA ZOOM EN PANTALLA COMPLETA
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'

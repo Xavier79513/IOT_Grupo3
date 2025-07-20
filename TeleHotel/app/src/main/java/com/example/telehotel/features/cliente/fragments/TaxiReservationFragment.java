@@ -1,5 +1,7 @@
 package com.example.telehotel.features.cliente.fragments;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -7,14 +9,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -23,10 +24,9 @@ import com.example.telehotel.core.storage.PrefsManager;
 import com.example.telehotel.data.model.Reserva;
 import com.example.telehotel.data.model.SolicitudTaxi;
 import com.example.telehotel.data.model.ServicioAdicional;
-import com.google.android.gms.maps.*;
-import com.google.android.gms.maps.model.*;
+import com.example.telehotel.features.cliente.TaxiPickupActivity;
+import com.example.telehotel.features.cliente.TaxiTrackingActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -36,15 +36,18 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Arrays;
 
-public class TaxiReservationFragment extends Fragment implements OnMapReadyCallback {
+/**
+ * Fragment para gestión del servicio de taxi
+ * SIN dependencias de Google Maps
+ */
+public class TaxiReservationFragment extends Fragment {
 
     private static final String TAG = "TaxiReservationFragment";
-    private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
+    private static final int REQUEST_CODE_TAXI_PICKUP = 1001;
+    private static final int REQUEST_CODE_TAXI_TRACKING = 1002;
 
     // Views principales
     private View rootView;
-    private MapView mapView;
-    private GoogleMap googleMap;
 
     // Firebase y gestión de datos
     private FirebaseFirestore db;
@@ -68,7 +71,7 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
         super.onViewCreated(view, savedInstanceState);
 
         initializeFirebase();
-        setupMapView(savedInstanceState);
+        setupMapView();
         setupViews();
         mostrarVistaApropriada();
     }
@@ -78,19 +81,59 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
         prefsManager = new PrefsManager(requireContext());
         currentUserId = prefsManager.getUserId();
 
-        // Log para debugging
         Log.d(TAG, "Usuario actual desde PrefsManager: " + currentUserId);
         Log.d(TAG, "Usuario logueado: " + prefsManager.isUserLoggedIn());
     }
 
-    private void setupMapView(Bundle savedInstanceState) {
-        mapView = rootView.findViewById(R.id.mapView);
-        if (mapView != null) {
-            Bundle mapViewBundle = savedInstanceState != null
-                    ? savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY)
-                    : null;
-            mapView.onCreate(mapViewBundle);
-            mapView.getMapAsync(this);
+    private void setupMapView() {
+        // Configurar mapa OSM si está disponible
+        try {
+            org.osmdroid.views.MapView osmMapView = rootView.findViewById(R.id.mapView);
+            if (osmMapView != null) {
+                setupOSMMap(osmMapView);
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "OSM MapView no encontrado o error al configurar: " + e.getMessage());
+            // Ocultar el contenedor del mapa si no está disponible
+            hideMapView();
+        }
+    }
+
+    private void setupOSMMap(org.osmdroid.views.MapView osmMapView) {
+        try {
+            // Configurar mapa OSM básico
+            osmMapView.setTileSource(org.osmdroid.tileprovider.tilesource.TileSourceFactory.MAPNIK);
+            osmMapView.setMultiTouchControls(true);
+
+            org.osmdroid.api.IMapController mapController = osmMapView.getController();
+            mapController.setZoom(12.0);
+
+            // Centrar en Lima
+            org.osmdroid.util.GeoPoint lima = new org.osmdroid.util.GeoPoint(-12.0464, -77.0428);
+            mapController.setCenter(lima);
+
+            // Agregar marcador simple
+            org.osmdroid.views.overlay.Marker marker = new org.osmdroid.views.overlay.Marker(osmMapView);
+            marker.setPosition(lima);
+            marker.setTitle("Lima, Perú");
+            osmMapView.getOverlays().add(marker);
+
+            Log.d(TAG, "Mapa OSM configurado exitosamente");
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error configurando mapa OSM", e);
+            hideMapView();
+        }
+    }
+
+    private void hideMapView() {
+        try {
+            View mapContainer = rootView.findViewById(R.id.mapView);
+            if (mapContainer != null) {
+                mapContainer.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "Error ocultando mapa", e);
         }
     }
 
@@ -108,9 +151,27 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
         }
     }
 
-    // ✅ MÉTODO PRINCIPAL ACTUALIZADO QUE USA LAS FUNCIONES REALES
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_TAXI_PICKUP && resultCode == Activity.RESULT_OK && data != null) {
+            boolean taxiRequested = data.getBooleanExtra("taxi_requested", false);
+            if (taxiRequested) {
+                String airportDestination = data.getStringExtra("airport_destination");
+                String qrCode = data.getStringExtra("qr_code");
+
+                Toast.makeText(getContext(),
+                        "¡Taxi solicitado exitosamente al " + airportDestination + "!",
+                        Toast.LENGTH_LONG).show();
+
+                // Refrescar vista para mostrar el estado actualizado
+                mostrarVistaApropriada();
+            }
+        }
+    }
+
     private void mostrarVistaApropriada() {
-        // Verificar primero si hay usuario válido
         if (!tieneUsuarioValido()) {
             mostrarVistaSinReserva("Inicia sesión para ver tus reservas");
             return;
@@ -126,13 +187,9 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
                     return;
                 }
 
-                // Tiene reserva válida
                 reservaActual = reserva;
-
-                // Guardar información en PrefsManager para uso posterior
                 guardarReservaEnPrefs(reserva);
 
-                // Verificar estado del taxi
                 if (tieneTaxiSolicitado(reserva)) {
                     mostrarVistaConTaxi(reserva, reserva.getSolicitudTaxi());
                 } else {
@@ -142,13 +199,7 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
         });
     }
 
-    // ✅ FUNCIONES REALES REEMPLAZANDO LA SIMULACIÓN
-
-    /**
-     * Verifica si el usuario tiene una reserva activa consultando Firebase
-     */
     private void verificarTieneReservaActiva(ReservaValidationCallback callback) {
-        // Verificar usuario usando PrefsManager
         if (currentUserId == null || !prefsManager.isUserLoggedIn()) {
             callback.onResult(false, null, "Usuario no autenticado");
             return;
@@ -174,7 +225,6 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
                             Log.d(TAG, "Reserva encontrada ID: " + reserva.getId());
                             Log.d(TAG, "Estado reserva: " + reserva.getEstado());
 
-                            // Validar que la reserva esté en período válido
                             if (esReservaEnPeriodoValido(reserva)) {
                                 callback.onResult(true, reserva, "Reserva activa encontrada");
                             } else {
@@ -193,51 +243,32 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
                 });
     }
 
-    /**
-     * Verifica si la reserva tiene taxi solicitado basándose en los datos reales
-     */
     private boolean tieneTaxiSolicitado(Reserva reserva) {
         if (reserva == null) return false;
 
         SolicitudTaxi solicitudTaxi = reserva.getSolicitudTaxi();
         if (solicitudTaxi == null) return false;
 
-        // Verificar que está marcado como solicitado
         return Boolean.TRUE.equals(solicitudTaxi.getSolicitado());
     }
 
-    /**
-     * Valida si la reserva está en un período válido para usar servicios
-     */
     private boolean esReservaEnPeriodoValido(Reserva reserva) {
         if (reserva == null) return false;
-
-        // Verificar que no haya hecho checkout
         if (yaHizoCheckout(reserva)) return false;
-
-        // Verificar período de estadía usando timestamps
         return estaEnPeriodoEstadiaConTimestamps(reserva);
     }
 
-    /**
-     * Verifica período de estadía usando fechaReservaTimestamp y otros campos timestamp
-     */
     private boolean estaEnPeriodoEstadiaConTimestamps(Reserva reserva) {
         long ahora = System.currentTimeMillis();
 
-        // Si tiene fechaInicio y fechaFin (timestamps)
         if (reserva.getFechaInicio() != null && reserva.getFechaFin() != null) {
-            //return ahora >= reserva.getFechaInicio() && ahora <= reserva.getFechaFin();
             return ahora <= reserva.getFechaFin();
-
         }
 
-        // Si solo tiene fechaReservaTimestamp, asumir que es válida por un período
         if (reserva.getFechaReservaTimestamp() != null) {
             long unDiaEnMs = 24 * 60 * 60 * 1000L;
             long treintaDiasEnMs = 30 * unDiaEnMs;
 
-            // Válida desde la fecha de reserva hasta 30 días después
             long limiteInferior = reserva.getFechaReservaTimestamp();
             long limiteSuperior = reserva.getFechaReservaTimestamp() + treintaDiasEnMs;
 
@@ -247,16 +278,11 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
         return false;
     }
 
-    /**
-     * Verifica si ya se realizó el checkout basándose en los datos reales
-     */
     private boolean yaHizoCheckout(Reserva reserva) {
         if (reserva == null) return false;
 
-        // Verificar si tiene datos de checkout
         if (reserva.getCheckout() != null) return true;
 
-        // Verificar estados que indican checkout realizado
         String estado = reserva.getEstado();
         if (estado != null) {
             estado = estado.toLowerCase();
@@ -269,9 +295,6 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
         return false;
     }
 
-    /**
-     * Obtiene información detallada del estado del taxi
-     */
     private String obtenerEstadoDetalladoTaxi(SolicitudTaxi solicitudTaxi) {
         if (solicitudTaxi == null) return "Sin taxi solicitado";
 
@@ -284,34 +307,29 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
             return "Taxi solicitado - Procesando";
         }
 
-        // Mapear estados a mensajes amigables
         switch (estado.toLowerCase()) {
             case "solicitado":
-                return "Taxi solicitado - Buscando conductor";
+                return "🔍 Buscando conductor disponible";
             case "asignado":
-                return "Conductor asignado - " +
-                        (solicitudTaxi.getTaxistaAsignadoId() != null ? "Preparándose" : "Confirmando");
+                return "✅ Conductor asignado";
             case "en_camino":
-                return "Conductor en camino al hotel";
+                return "🚗 Conductor en camino al hotel";
             case "llegado":
             case "en_destino":
-                return "Conductor ha llegado - Listo para partir";
+                return "📍 Conductor ha llegado";
             case "recogido":
             case "en_viaje":
-                return "En viaje al aeropuerto";
+                return "✈️ En viaje al aeropuerto";
             case "completado":
             case "finalizado":
-                return "Viaje completado";
+                return "✅ Viaje completado";
             case "cancelado":
-                return "Servicio cancelado";
+                return "❌ Servicio cancelado";
             default:
                 return "Estado: " + estado;
         }
     }
 
-    /**
-     * Verifica si la reserva cumple con el monto mínimo para taxi gratuito
-     */
     private void verificarElegibilidadTaxiGratuito(Reserva reserva, ElegibilidadCallback callback) {
         if (reserva == null || reserva.getHotelId() == null) {
             callback.onResult(false, "Datos de reserva incompletos", null);
@@ -327,17 +345,17 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
                         Double montoReserva = calcularMontoTotalConServicios(reserva);
 
                         if (montoMinimo == null) {
-                            callback.onResult(true, "No hay monto mínimo requerido", null);
+                            callback.onResult(true, "✓ Servicio disponible sin monto mínimo", null);
                             return;
                         }
 
                         if (montoReserva >= montoMinimo) {
                             callback.onResult(true,
-                                    "✓ Cumples el monto mínimo (S/" + montoMinimo + ")",
+                                    "✓ Cumples el monto mínimo (S/" + String.format("%.2f", montoMinimo) + ")",
                                     montoMinimo);
                         } else {
                             callback.onResult(false,
-                                    "Monto mínimo requerido: S/" + montoMinimo +
+                                    "Monto mínimo requerido: S/" + String.format("%.2f", montoMinimo) +
                                             " (Tu reserva: S/" + String.format("%.2f", montoReserva) + ")",
                                     montoMinimo);
                         }
@@ -351,9 +369,6 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
                 });
     }
 
-    /**
-     * Calcula el monto total real incluyendo servicios adicionales
-     */
     private double calcularMontoTotalConServicios(Reserva reserva) {
         if (reserva == null) return 0.0;
 
@@ -371,30 +386,23 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
         return montoBase + montoServicios;
     }
 
-    /**
-     * Obtiene información completa de la reserva para mostrar en la UI
-     */
     private String obtenerResumenReserva(Reserva reserva) {
         if (reserva == null) return "Información no disponible";
 
         StringBuilder resumen = new StringBuilder();
 
-        // Información básica
         if (reserva.getHotelNombre() != null) {
             resumen.append("Hotel: ").append(reserva.getHotelNombre()).append("\n");
         }
 
-        // Fechas
         String fechas = obtenerFechasFormateadas(reserva);
         if (!fechas.isEmpty()) {
             resumen.append("Período: ").append(fechas).append("\n");
         }
 
-        // Monto total
         double montoTotal = calcularMontoTotalConServicios(reserva);
         resumen.append("Monto total: S/").append(String.format("%.2f", montoTotal));
 
-        // Servicios adicionales
         if (reserva.getServiciosAdicionales() != null &&
                 !reserva.getServiciosAdicionales().isEmpty()) {
             resumen.append("\nServicios adicionales: ")
@@ -404,9 +412,6 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
         return resumen.toString();
     }
 
-    /**
-     * Obtiene las fechas formateadas de la reserva
-     */
     private String obtenerFechasFormateadas(Reserva reserva) {
         if (reserva == null) return "";
 
@@ -426,48 +431,33 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
         return "Fechas no disponibles";
     }
 
-    /**
-     * Método para verificar si hay información de usuario válida
-     */
     private boolean tieneUsuarioValido() {
         return prefsManager.isUserLoggedIn() &&
                 prefsManager.getUserId() != null &&
                 !prefsManager.getUserId().trim().isEmpty();
     }
 
-    /**
-     * Método para obtener información de usuario para mostrar en la UI
-     */
     private String obtenerInfoUsuario() {
         if (!tieneUsuarioValido()) {
             return "Usuario no identificado";
         }
 
-        StringBuilder info = new StringBuilder();
-
         String nombre = prefsManager.getUserName();
         String email = prefsManager.getUserEmail();
 
         if (nombre != null && !nombre.trim().isEmpty()) {
-            info.append(nombre);
+            return nombre;
         } else if (email != null && !email.trim().isEmpty()) {
-            info.append(email);
+            return email;
         } else {
-            info.append("Usuario: ").append(prefsManager.getUserId().substring(0, 8)).append("...");
+            return "Usuario: " + prefsManager.getUserId().substring(0, 8) + "...";
         }
-
-        return info.toString();
     }
 
-    /**
-     * Método para guardar información de la reserva actual en PrefsManager
-     * Útil para compartir datos entre actividades
-     */
     private void guardarReservaEnPrefs(Reserva reserva) {
         if (reserva == null) return;
 
         try {
-            // Guardar información básica
             if (reserva.getHotelId() != null) {
                 prefsManager.saveHotel(
                         reserva.getHotelId(),
@@ -476,29 +466,8 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
                 );
             }
 
-            // Guardar fechas si existen
             if (reserva.getFechaInicio() != null && reserva.getFechaFin() != null) {
                 prefsManager.saveDateRange(reserva.getFechaInicio(), reserva.getFechaFin());
-            }
-
-            // Guardar información de habitación si existe
-            if (reserva.getHabitacionTipo() != null) {
-                prefsManager.saveRoom(
-                        reserva.getHabitacionTipo(),
-                        reserva.getHabitacionDescripcion() != null ? reserva.getHabitacionDescripcion() : "",
-                        reserva.getHabitacionNumero() != null ? reserva.getHabitacionNumero() : "",
-                        reserva.getHabitacionPrecio() != null ? reserva.getHabitacionPrecio() : 0.0,
-                        1 // Cantidad por defecto
-                );
-            }
-
-            // Guardar totales si existen
-            if (reserva.getMontoTotal() != null) {
-                prefsManager.saveTotals(
-                        reserva.getTotalDias() != null ? reserva.getTotalDias() : 1,
-                        reserva.getImpuestos() != null ? reserva.getImpuestos() : 0.0,
-                        reserva.getMontoTotal()
-                );
             }
 
             Log.d(TAG, "Información de reserva guardada en PrefsManager");
@@ -508,28 +477,15 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
         }
     }
 
-    // Interfaces para callbacks
-    interface ReservaValidationCallback {
-        void onResult(boolean tieneReserva, Reserva reserva, String mensaje);
-    }
-
-    interface ElegibilidadCallback {
-        void onResult(boolean esElegible, String mensaje, Double montoMinimo);
-    }
-
+    // UI Methods
     private void mostrarMensajeCargando() {
         ocultarTodasLasVistas();
-        // Mostrar un mensaje de carga temporal
         View vistaSinReserva = rootView.findViewById(R.id.vista_sin_reserva);
         if (vistaSinReserva != null) {
             vistaSinReserva.setVisibility(View.VISIBLE);
             TextView mensaje = vistaSinReserva.findViewById(R.id.tv_mensaje_sin_reserva);
             if (mensaje != null) {
-                if (tieneUsuarioValido()) {
-                    mensaje.setText("Verificando reservas...");
-                } else {
-                    mensaje.setText("Verificando sesión de usuario...");
-                }
+                mensaje.setText(tieneUsuarioValido() ? "Verificando reservas..." : "Verificando sesión...");
             }
         }
 
@@ -566,14 +522,12 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
         if (vista != null) {
             vista.setVisibility(View.VISIBLE);
 
-            // Información detallada de la reserva
             TextView infoReserva = vista.findViewById(R.id.tv_info_reserva);
             if (infoReserva != null) {
                 String resumenReserva = obtenerResumenReserva(reserva);
                 infoReserva.setText(resumenReserva);
             }
 
-            // Verificar elegibilidad para taxi gratuito
             verificarMontoMinimoTaxi(reserva);
         }
         Log.d(TAG, "Mostrando vista sin taxi - Reserva ID: " + reserva.getId());
@@ -589,7 +543,7 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
             TextView titulo = vista.findViewById(R.id.tv_title);
             if (titulo != null) {
                 String fechas = obtenerFechasFormateadas(reserva);
-                titulo.setText("Taxi reservado para " + fechas);
+                titulo.setText("Taxi reservado" + (!fechas.isEmpty() ? " para " + fechas : ""));
             }
 
             // Estado detallado del taxi
@@ -615,21 +569,41 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
                 mostrarInformacionTaxista(solicitudTaxi.getTaxistaAsignadoId());
             }
 
-            // Generar código QR si existe
+            // Generar código QR
             if (solicitudTaxi.getCodigoQR() != null && !solicitudTaxi.getCodigoQR().trim().isEmpty()) {
                 generarCodigoQR(solicitudTaxi.getCodigoQR());
             } else {
-                // Generar código temporal si no existe
                 String codigoTemp = "TAXI_" + reserva.getId() + "_" + System.currentTimeMillis();
                 generarCodigoQR(codigoTemp);
             }
+
+            // Configurar botón de seguimiento
+            configurarBotonSeguimiento(vista, solicitudTaxi);
         }
-        Log.d(TAG, "Mostrando vista con taxi - Estado: " +
-                obtenerEstadoDetalladoTaxi(solicitudTaxi));
+        Log.d(TAG, "Mostrando vista con taxi - Estado: " + obtenerEstadoDetalladoTaxi(solicitudTaxi));
+    }
+
+    private void configurarBotonSeguimiento(View vista, SolicitudTaxi solicitudTaxi) {
+        Button btnSeguimiento = vista.findViewById(R.id.btn_seguir_taxi);
+        if (btnSeguimiento != null) {
+            btnSeguimiento.setVisibility(View.VISIBLE);
+            btnSeguimiento.setOnClickListener(v -> abrirSeguimientoTaxi());
+
+            String estado = solicitudTaxi.getEstado();
+            if ("asignado".equals(estado) || "en_camino".equals(estado) || "llegado".equals(estado)) {
+                btnSeguimiento.setText("Ver ubicación del conductor");
+                btnSeguimiento.setEnabled(true);
+            } else if ("en_viaje".equals(estado)) {
+                btnSeguimiento.setText("Seguir viaje en tiempo real");
+                btnSeguimiento.setEnabled(true);
+            } else {
+                btnSeguimiento.setText("Seguimiento no disponible");
+                btnSeguimiento.setEnabled(false);
+            }
+        }
     }
 
     private void mostrarInformacionTaxista(String taxistaId) {
-        // Consultar información del taxista
         db.collection("usuarios")
                 .document(taxistaId)
                 .get()
@@ -639,7 +613,6 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
                         String telefonoTaxista = documentSnapshot.getString("telefono");
                         String placaAuto = documentSnapshot.getString("placaAuto");
 
-                        // Actualizar UI con información del taxista
                         TextView infoTaxista = rootView.findViewById(R.id.tv_info_taxista);
                         if (infoTaxista != null) {
                             StringBuilder info = new StringBuilder();
@@ -704,6 +677,7 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
         }
     }
 
+    // Navigation and Actions
     private void navegarAHoteles() {
         try {
             NavHostFragment.findNavController(this)
@@ -722,90 +696,153 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
     private void abrirSolicitudTaxi() {
         try {
             if (reservaActual != null) {
-                Intent intent = new Intent(requireContext(),
-                        com.example.telehotel.features.cliente.AgregarTaxiActivity.class);
-                intent.putExtra("reservaId", reservaActual.getId());
-                intent.putExtra("hotelId", reservaActual.getHotelId());
+                verificarElegibilidadTaxiGratuito(reservaActual, new ElegibilidadCallback() {
+                    @Override
+                    public void onResult(boolean esElegible, String mensaje, Double montoMinimo) {
+                        if (!esElegible) {
+                            new AlertDialog.Builder(requireContext())
+                                    .setTitle("Servicio no disponible")
+                                    .setMessage(mensaje)
+                                    .setPositiveButton("Entendido", null)
+                                    .show();
+                            return;
+                        }
 
-                // Guardar información adicional en PrefsManager para la actividad
-                prefsManager.saveHotel(
-                        reservaActual.getHotelId(),
-                        reservaActual.getHotelNombre() != null ? reservaActual.getHotelNombre() : "Hotel",
-                        reservaActual.getHotelUbicacion() != null ? reservaActual.getHotelUbicacion() : ""
-                );
+                        try {
+                            Intent intent = new Intent(requireContext(), TaxiPickupActivity.class);
+                            intent.putExtra("reservaId", reservaActual.getId());
+                            intent.putExtra("hotelId", reservaActual.getHotelId());
 
-                startActivity(intent);
+                            if (reservaActual.getHotelNombre() != null) {
+                                intent.putExtra("hotelNombre", reservaActual.getHotelNombre());
+                            }
+                            if (reservaActual.getMontoTotal() != null) {
+                                intent.putExtra("montoReserva", reservaActual.getMontoTotal());
+                            }
+
+                            startActivityForResult(intent, REQUEST_CODE_TAXI_PICKUP);
+
+                        } catch (android.content.ActivityNotFoundException e) {
+                            Log.e(TAG, "TaxiPickupActivity no encontrada en el manifest", e);
+                            Toast.makeText(getContext(),
+                                    "Error: Actividad no registrada. Verifica el AndroidManifest.xml",
+                                    Toast.LENGTH_LONG).show();
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error general abriendo TaxiPickupActivity", e);
+                            Toast.makeText(getContext(),
+                                    "Error al abrir solicitud de taxi: " + e.getMessage(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             } else {
                 Toast.makeText(getContext(), "Error: No se encontró la reserva", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
-            Log.e(TAG, "Error abriendo solicitud taxi", e);
-            Toast.makeText(getContext(), "Función próximamente disponible", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Error general en abrirSolicitudTaxi", e);
+            Toast.makeText(getContext(), "Error al procesar solicitud", Toast.LENGTH_SHORT).show();
         }
     }
 
+    private void abrirSeguimientoTaxi() {
+        if (reservaActual != null && reservaActual.getSolicitudTaxi() != null) {
+            try {
+                Intent intent = new Intent(requireContext(), TaxiTrackingActivity.class);
+                intent.putExtra("reservaId", reservaActual.getId());
+
+                buscarServicioTaxiId(servicioId -> {
+                    if (servicioId != null) {
+                        intent.putExtra("servicioTaxiId", servicioId);
+                    }
+                    startActivityForResult(intent, REQUEST_CODE_TAXI_TRACKING);
+                });
+            } catch (Exception e) {
+                Log.e(TAG, "Error abriendo TaxiTrackingActivity", e);
+                Toast.makeText(getContext(), "Error al abrir seguimiento", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void buscarServicioTaxiId(Consumer<String> callback) {
+        db.collection("servicios_taxi")
+                .whereEqualTo("clienteId", prefsManager.getUserId())
+                .whereIn("estado", Arrays.asList("solicitado", "asignado", "en_camino", "llegado", "en_viaje"))
+                .limit(1)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        String servicioId = queryDocumentSnapshots.getDocuments().get(0).getId();
+                        callback.accept(servicioId);
+                    } else {
+                        callback.accept(null);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error buscando servicio de taxi", e);
+                    callback.accept(null);
+                });
+    }
+
+    // Lifecycle methods para OSM
     @Override
     public void onResume() {
         super.onResume();
-        if (mapView != null) mapView.onResume();
-        // ✅ ACTUALIZAR DATOS AL VOLVER AL FRAGMENT
+        try {
+            org.osmdroid.views.MapView osmMapView = rootView.findViewById(R.id.mapView);
+            if (osmMapView != null) {
+                osmMapView.onResume();
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "Error en onResume del mapa", e);
+        }
+        // Actualizar datos al volver al fragment
         mostrarVistaApropriada();
     }
 
     @Override
-    public void onMapReady(@NonNull GoogleMap map) {
-        this.googleMap = map;
-
-        googleMap.getUiSettings().setZoomControlsEnabled(true);
-        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-
-        // Ubicación por defecto (Lima, Perú)
-        LatLng lima = new LatLng(-12.0464, -77.0428);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lima, 12f));
-        googleMap.addMarker(new MarkerOptions().position(lima).title("Lima"));
-    }
-
-    // Métodos del ciclo de vida del MapView
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (mapView != null) mapView.onStart();
-    }
-
-    @Override
     public void onPause() {
-        if (mapView != null) mapView.onPause();
+        try {
+            org.osmdroid.views.MapView osmMapView = rootView.findViewById(R.id.mapView);
+            if (osmMapView != null) {
+                osmMapView.onPause();
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "Error en onPause del mapa", e);
+        }
         super.onPause();
     }
 
-    @Override
-    public void onStop() {
-        if (mapView != null) mapView.onStop();
-        super.onStop();
-    }
 
     @Override
     public void onDestroyView() {
-        if (mapView != null) mapView.onDestroy();
+        try {
+            org.osmdroid.views.MapView osmMapView = rootView.findViewById(R.id.mapView);
+            if (osmMapView != null) {
+                osmMapView.onDetach();
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "Error en onDestroyView del mapa", e);
+        }
         super.onDestroyView();
     }
 
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        if (mapView != null) mapView.onLowMemory();
-    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mapView != null) {
-            Bundle mapViewBundle = outState.getBundle(MAPVIEW_BUNDLE_KEY);
-            if (mapViewBundle == null) {
-                mapViewBundle = new Bundle();
-                outState.putBundle(MAPVIEW_BUNDLE_KEY, mapViewBundle);
-            }
-            mapView.onSaveInstanceState(mapViewBundle);
-        }
+        // OSM no requiere manejo especial de estado como Google Maps
+    }
+
+    // Callback interfaces
+    interface ReservaValidationCallback {
+        void onResult(boolean tieneReserva, Reserva reserva, String mensaje);
+    }
+
+    interface ElegibilidadCallback {
+        void onResult(boolean esElegible, String mensaje, Double montoMinimo);
+    }
+
+    interface Consumer<T> {
+        void accept(T t);
     }
 }

@@ -109,7 +109,12 @@
             android:label="Cliente" />
         <activity android:name=".features.cliente.ResumenReservaActivity" />
         <activity android:name=".features.admin.ProcesarCheckoutActivity" />
-
+        <activity
+            android:name=".features.cliente.TaxiPickupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.cliente.TaxiTrackingActivity"
+            android:exported="false" />
         <!--activity
             android:name=".features.cliente.PerfilActivity"
             android:label="Cliente" />

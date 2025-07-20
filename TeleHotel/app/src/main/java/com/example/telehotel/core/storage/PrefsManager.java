@@ -30,7 +30,9 @@ public class PrefsManager {
     private static final String KEY_TOTAL_DAYS = "total_days";
     private static final String KEY_TOTAL_TAXES = "total_taxes";
     private static final String KEY_TOTAL_PRICE = "total_price";
-
+    private static final String KEY_SELECTED_LOCATION = "selected_location";
+    private static final String KEY_LOCATION_TIMESTAMP = "location_timestamp";
+    private static final String KEY_LAST_SEARCH_LOCATION = "last_search_location";
     // Claves para usuario y sesión
     private static final String KEY_USER_ID = "user_id";
     private static final String KEY_USER_TOKEN = "user_token";
@@ -64,7 +66,210 @@ public class PrefsManager {
                 .putLong(KEY_END_DATE, endDate)
                 .apply();
     }
+    public void saveSelectedLocation(String location) {
+        prefs.edit()
+                .putString(KEY_SELECTED_LOCATION, location)
+                .putLong(KEY_LOCATION_TIMESTAMP, System.currentTimeMillis())
+                .apply();
+    }
 
+    /**
+     * Obtiene la última ubicación seleccionada
+     */
+    public String getSelectedLocation() {
+        return prefs.getString(KEY_SELECTED_LOCATION, "");
+    }
+
+    /**
+     * Guarda la ubicación de la última búsqueda realizada
+     */
+    public void saveLastSearchLocation(String location) {
+        prefs.edit().putString(KEY_LAST_SEARCH_LOCATION, location).apply();
+    }
+
+    /**
+     * Obtiene la ubicación de la última búsqueda
+     */
+    public String getLastSearchLocation() {
+        return prefs.getString(KEY_LAST_SEARCH_LOCATION, "");
+    }
+
+    /**
+     * Obtiene el timestamp de cuándo se guardó la ubicación
+     */
+    public long getLocationTimestamp() {
+        return prefs.getLong(KEY_LOCATION_TIMESTAMP, 0);
+    }
+
+    /**
+     * Verifica si hay una ubicación reciente (últimas 24 horas)
+     */
+    public boolean hasRecentLocation() {
+        long timestamp = getLocationTimestamp();
+        if (timestamp == 0) return false;
+
+        long oneDayAgo = System.currentTimeMillis() - (24 * 60 * 60 * 1000);
+        return timestamp > oneDayAgo;
+    }
+
+    /**
+     * Obtiene la mejor ubicación disponible (prioriza la más reciente)
+     */
+    public String getBestAvailableLocation() {
+        // 1. Intentar ubicación seleccionada (más reciente)
+        String selectedLocation = getSelectedLocation();
+        if (selectedLocation != null && !selectedLocation.trim().isEmpty()) {
+            return selectedLocation;
+        }
+
+        // 2. Intentar ubicación de última búsqueda
+        String lastSearchLocation = getLastSearchLocation();
+        if (lastSearchLocation != null && !lastSearchLocation.trim().isEmpty()) {
+            return lastSearchLocation;
+        }
+
+        // 3. Intentar ubicación del método legacy
+        String legacyLocation = getLocation();
+        if (legacyLocation != null && !legacyLocation.trim().isEmpty()) {
+            return legacyLocation;
+        }
+
+        return null;
+    }
+
+    /**
+     * Limpia todas las ubicaciones guardadas
+     */
+    public void clearAllLocations() {
+        prefs.edit()
+                .remove(KEY_SELECTED_LOCATION)
+                .remove(KEY_LOCATION_TIMESTAMP)
+                .remove(KEY_LAST_SEARCH_LOCATION)
+                .remove(KEY_LOCATION) // legacy
+                .apply();
+    }
+
+    /**
+     * Verifica si hay alguna ubicación guardada
+     */
+    public boolean hasAnyLocation() {
+        return getBestAvailableLocation() != null;
+    }
+
+    // ============= 🔥 MEJORAR MÉTODOS EXISTENTES =============
+
+    /**
+     * MEJORAR: clearSearchData() para incluir nuevas ubicaciones
+     */
+    public void clearSearchData() {
+        prefs.edit()
+                .remove(KEY_START_DATE)
+                .remove(KEY_END_DATE)
+                .remove(KEY_PEOPLE)
+                .remove(KEY_HOTEL_ID)
+                .remove(KEY_HOTEL_NAME)
+                .remove(KEY_HOTEL_LOCATION)
+                .remove(KEY_ROOM_TYPE)
+                .remove(KEY_ROOM_DESCRIPTION)
+                .remove(KEY_ROOM_NUMBER)
+                .remove(KEY_ROOM_PRICE)
+                .remove(KEY_ROOM_QUANTITY)
+                .remove(KEY_TOTAL_DAYS)
+                .remove(KEY_TOTAL_TAXES)
+                .remove(KEY_TOTAL_PRICE)
+                // 🔥 AGREGAR: limpiar ubicaciones también
+                .remove(KEY_SELECTED_LOCATION)
+                .remove(KEY_LOCATION_TIMESTAMP)
+                .remove(KEY_LAST_SEARCH_LOCATION)
+                .remove(KEY_LOCATION)
+                .apply();
+    }
+
+    /**
+     * MEJORAR: addSearchHistory() para también guardar la ubicación
+     */
+    public void addSearchHistory(SearchHistory search) {
+        List<SearchHistory> history = getSearchHistory();
+        history.removeIf(s -> s.getLocation().equals(search.getLocation()) &&
+                s.getStartDate() == search.getStartDate() &&
+                s.getEndDate() == search.getEndDate());
+        history.add(0, search);
+        if (history.size() > 20) {
+            history = history.subList(0, 20);
+        }
+        String json = gson.toJson(history);
+        prefs.edit().putString(KEY_SEARCH_HISTORY, json).apply();
+
+        // 🔥 NUEVO: También guardar como última búsqueda
+        saveLastSearchLocation(search.getLocation());
+    }
+
+    // ============= 🔥 MÉTODOS DE INTEGRACIÓN CON TU CÓDIGO EXISTENTE =============
+
+    /**
+     * Método unificado para guardar una búsqueda completa con ubicación
+     */
+    public void saveCompleteSearch(String location, long startDate, long endDate, String peopleString) {
+        prefs.edit()
+                .putString(KEY_SELECTED_LOCATION, location)
+                .putString(KEY_LAST_SEARCH_LOCATION, location)
+                .putString(KEY_LOCATION, location) // compatibilidad
+                .putLong(KEY_START_DATE, startDate)
+                .putLong(KEY_END_DATE, endDate)
+                .putString(KEY_PEOPLE, peopleString)
+                .putLong(KEY_LOCATION_TIMESTAMP, System.currentTimeMillis())
+                .apply();
+    }
+
+    /**
+     * Método para obtener un resumen de la búsqueda actual
+     */
+    public String getCurrentSearchSummary() {
+        String location = getBestAvailableLocation();
+        String people = getPeopleString();
+        long startDate = getStartDate();
+        long endDate = getEndDate();
+
+        if (location == null || location.isEmpty()) {
+            return "Sin búsqueda guardada";
+        }
+
+        StringBuilder summary = new StringBuilder();
+        summary.append("📍 ").append(location);
+
+        if (startDate > 0 && endDate > 0) {
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM", java.util.Locale.getDefault());
+            summary.append(" • 📅 ").append(sdf.format(new java.util.Date(startDate)))
+                    .append(" - ").append(sdf.format(new java.util.Date(endDate)));
+        }
+
+        if (people != null && !people.isEmpty()) {
+            summary.append(" • 👥 ").append(people);
+        }
+
+        return summary.toString();
+    }
+
+    /**
+     * Debug: Obtener información de todas las ubicaciones guardadas
+     */
+    public String getLocationDebugInfo() {
+        return String.format(
+                "Ubicaciones guardadas:\n" +
+                        "- Seleccionada: '%s'\n" +
+                        "- Última búsqueda: '%s'\n" +
+                        "- Legacy: '%s'\n" +
+                        "- Mejor disponible: '%s'\n" +
+                        "- Timestamp: %d\n" +
+                        "- Reciente: %s",
+                getSelectedLocation(),
+                getLastSearchLocation(),
+                getLocation(),
+                getBestAvailableLocation(),
+                getLocationTimestamp(),
+                hasRecentLocation()
+        );
+    }
     public long getStartDate() {
         return prefs.getLong(KEY_START_DATE, 0);
     }
@@ -244,19 +449,7 @@ public class PrefsManager {
         return getFavoriteHotels().stream().anyMatch(hotel -> hotel.getId().equals(hotelId));
     }
 
-    // ============= HISTORIAL DE BÚSQUEDAS =============
-    public void addSearchHistory(SearchHistory search) {
-        List<SearchHistory> history = getSearchHistory();
-        history.removeIf(s -> s.getLocation().equals(search.getLocation()) &&
-                s.getStartDate() == search.getStartDate() &&
-                s.getEndDate() == search.getEndDate());
-        history.add(0, search);
-        if (history.size() > 20) {
-            history = history.subList(0, 20);
-        }
-        String json = gson.toJson(history);
-        prefs.edit().putString(KEY_SEARCH_HISTORY, json).apply();
-    }
+
 
     public List<SearchHistory> getSearchHistory() {
         String json = prefs.getString(KEY_SEARCH_HISTORY, null);
@@ -326,24 +519,7 @@ public class PrefsManager {
         userPrefs.edit().clear().apply();
     }
 
-    public void clearSearchData() {
-        prefs.edit()
-                .remove(KEY_START_DATE)
-                .remove(KEY_END_DATE)
-                .remove(KEY_PEOPLE)
-                .remove(KEY_HOTEL_ID)
-                .remove(KEY_HOTEL_NAME)
-                .remove(KEY_HOTEL_LOCATION)
-                .remove(KEY_ROOM_TYPE)
-                .remove(KEY_ROOM_DESCRIPTION)
-                .remove(KEY_ROOM_NUMBER)
-                .remove(KEY_ROOM_PRICE)
-                .remove(KEY_ROOM_QUANTITY)
-                .remove(KEY_TOTAL_DAYS)
-                .remove(KEY_TOTAL_TAXES)
-                .remove(KEY_TOTAL_PRICE)
-                .apply();
-    }
+
     // Claves adicionales
     private static final String KEY_LOCATION = "search_location";
 

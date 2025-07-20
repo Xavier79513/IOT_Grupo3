@@ -24,6 +24,8 @@ import com.example.telehotel.R;
 import com.example.telehotel.core.FirebaseUtil;
 import com.example.telehotel.core.storage.PrefsManager;
 import com.example.telehotel.core.storage.StorageHelper;
+import com.example.telehotel.core.utils.ReservaValidationUtil;
+import com.example.telehotel.data.model.Reserva;
 import com.example.telehotel.data.model.SearchHistory;
 import com.example.telehotel.data.model.Hotel;
 import com.example.telehotel.data.model.LocationSearch;
@@ -47,7 +49,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-
 
 public class ClientePaginaPrincipal extends AppCompatActivity {
     private static final String TAG = "ClientePaginaPrincipal";
@@ -92,6 +93,10 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
     private List<String> allHotelLocations = new ArrayList<>();
     private List<LocationSearch> detailedLocations = new ArrayList<>();
     private static final String NO_LOCATION_MESSAGE = "No se cuenta con la ubicación escrita";
+    // 🔥 NUEVO: Sistema de validación de reserva
+    private ReservaValidationUtil reservaValidator;
+    private boolean tieneReservaActiva = false;
+    private Reserva reservaActiva = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,14 +147,15 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
             tvPeople = findViewById(R.id.tvPeople);
             btnSearch = findViewById(R.id.btnSearch);
 
-            // RecyclerViews principales
-            rvLugares = findViewById(R.id.rvLugares);
-            rvHoteles = findViewById(R.id.rvHoteles);
-
             // Botones adicionales
             //btnVerTodoLugares = findViewById(R.id.btnVerTodoLugares);
             //btnVerTodoHoteles = findViewById(R.id.btnVerTodoHoteles);
             ivLogout = findViewById(R.id.ivLogout);
+            // Si no existe ivLogout, busca el botón en el encabezado:
+            if (ivLogout == null) {
+                // Buscar en el encabezado incluido
+                ivLogout = findViewById(R.id.btnLogout);  // o como se llame en tu encabezado
+            }
 
             Log.d(TAG, "initializeViews - Completado");
 
@@ -164,7 +170,9 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
         try {
             // Logout
             if (ivLogout != null) {
-                ivLogout.setOnClickListener(v -> performLogout());
+                ivLogout.setOnClickListener(v -> showLogoutConfirmationDialog());
+            } else {
+                Log.w(TAG, "Botón de logout no encontrado");
             }
 
             // Configurar AutoCompleteTextView
@@ -176,28 +184,184 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
             // Selector de personas/habitaciones
             setupGuestSelector();
 
-            // Botón Buscar
+            // Botón Buscar - 🔥 CAMBIO PRINCIPAL: Solo validar y navegar
             if (btnSearch != null) {
-                btnSearch.setOnClickListener(v -> performSearch());
-            }
-
-            // Botones "Ver todo"
-            if (btnVerTodoLugares != null) {
-                btnVerTodoLugares.setOnClickListener(v -> {
-                    Toast.makeText(this, "Ver todos los lugares", Toast.LENGTH_SHORT).show();
-                });
-            }
-
-            if (btnVerTodoHoteles != null) {
-                btnVerTodoHoteles.setOnClickListener(v -> {
-                    Toast.makeText(this, "Ver todos los hoteles", Toast.LENGTH_SHORT).show();
-                });
+                btnSearch.setOnClickListener(v -> performSearchAndNavigate());
             }
 
             Log.d(TAG, "setupListeners - Completado");
 
         } catch (Exception e) {
             Log.e(TAG, "Error configurando listeners", e);
+        }
+    }
+
+    // ============= 🔥 MÉTODO PRINCIPAL SIMPLIFICADO =============
+
+    /**
+     * 🔥 NUEVO: Método simplificado que SIEMPRE navega a ClienteMainActivity
+     */
+    private void performSearchAndNavigate() {
+        Log.d(TAG, "performSearchAndNavigate - Iniciando navegación directa");
+
+        try {
+            // 1. Obtener ubicación (puede estar vacía)
+            String location = etCity != null ? etCity.getText().toString().trim() : "";
+
+            // 2. Limpiar ubicación si es el mensaje de "no encontrada"
+            if (location.equals(NO_LOCATION_MESSAGE)) {
+                location = "";
+            }
+
+            // 3. Obtener fechas (pueden ser 0)
+            long startDate = prefsManager != null ? prefsManager.getStartDate() : 0;
+            long endDate = prefsManager != null ? prefsManager.getEndDate() : 0;
+
+            // 4. 🔥 SIEMPRE guardar búsqueda antes de navegar (incluso si está incompleta)
+            saveSearchDataBeforeNavigation(location, startDate, endDate);
+
+            // 5. 🔥 SIEMPRE navegar - HotelsFragment manejará los estados
+            navigateToClienteMainActivity(location, startDate, endDate);
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error en performSearchAndNavigate", e);
+
+            // 🔥 INCLUSO CON ERROR, navegar para mostrar mensaje apropiado
+            navigateToClienteMainActivity("", 0, 0);
+        }
+    }
+
+    /**
+     * 🔥 NUEVO: Guardar datos de búsqueda antes de navegar (sin validaciones)
+     */
+    private void saveSearchDataBeforeNavigation(String location, long startDate, long endDate) {
+        try {
+            if (prefsManager == null) return;
+
+            Log.d(TAG, String.format("Guardando búsqueda: ubicación='%s', fechas=%d-%d, huéspedes=%d+%d+%d",
+                    location, startDate, endDate, adultCount, childCount, roomCount));
+
+            // Guardar ubicación (incluso si está vacía)
+            if (!location.isEmpty()) {
+                prefsManager.saveSelectedLocation(location);
+                prefsManager.saveLastSearchLocation(location);
+                prefsManager.saveLocation(location); // compatibilidad
+            }
+
+            // Guardar huéspedes
+            updatePeopleDisplay(); // Esto ya guarda en prefsManager
+
+            // Crear historial de búsqueda (incluso si está incompleto)
+            SearchHistory search = new SearchHistory(
+                    location.isEmpty() ? "Ubicación no especificada" : location,
+                    startDate > 0 ? startDate : System.currentTimeMillis(),
+                    endDate > 0 ? endDate : System.currentTimeMillis() + (24 * 60 * 60 * 1000),
+                    adultCount, childCount, roomCount
+            );
+
+            prefsManager.addSearchHistory(search);
+
+            Log.d(TAG, "Búsqueda guardada exitosamente");
+            Log.d(TAG, "Resumen: " + prefsManager.getCurrentSearchSummary());
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error guardando búsqueda", e);
+            // No hacer nada - seguir con la navegación
+        }
+    }
+
+    /**
+     * 🔥 NUEVO: Navegación directa SIEMPRE exitosa
+     */
+    private void navigateToClienteMainActivity(String location, long startDate, long endDate) {
+        Log.d(TAG, String.format("Navegando a ClienteMainActivity con: ubicación='%s', fechas=%d-%d",
+                location, startDate, endDate));
+
+        try {
+            Intent intent = new Intent(this, ClienteMainActivity.class);
+
+            // Pasar TODOS los parámetros (incluso si algunos están vacíos o son 0)
+            intent.putExtra("search_location", location);
+            intent.putExtra("start_date", startDate);
+            intent.putExtra("end_date", endDate);
+            intent.putExtra("adults", adultCount);
+            intent.putExtra("children", childCount);
+            intent.putExtra("rooms", roomCount);
+
+            // 🔥 NUEVO: Indicadores de estado para el HotelsFragment
+            intent.putExtra("force_navigation", true); // Siempre mostrar vista
+            intent.putExtra("search_from_main", true); // Proviene de búsqueda principal
+
+            // Información adicional para debug
+            intent.putExtra("has_location", !location.isEmpty());
+            intent.putExtra("has_dates", startDate > 0 && endDate > 0);
+            intent.putExtra("search_timestamp", System.currentTimeMillis());
+
+            startActivity(intent);
+
+            // 🔥 OPCIONAL: Mostrar mensaje informativo
+            showNavigationMessage(location, startDate, endDate);
+
+            Log.d(TAG, "Navegación exitosa a ClienteMainActivity");
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error navegando a ClienteMainActivity", e);
+            Toast.makeText(this, "Error navegando a resultados", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * 🔥 NUEVO: Mostrar mensaje informativo sobre la navegación
+     */
+    private void showNavigationMessage(String location, long startDate, long endDate) {
+        try {
+            String message;
+
+            boolean hasLocation = !location.isEmpty();
+            boolean hasDates = startDate > 0 && endDate > 0;
+
+            if (hasLocation && hasDates) {
+                message = String.format("🔍 Buscando hoteles en %s...", location);
+            } else if (hasLocation && !hasDates) {
+                message = String.format("📍 Explorando %s (completa las fechas para mejores resultados)", location);
+            } else if (!hasLocation && hasDates) {
+                message = "📅 Fechas seleccionadas (especifica una ubicación para mejores resultados)";
+            } else {
+                message = "🔍 Explorando opciones disponibles";
+            }
+
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            Log.w(TAG, "Error mostrando mensaje de navegación", e);
+        }
+    }
+
+    // ============= MÉTODOS EXISTENTES (sin cambios significativos) =============
+
+    private void showLogoutConfirmationDialog() {
+        try {
+            androidx.appcompat.app.AlertDialog.Builder builder =
+                    new androidx.appcompat.app.AlertDialog.Builder(this);
+
+            builder.setTitle("Cerrar sesión");
+            builder.setMessage("¿Estás seguro que deseas cerrar sesión?");
+            builder.setIcon(R.drawable.ic_logout);
+
+            builder.setPositiveButton("Sí, cerrar sesión", (dialog, which) -> {
+                performLogout();
+            });
+
+            builder.setNegativeButton("Cancelar", (dialog, which) -> {
+                dialog.dismiss();
+            });
+
+            androidx.appcompat.app.AlertDialog dialog = builder.create();
+            dialog.show();
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error mostrando diálogo de confirmación", e);
+            performLogout();
         }
     }
 
@@ -210,16 +374,13 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
         }
 
         try {
-            // Crear ArrayAdapter simple
             cityAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<>());
             etCity.setAdapter(cityAdapter);
 
-            // Configurar comportamiento
             etCity.setThreshold(2);
             etCity.setDropDownWidth(ViewGroup.LayoutParams.MATCH_PARENT);
             etCity.setDropDownHeight(400);
 
-            // TextWatcher para filtrar ubicaciones
             etCity.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -227,12 +388,10 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    // Cancelar búsqueda anterior
                     if (searchRunnable != null) {
                         searchHandler.removeCallbacks(searchRunnable);
                     }
 
-                    // Programar nueva búsqueda
                     searchRunnable = () -> {
                         String query = s.toString().trim();
                         Log.d(TAG, "Filtrando ubicaciones para: " + query);
@@ -240,7 +399,6 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
                         if (query.length() >= 2) {
                             filtrarUbicacionesSimple(query);
                         } else {
-                            // Mostrar todas las ubicaciones
                             cityAdapter.clear();
                             cityAdapter.addAll(allHotelLocations);
                             cityAdapter.notifyDataSetChanged();
@@ -259,24 +417,20 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
                         String queryLower = query.toLowerCase();
                         List<String> ubicacionesFiltradas = new ArrayList<>();
 
-                        // Filtrar ubicaciones existentes
                         for (String ubicacion : allHotelLocations) {
                             if (ubicacion.toLowerCase().contains(queryLower)) {
                                 ubicacionesFiltradas.add(ubicacion);
                             }
                         }
 
-                        // Si no se encontraron ubicaciones, mostrar mensaje simple
                         if (ubicacionesFiltradas.isEmpty()) {
                             ubicacionesFiltradas.add(NO_LOCATION_MESSAGE);
                         }
 
-                        // Actualizar adapter
                         cityAdapter.clear();
                         cityAdapter.addAll(ubicacionesFiltradas);
                         cityAdapter.notifyDataSetChanged();
 
-                        // Mostrar dropdown
                         if (!ubicacionesFiltradas.isEmpty() && etCity.hasFocus()) {
                             etCity.showDropDown();
 
@@ -297,20 +451,14 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
                 }
             });
 
-            // Listener para selección
             etCity.setOnItemClickListener((parent, view, position, id) -> {
                 try {
                     String selectedLocation = cityAdapter.getItem(position);
-                    if (selectedLocation != null) {
-                        // *** CAMBIO: Verificar si es el mensaje de "no encontrado" ***
-                        if (selectedLocation.equals(NO_LOCATION_MESSAGE)) {
-                            // No hacer nada, es solo un mensaje informativo
-                            return;
-                        }
-
+                    if (selectedLocation != null && !selectedLocation.equals(NO_LOCATION_MESSAGE)) {
                         Log.d(TAG, "Ubicación seleccionada: " + selectedLocation);
 
-                        // Buscar información detallada de la ubicación
+                        saveSelectedLocationImmediate(selectedLocation);
+
                         LocationSearch locationDetails = findLocationDetails(selectedLocation);
                         if (locationDetails != null) {
                             String message = "✓ " + selectedLocation + " (" + locationDetails.getHotelCount() + " hoteles)";
@@ -319,7 +467,6 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
                             Toast.makeText(this, "✓ " + selectedLocation, Toast.LENGTH_SHORT).show();
                         }
 
-                        // Establecer el texto en el campo
                         etCity.setText(selectedLocation);
                         etCity.dismissDropDown();
                         etCity.clearFocus();
@@ -329,8 +476,17 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
                 }
             });
 
-            // Cargar ubicaciones de hoteles al inicializar
-            loadHotelLocations();
+            etCity.setOnFocusChangeListener((v, hasFocus) -> {
+                if (!hasFocus) {
+                    String typedLocation = etCity.getText().toString().trim();
+                    if (!typedLocation.isEmpty() && !typedLocation.equals(NO_LOCATION_MESSAGE)) {
+                        saveSelectedLocationImmediate(typedLocation);
+                    }
+                }
+            });
+
+            // 🔥 MODIFICADO: Cargar ubicaciones con validación
+            cargarUbicacionesConValidacion();
 
             Log.d(TAG, "AutoCompleteTextView configurado correctamente");
 
@@ -340,12 +496,59 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
     }
 
     /**
-     * Carga todas las ubicaciones únicas de los hoteles
+     * 🔥 NUEVO: Método que verifica reserva antes de cargar ubicaciones
      */
+    private void cargarUbicacionesConValidacion() {
+        if (reservaValidator == null) {
+            // Sin validador, cargar ubicaciones normalmente
+            loadHotelLocations();
+            return;
+        }
+
+        reservaValidator.verificarReservaActiva((tieneReserva, reserva, mensaje) -> {
+            runOnUiThread(() -> {
+                if (tieneReserva) {
+                    // 🚫 Usuario tiene reserva activa - no cargar ubicaciones
+                    Log.d(TAG, "No cargando ubicaciones - usuario tiene reserva activa");
+                    // Opcional: Deshabilitar el campo de texto
+                    if (etCity != null) {
+                        etCity.setEnabled(false);
+                        etCity.setHint("Búsqueda no disponible (tienes una reserva activa)");
+                    }
+                } else {
+                    // ✅ Usuario sin reserva activa - cargar ubicaciones normalmente
+                    loadHotelLocations();
+                }
+            });
+        });
+    }
+
+    private void saveSelectedLocationImmediate(String location) {
+        try {
+            Log.d(TAG, "Guardando ubicación seleccionada: " + location);
+
+            if (prefsManager != null) {
+                prefsManager.saveSelectedLocation(location);
+                prefsManager.saveLocation(location);
+                Log.d(TAG, "Ubicación guardada en PrefsManager: " + location);
+            }
+
+            getSharedPreferences("TeleHotelPrefs", MODE_PRIVATE)
+                    .edit()
+                    .putString("selected_location", location)
+                    .putLong("location_timestamp", System.currentTimeMillis())
+                    .apply();
+
+            Log.d(TAG, "Ubicación guardada correctamente: " + location);
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error guardando ubicación seleccionada", e);
+        }
+    }
+
     private void loadHotelLocations() {
         Log.d(TAG, "Cargando ubicaciones de hoteles...");
 
-        // Cargar ubicaciones simples
         HotelRepository.getUniqueLocations(
                 ubicaciones -> {
                     if (!isFinishing() && !isDestroyed()) {
@@ -354,7 +557,6 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
                                 allHotelLocations.clear();
                                 allHotelLocations.addAll(ubicaciones);
 
-                                // Actualizar adapter
                                 cityAdapter.clear();
                                 cityAdapter.addAll(allHotelLocations);
                                 cityAdapter.notifyDataSetChanged();
@@ -377,7 +579,6 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
                 }
         );
 
-        // Cargar ubicaciones con detalles
         HotelRepository.getUniqueLocationsWithDetails(
                 ubicacionesDetalladas -> {
                     if (!isFinishing() && !isDestroyed()) {
@@ -398,43 +599,6 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
         );
     }
 
-    /**
-     * Filtra las ubicaciones basándose en el texto ingresado
-     */
-    private void filtrarUbicaciones(String query) {
-        if (query == null || query.trim().isEmpty()) {
-            return;
-        }
-
-        try {
-            String queryLower = query.toLowerCase();
-            List<String> ubicacionesFiltradas = new ArrayList<>();
-
-            for (String ubicacion : allHotelLocations) {
-                if (ubicacion.toLowerCase().contains(queryLower)) {
-                    ubicacionesFiltradas.add(ubicacion);
-                }
-            }
-
-            // Actualizar adapter
-            cityAdapter.clear();
-            cityAdapter.addAll(ubicacionesFiltradas);
-            cityAdapter.notifyDataSetChanged();
-
-            // Mostrar dropdown si hay resultados y el campo tiene foco
-            if (!ubicacionesFiltradas.isEmpty() && etCity.hasFocus()) {
-                etCity.showDropDown();
-                Log.d(TAG, "Mostrando " + ubicacionesFiltradas.size() + " ubicaciones filtradas");
-            }
-
-        } catch (Exception e) {
-            Log.e(TAG, "Error filtrando ubicaciones", e);
-        }
-    }
-
-    /**
-     * Busca los detalles de una ubicación específica
-     */
     private LocationSearch findLocationDetails(String locationName) {
         for (LocationSearch location : detailedLocations) {
             if (location.getDisplayName().equals(locationName)) {
@@ -443,14 +607,48 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
         }
         return null;
     }
+    /**
+     * 🔥 NUEVO: Verificar estado de reserva en onResume
+     */
+    private void verificarReservaYCargarDatos() {
+        Log.d(TAG, "Verificando estado de reserva");
 
+        if (reservaValidator == null) {
+            Log.w(TAG, "ReservaValidator no disponible, cargando datos normalmente");
+            loadInitialData();
+            return;
+        }
+
+        reservaValidator.verificarReservaActiva((tieneReserva, reserva, mensaje) -> {
+            runOnUiThread(() -> {
+                if (tieneReserva) {
+                    // 🚫 Usuario tiene reserva activa
+                    Log.d(TAG, "Usuario tiene reserva activa - limitando funcionalidades");
+                    mostrarMensajeNoMasReservas(reserva);
+                    // Cargar solo datos básicos (sin ubicaciones)
+                    loadInitialData();
+                } else {
+                    // ✅ Usuario sin reserva activa - todo normal
+                    Log.d(TAG, "Usuario sin reserva activa - cargando todo");
+                    loadInitialData();
+                }
+            });
+        });
+    }
+    private void mostrarMensajeNoMasReservas(Reserva reserva) {
+        // Toast informativo
+        Toast.makeText(this, "No puedes realizar nuevas reservas porque tienes una activa",
+                Toast.LENGTH_LONG).show();
+
+        // Bloquear solo el botón de búsqueda
+        btnSearch.setEnabled(false);
+        btnSearch.setText("Tienes una reserva activa");
+    }
     private void setupDateSelector() {
         if (dateSelector == null) return;
 
         try {
-            // Configurar restricciones para el calendario
             CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
-            // Solo fechas futuras (desde hoy)
             constraintsBuilder.setStart(System.currentTimeMillis());
 
             MaterialDatePicker<Pair<Long, Long>> dateRangePicker = MaterialDatePicker.Builder.dateRangePicker()
@@ -465,26 +663,21 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
                 Long endDateUTC = selection.second;
 
                 if (startDateUTC != null && endDateUTC != null) {
-                    // Convertir fechas UTC a zona horaria local
                     long startDateLocal = convertirUTCaLocal(startDateUTC);
                     long endDateLocal = convertirUTCaLocal(endDateUTC);
 
-                    // Log para debugging
                     Log.d(TAG, "Fecha inicio UTC: " + new Date(startDateUTC));
                     Log.d(TAG, "Fecha inicio Local: " + new Date(startDateLocal));
                     Log.d(TAG, "Fecha fin UTC: " + new Date(endDateUTC));
                     Log.d(TAG, "Fecha fin Local: " + new Date(endDateLocal));
 
-                    // Validación adicional de fechas pasadas usando fecha local
                     if (storageHelper != null && storageHelper.isPastDate(startDateLocal)) {
                         Toast.makeText(this, "No puedes seleccionar fechas pasadas", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    // Formatear fechas para mostrar en UI usando zona horaria local
                     SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM", Locale.getDefault());
 
-                    // Usar Calendar para formateo seguro
                     Calendar startCal = Calendar.getInstance();
                     startCal.setTimeInMillis(startDateLocal);
                     Calendar endCal = Calendar.getInstance();
@@ -497,12 +690,10 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
                         tvDate.setTextColor(getResources().getColor(R.color.black));
                     }
 
-                    // Guardar fechas locales en PrefsManager
                     if (prefsManager != null) {
                         prefsManager.saveDateRange(startDateLocal, endDateLocal);
                     }
 
-                    // Calcular días de estadía correctamente
                     if (storageHelper != null) {
                         int days = calcularDiasEstadia(startDateLocal, endDateLocal);
                         String dayMessage = String.format("Estadía de %d día%s seleccionada",
@@ -524,12 +715,11 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
         Calendar utcCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         utcCalendar.setTimeInMillis(utcTimestamp);
 
-        // Crear calendar en zona horaria local con la misma fecha
         Calendar localCalendar = Calendar.getInstance();
         localCalendar.set(Calendar.YEAR, utcCalendar.get(Calendar.YEAR));
         localCalendar.set(Calendar.MONTH, utcCalendar.get(Calendar.MONTH));
         localCalendar.set(Calendar.DAY_OF_MONTH, utcCalendar.get(Calendar.DAY_OF_MONTH));
-        localCalendar.set(Calendar.HOUR_OF_DAY, 12); // Usar mediodía para evitar problemas de DST
+        localCalendar.set(Calendar.HOUR_OF_DAY, 12);
         localCalendar.set(Calendar.MINUTE, 0);
         localCalendar.set(Calendar.SECOND, 0);
         localCalendar.set(Calendar.MILLISECOND, 0);
@@ -555,7 +745,7 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
         long diffInMillis = end.getTimeInMillis() - start.getTimeInMillis();
         int days = (int) (diffInMillis / (1000 * 60 * 60 * 24));
 
-        return Math.max(1, days); // Mínimo 1 día
+        return Math.max(1, days);
     }
 
     private void setupGuestSelector() {
@@ -568,14 +758,9 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
         Log.d(TAG, "setupRecyclerViews - Iniciando");
 
         try {
-            // Setup lugares turísticos
             setupLugaresRecyclerView();
-
-            // Setup hoteles
             setupHotelesRecyclerView();
-
             Log.d(TAG, "setupRecyclerViews - Completado");
-
         } catch (Exception e) {
             Log.e(TAG, "Error configurando RecyclerViews", e);
         }
@@ -599,6 +784,7 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
             lugaresAdapter.setOnItemClickListener(lugar -> {
                 if (etCity != null) {
                     etCity.setText(lugar.getNombre());
+                    saveSelectedLocationImmediate(lugar.getNombre());
                 }
                 Toast.makeText(this, "🌍 Destino seleccionado: " + lugar.getNombre(), Toast.LENGTH_SHORT).show();
             });
@@ -786,322 +972,39 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
         }
     }
 
-    private void performSearch() {
-        String location = etCity != null ? etCity.getText().toString().trim() : "";
-
-        if (location.isEmpty()) {
-            Toast.makeText(this, "Por favor ingresa una ciudad o país", Toast.LENGTH_SHORT).show();
-            if (etCity != null) {
-                etCity.requestFocus();
-            }
-            return;
-        }
-
-        // *** CAMBIO: Verificar si es el mensaje de error ***
-        if (location.equals(NO_LOCATION_MESSAGE)) {
-            Toast.makeText(this, "Por favor selecciona una ubicación válida", Toast.LENGTH_SHORT).show();
-            if (etCity != null) {
-                etCity.setText("");
-                etCity.requestFocus();
-            }
-            return;
-        }
-
-        if (prefsManager != null && (prefsManager.getStartDate() == 0 || prefsManager.getEndDate() == 0)) {
-            Toast.makeText(this, "Por favor selecciona las fechas", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Continuar con la búsqueda usando la función mejorada del repository
-        searchHotelsByLocationEnhanced(location);
-    }
-
-    private void searchHotelsByLocationEnhanced(String location) {
-        Log.d(TAG, "Buscando hoteles en: " + location);
-
-        // CAMBIO: Mensaje más claro sobre qué se está buscando
-        String searchMessage = String.format("Buscando hoteles con capacidad para %d+ adultos y %d+ niños en %s...",
-                adultCount, childCount, location);
-        Toast.makeText(this, searchMessage, Toast.LENGTH_SHORT).show();
-
-        // CORREGIDO: Usar la función mejorada que ignora el número de habitaciones
-        HotelRepository.searchHotelsWithCustomParamsEnhanced(
-                this,
-                location,
-                adultCount,     // Mínimo de adultos
-                childCount,     // Mínimo de niños
-                1,              // IGNORADO: Número de habitaciones ya no importa
-                hoteles -> {
-                    if (!isFinishing() && !isDestroyed()) {
-                        runOnUiThread(() -> {
-                            try {
-                                // Guardar búsqueda
-                                if (storageHelper != null && prefsManager != null) {
-                                    storageHelper.saveCompleteSearch(location,
-                                            prefsManager.getStartDate(),
-                                            prefsManager.getEndDate(),
-                                            adultCount, childCount, roomCount);
-                                }
-
-                                // Calcular días de estadía
-                                int dias = storageHelper != null && prefsManager != null ?
-                                        storageHelper.calculateDaysDifference(prefsManager.getStartDate(), prefsManager.getEndDate()) : 0;
-
-                                if (hoteles.isEmpty()) {
-                                    // CAMBIO: Mensaje más claro
-                                    String noResultsMessage = String.format(
-                                            "No se encontraron hoteles en '%s' con capacidad para %d+ adultos y %d+ niños",
-                                            location, adultCount, childCount);
-                                    Toast.makeText(this, noResultsMessage, Toast.LENGTH_LONG).show();
-                                } else {
-                                    // CAMBIO: Mensaje más claro sin mencionar habitaciones
-                                    String successMessage = String.format(
-                                            "✅ %d hoteles encontrados en '%s' para %d+ adultos y %d+ niños - %d días",
-                                            hoteles.size(), location, adultCount, childCount, dias);
-                                    Toast.makeText(this, successMessage, Toast.LENGTH_LONG).show();
-
-                                    // Navegar a resultados
-                                    navigateToSearchResults(location,
-                                            prefsManager != null ? prefsManager.getStartDate() : 0L,
-                                            prefsManager != null ? prefsManager.getEndDate() : 0L,
-                                            hoteles.size());
-                                }
-
-                            } catch (Exception e) {
-                                Log.e(TAG, "Error procesando resultados", e);
-                                Toast.makeText(this, "Error procesando resultados", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                },
-                error -> {
-                    if (!isFinishing() && !isDestroyed()) {
-                        runOnUiThread(() -> {
-                            Log.e(TAG, "Error en búsqueda: " + error.getMessage());
-                            String errorMessage = String.format(
-                                    "No se pudieron buscar hoteles en '%s'. Intenta con otra ubicación.",
-                                    location);
-                            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
-                        });
-                    }
-                }
-        );
-    }
+    // ============= MÉTODOS REMOVIDOS/SIMPLIFICADOS =============
 
     /**
-     * Busca hoteles por ubicación y navega a los resultados
+     * 🔥 REMOVIDO: Ya no se necesitan los métodos complejos de búsqueda
+     * - performSearch() -> reemplazado por performSearchAndNavigate()
+     * - searchHotelsByLocationEnhanced() -> no necesario
+     * - searchHotelsByLocation() -> no necesario
+     * - showNoHotelsFoundDialog() -> no necesario
+     * - searchAllHotelsInLocation() -> no necesario
+     * - showAvailabilityStats() -> no necesario
+     *
+     * El HotelsFragment ahora maneja toda esta lógica
      */
-    private void searchHotelsByLocation(String location) {
-        Log.d(TAG, "Buscando hoteles en: " + location);
-
-        // Mostrar mensaje de búsqueda con parámetros
-        String searchMessage = String.format("Buscando hoteles en %s para %d adultos, %d niños, %d habitación(es)...",
-                location, adultCount, childCount, roomCount);
-        Toast.makeText(this, searchMessage, Toast.LENGTH_SHORT).show();
-
-        // Buscar hoteles usando parámetros personalizados
-        HotelRepository.searchHotelsWithCustomParams(
-                this, // context
-                location,
-                adultCount,
-                childCount,
-                roomCount,
-                hoteles -> {
-                    if (!isFinishing() && !isDestroyed()) {
-                        runOnUiThread(() -> {
-                            try {
-                                // Guardar búsqueda en el storage
-                                if (storageHelper != null && prefsManager != null) {
-                                    storageHelper.saveCompleteSearch(location,
-                                            prefsManager.getStartDate(),
-                                            prefsManager.getEndDate(),
-                                            adultCount, childCount, roomCount);
-                                }
-
-                                // Calcular días de estadía
-                                int dias = storageHelper != null && prefsManager != null ?
-                                        storageHelper.calculateDaysDifference(prefsManager.getStartDate(), prefsManager.getEndDate()) : 0;
-
-                                // Mostrar resumen de búsqueda
-                                String searchSummary = String.format(
-                                        "%s - %d días - %d habitación(es) - %d adulto(s) - %d niño(s) - %d hoteles encontrados",
-                                        location, dias, roomCount, adultCount, childCount, hoteles.size());
-
-                                if (hoteles.isEmpty()) {
-                                    // No se encontraron hoteles que cumplan los criterios
-                                    showNoHotelsFoundDialog(location, adultCount, childCount, roomCount);
-                                } else {
-                                    // Hoteles encontrados
-                                    Toast.makeText(this, searchSummary, Toast.LENGTH_LONG).show();
-
-                                    // Navegar a resultados con información completa
-                                    navigateToSearchResults(location,
-                                            prefsManager != null ? prefsManager.getStartDate() : 0L,
-                                            prefsManager != null ? prefsManager.getEndDate() : 0L,
-                                            hoteles.size());
-                                }
-
-                            } catch (Exception e) {
-                                Log.e(TAG, "Error procesando resultados de búsqueda", e);
-                                Toast.makeText(this, "Error procesando resultados", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                },
-                error -> {
-                    if (!isFinishing() && !isDestroyed()) {
-                        runOnUiThread(() -> {
-                            Log.e(TAG, "Error buscando hoteles: " + error.getMessage());
-
-                            if (error.getMessage().contains("Fechas no configuradas")) {
-                                Toast.makeText(this, "Por favor selecciona las fechas de estadía", Toast.LENGTH_LONG).show();
-                            } else if (error.getMessage().contains("Formato de ubicación inválido")) {
-                                Toast.makeText(this, "Formato de ubicación inválido. Use: 'Ciudad, País'", Toast.LENGTH_LONG).show();
-                            } else {
-                                String errorMessage = String.format(
-                                        "No se encontraron hoteles disponibles en %s para %d adultos, %d niños y %d habitación(es)",
-                                        location, adultCount, childCount, roomCount);
-                                Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                }
-        );
-    }
-
-    /**
-     * Muestra un diálogo cuando no se encuentran hoteles
-     */
-    private void showNoHotelsFoundDialog(String location, int adults, int children, int rooms) {
-        try {
-            BottomSheetDialog dialog = new BottomSheetDialog(this);
-            View view = getLayoutInflater().inflate(R.layout.dialog_no_hotels_found, null);
-
-            TextView tvMessage = view.findViewById(R.id.tvNoHotelsMessage);
-            MaterialButton btnTryAgain = view.findViewById(R.id.btnTryAgain);
-            MaterialButton btnShowAll = view.findViewById(R.id.btnShowAllHotels);
-
-            // Mensaje personalizado
-            String message = String.format(
-                    "No encontramos hoteles en %s que cumplan exactamente con tus criterios:\n\n" +
-                            "• %d adulto(s)\n• %d niño(s)\n• %d habitación(es)\n\n" +
-                            "¿Te gustaría ver todos los hoteles disponibles en esta ubicación?",
-                    location, adults, children, rooms);
-
-            tvMessage.setText(message);
-
-            // Botón para intentar de nuevo (modificar búsqueda)
-            btnTryAgain.setOnClickListener(v -> {
-                dialog.dismiss();
-                // Reabrir el selector de huéspedes para modificar criterios
-                showPeopleDialog();
-            });
-
-            // Botón para mostrar todos los hoteles sin filtros
-            btnShowAll.setOnClickListener(v -> {
-                dialog.dismiss();
-                searchAllHotelsInLocation(location);
-            });
-
-            dialog.setContentView(view);
-            dialog.show();
-
-        } catch (Exception e) {
-            Log.e(TAG, "Error mostrando diálogo de no encontrados", e);
-            // Fallback: mostrar toast simple
-            String message = String.format("No se encontraron hoteles en %s para tus criterios. Intenta con menos restricciones.", location);
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    /**
-     * Busca todos los hoteles en una ubicación sin filtros de capacidad
-     */
-    private void searchAllHotelsInLocation(String location) {
-        Log.d(TAG, "Buscando todos los hoteles en: " + location);
-
-        HotelRepository.searchHotelsByLocationString(location,
-                hoteles -> {
-                    if (!isFinishing() && !isDestroyed()) {
-                        runOnUiThread(() -> {
-                            String message = String.format("Mostrando todos los %d hoteles en %s",
-                                    hoteles.size(), location);
-                            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-
-                            navigateToSearchResults(location,
-                                    prefsManager.getStartDate(),
-                                    prefsManager.getEndDate(),
-                                    hoteles.size());
-                        });
-                    }
-                },
-                error -> {
-                    if (!isFinishing() && !isDestroyed()) {
-                        runOnUiThread(() -> {
-                            Toast.makeText(this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                        });
-                    }
-                }
-        );
-    }
-
-    /**
-     * Navega a la pantalla de resultados de búsqueda
-     */
-    private void navigateToSearchResults(String location, long startDate, long endDate, int hotelsFound) {
-        Log.d(TAG, String.format("Navegando a resultados: %s, fechas: %d-%d, hoteles: %d",
-                location, startDate, endDate, hotelsFound));
-
-        Intent intent = new Intent(this, ClienteMainActivity.class);
-        intent.putExtra("search_location", location);
-        intent.putExtra("start_date", startDate);
-        intent.putExtra("end_date", endDate);
-        intent.putExtra("adults", adultCount);
-        intent.putExtra("children", childCount);
-        intent.putExtra("rooms", roomCount);
-        intent.putExtra("hotels_found", hotelsFound);
-        intent.putExtra("use_filters", true); // Filtro exacto
-
-        startActivity(intent);
-    }
-
-    /**
-     * Muestra estadísticas de disponibilidad para una ubicación
-     */
-    private void showAvailabilityStats(String location) {
-        if (prefsManager == null) return;
-
-        HotelRepository.getAvailabilityStats(location,
-                prefsManager.getStartDate(),
-                prefsManager.getEndDate(),
-                stats -> {
-                    if (!isFinishing() && !isDestroyed()) {
-                        runOnUiThread(() -> {
-                            String message = String.format(
-                                    "📊 Disponibilidad en %s:\n• %s\n• Capacidad máxima: %d adultos, %d niños",
-                                    location, stats.getResumen(),
-                                    stats.capacidadMaximaAdultos, stats.capacidadMaximaNinos
-                            );
-                            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-                        });
-                    }
-                },
-                error -> {
-                    Log.e(TAG, "Error obteniendo estadísticas: " + error.getMessage());
-                }
-        );
-    }
 
     private void performLogout() {
         try {
+            Log.d(TAG, "Iniciando proceso de logout");
+
+            Toast.makeText(this, "Cerrando sesión...", Toast.LENGTH_SHORT).show();
+
             if (prefsManager != null) {
                 prefsManager.clearUserSession();
+                Log.d(TAG, "PrefsManager limpiado");
             }
+
             if (storageHelper != null) {
                 storageHelper.clearCurrentSessionData();
+                Log.d(TAG, "StorageHelper limpiado");
             }
 
             FirebaseAuth.getInstance().signOut();
+            Log.d(TAG, "Firebase Auth signOut completado");
+
             Toast.makeText(this, "Sesión cerrada correctamente", Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(this, LoginActivity.class);
@@ -1109,9 +1012,20 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
             startActivity(intent);
             finish();
 
+            Log.d(TAG, "Logout completado exitosamente");
+
         } catch (Exception e) {
             Log.e(TAG, "Error durante logout", e);
-            Toast.makeText(this, "Error cerrando sesión", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error cerrando sesión: " + e.getMessage(), Toast.LENGTH_LONG).show();
+
+            try {
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            } catch (Exception e2) {
+                Log.e(TAG, "Error crítico navegando al login", e2);
+            }
         }
     }
 
@@ -1119,12 +1033,11 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
         if (prefsManager == null) return;
 
         try {
-            // Cargar fechas (ya están en zona horaria local si se guardaron correctamente)
+            // Cargar fechas
             long startDate = prefsManager.getStartDate();
             long endDate = prefsManager.getEndDate();
 
             if (startDate != 0 && endDate != 0 && tvDate != null) {
-                // Usar Calendar para formateo seguro
                 Calendar startCal = Calendar.getInstance();
                 startCal.setTimeInMillis(startDate);
                 Calendar endCal = Calendar.getInstance();
@@ -1146,7 +1059,6 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
                 tvPeople.setText(peopleString);
                 tvPeople.setTextColor(getResources().getColor(R.color.black));
 
-                // Intentar parsear para actualizar las variables
                 try {
                     parsePeopleString(peopleString);
                 } catch (Exception e) {
@@ -1154,17 +1066,55 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
                 }
             }
 
-            // Cargar última búsqueda si existe (opcional)
-            if (storageHelper != null) {
-                List<SearchHistory> history = storageHelper.getRecentSearches();
-                if (!history.isEmpty() && etCity != null) {
-                    SearchHistory lastSearch = history.get(0);
-                    etCity.setText(lastSearch.getLocation());
+            // Cargar última ubicación
+            loadLastSelectedLocationFromPrefs();
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error cargando datos guardados", e);
+        }
+    }
+
+    /**
+     * 🔥 MEJORADO: Cargar la última ubicación usando PrefsManager
+     */
+    private void loadLastSelectedLocationFromPrefs() {
+        try {
+            String lastLocation = null;
+
+            if (prefsManager != null) {
+                lastLocation = prefsManager.getBestAvailableLocation();
+
+                if (lastLocation == null || lastLocation.isEmpty()) {
+                    lastLocation = prefsManager.getLocation();
+                }
+            }
+
+            if (lastLocation == null || lastLocation.isEmpty()) {
+                lastLocation = getSharedPreferences("TeleHotelPrefs", MODE_PRIVATE)
+                        .getString("selected_location", null);
+            }
+
+            if (lastLocation == null || lastLocation.isEmpty()) {
+                if (storageHelper != null) {
+                    List<SearchHistory> history = storageHelper.getRecentSearches();
+                    if (!history.isEmpty()) {
+                        lastLocation = history.get(0).getLocation();
+                    }
+                }
+            }
+
+            if (lastLocation != null && !lastLocation.isEmpty() && etCity != null) {
+                etCity.setText(lastLocation);
+                etCity.setTextColor(getResources().getColor(R.color.black));
+                Log.d(TAG, "Última ubicación cargada: " + lastLocation);
+
+                if (prefsManager != null) {
+                    Log.d(TAG, prefsManager.getLocationDebugInfo());
                 }
             }
 
         } catch (Exception e) {
-            Log.e(TAG, "Error cargando datos guardados", e);
+            Log.e(TAG, "Error cargando última ubicación", e);
         }
     }
 
@@ -1207,8 +1157,16 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         try {
+            if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+                Log.w(TAG, "Usuario no autenticado, redirigiendo al login");
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+                return;
+            }
+
             loadSavedData();
-            // Recargar ubicaciones en caso de que hayan cambiado
             loadHotelLocations();
         } catch (Exception e) {
             Log.e(TAG, "Error en onResume", e);
@@ -1220,17 +1178,14 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
         super.onDestroy();
 
         try {
-            // Limpiar handler para evitar memory leaks
             if (searchHandler != null && searchRunnable != null) {
                 searchHandler.removeCallbacks(searchRunnable);
             }
 
-            // Limpiar adapters
             if (cityAdapter != null) {
                 cityAdapter.clear();
             }
 
-            // Limpiar listas
             allHotelLocations.clear();
             detailedLocations.clear();
 

@@ -227,7 +227,9 @@ public class TaxiReservationFragment extends Fragment implements OnMapReadyCallb
 
         // Si tiene fechaInicio y fechaFin (timestamps)
         if (reserva.getFechaInicio() != null && reserva.getFechaFin() != null) {
-            return ahora >= reserva.getFechaInicio() && ahora <= reserva.getFechaFin();
+            //return ahora >= reserva.getFechaInicio() && ahora <= reserva.getFechaFin();
+            return ahora <= reserva.getFechaFin();
+
         }
 
         // Si solo tiene fechaReservaTimestamp, asumir que es válida por un período

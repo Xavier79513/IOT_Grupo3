@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText emailEditText, passwordEditText;
     private MaterialButton loginButton;
-    private TextView forgotPasswordTextView, createAccountTextView;
+    private TextView forgotPasswordTextView, createAccountTextView,registerTaxiTextView;
     private AuthViewModel authViewModel;
 
     @Override
@@ -60,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.loginButton);
         forgotPasswordTextView = findViewById(R.id.forgotPasswordTextView);
         createAccountTextView = findViewById(R.id.createAccountTextView);
+        registerTaxiTextView = findViewById(R.id.registerTaxiTextView);
     }
 
     private void setupClickListeners() {
@@ -84,6 +85,11 @@ public class LoginActivity extends AppCompatActivity {
         createAccountTextView.setOnClickListener(v ->
                 startActivity(new Intent(this, RegisterActivity.class))
         );
+
+        registerTaxiTextView.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, RegisterTaxiActivity.class);
+            startActivity(intent);
+        });
     }
 
     private boolean validateInput(String email, String password) {
@@ -166,126 +172,6 @@ public class LoginActivity extends AppCompatActivity {
                 "Solicitud de recuperación de contraseña para: " + email
         );
     }
-    /*private void goToMain(FirebaseUser user) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        db.collection("usuarios")
-                .document(user.getUid())
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        // Obtener role con valor por defecto
-                        String role = documentSnapshot.getString("rol");
-                        if (role == null || role.isEmpty()) {
-                            role = "cliente"; // Valor por defecto
-                        }
-
-                        // Obtener nombre con valor por defecto
-                        String nombre = documentSnapshot.getString("nombres");
-                        if (nombre == null || nombre.isEmpty()) {
-                            nombre = "Usuario"; // Valor por defecto
-                        }
-
-                        Toast.makeText(this, "Bienvenido " + nombre, Toast.LENGTH_SHORT).show();
-
-                        Intent intent = null;
-                        switch (role) {
-                            case "taxista":
-                                intent = new Intent(this, TaxistaActivity.class);
-                                break;
-                            case "admin":
-                                intent = new Intent(this, AdminActivity.class);
-                                break;
-                            case "superadmin":
-                                intent = new Intent(this, SuperAdminActivity.class);
-                                break;
-                            default: // cliente o cualquier otro
-                                intent = new Intent(this, ClientePaginaPrincipal.class);
-                                break;
-                        }
-
-                        if (intent != null) {
-                            startActivity(intent);
-                            finish();
-                        }
-                    } else {
-                        Toast.makeText(this, "Usuario no registrado en la base de datos", Toast.LENGTH_SHORT).show();
-                        FirebaseAuth.getInstance().signOut();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Error al obtener datos: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    loginButton.setEnabled(true);
-                    loginButton.setText("Iniciar Sesión");
-                });
-    }*/
-    /*private void goToMain(FirebaseUser user) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        db.collection("usuarios")
-                .document(user.getUid())
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        // ✅ CORREGIDO: Usar "rol" en lugar de "role"
-                        String role = documentSnapshot.getString("role");
-                        if (role == null || role.isEmpty()) {
-                            role = "cliente"; // Valor por defecto
-                        }
-
-                        // ✅ CORREGIDO: Usar "nombres" consistentemente
-                        String nombre = documentSnapshot.getString("nombres");
-                        if (nombre == null || nombre.isEmpty()) {
-                            nombre = "Usuario"; // Valor por defecto
-                        }
-
-                        // ✅ AGREGADO: Verificar estado del usuario
-                        String estado = documentSnapshot.getString("estado");
-                        if (estado != null && !"activo".equals(estado)) {
-                            Toast.makeText(this, "Tu cuenta está deshabilitada. Contacta al administrador.", Toast.LENGTH_LONG).show();
-                            FirebaseAuth.getInstance().signOut();
-                            return;
-                        }
-
-                        // ✅ AGREGADO: Log para debug
-                        Log.d("LoginDebug", "Usuario: " + user.getEmail() + ", Rol: " + role + ", Estado: " + estado);
-
-                        Toast.makeText(this, "Bienvenido " + nombre, Toast.LENGTH_SHORT).show();
-
-                        Intent intent = null;
-                        switch (role) {
-                            case "taxista":
-                                intent = new Intent(this, TaxistaActivity.class);
-                                break;
-                            case "admin":
-                                intent = new Intent(this, AdminMainActivity.class);
-                                break;
-                            case "superadmin":
-                                intent = new Intent(this, SuperAdminActivity.class);
-                                break;
-                            default: // cliente o cualquier otro
-                                intent = new Intent(this, ClientePaginaPrincipal.class);
-                                break;
-                        }
-
-                        if (intent != null) {
-                            startActivity(intent);
-                            finish();
-                        }
-                    } else {
-                        // ✅ MEJORADO: Mejor manejo cuando no existe el documento
-                        Log.w("LoginDebug", "Documento del usuario no existe en Firestore");
-                        Toast.makeText(this, "Usuario no registrado en la base de datos", Toast.LENGTH_SHORT).show();
-                        FirebaseAuth.getInstance().signOut();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("LoginDebug", "Error al consultar Firestore: " + e.getMessage());
-                    Toast.makeText(this, "Error al obtener datos: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    loginButton.setEnabled(true);
-                    loginButton.setText("Iniciar Sesión");
-                });
-    }*/
     private void goToMain(FirebaseUser user) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 

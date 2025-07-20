@@ -109,6 +109,10 @@
             android:label="Cliente" />
         <activity android:name=".features.cliente.ResumenReservaActivity" />
         <activity android:name=".features.admin.ProcesarCheckoutActivity" />
+        <activity
+            android:name=".features.auth.RegisterTaxiActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
         <!--activity
             android:name=".features.cliente.PerfilActivity"

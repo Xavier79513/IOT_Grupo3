@@ -159,8 +159,6 @@ public class HotelsFragment extends Fragment {
         listaHotelesFiltrada.clear();
         if (adapter != null) {
             adapter.notifyDataSetChanged();
-            // 🔥 NUEVO: Sincronizar estado con adapter
-            adapter.actualizarEstadoReserva(true);
         }
 
         // 🔥 MENSAJE CLARO Y CONTUNDENTE
@@ -203,12 +201,6 @@ public class HotelsFragment extends Fragment {
      */
     private void permitirBusquedaHoteles() {
         Log.d(TAG, "✅ PERMITIENDO BÚSQUEDA - No hay reserva activa");
-
-        // 🔥 NUEVO: Sincronizar estado con adapter
-        if (adapter != null) {
-            adapter.actualizarEstadoReserva(false);
-            Log.d(TAG, "Adapter configurado sin restricciones de reserva");
-        }
 
         // Actualizar título normal
         actualizarTituloUbicacion();
@@ -1100,13 +1092,6 @@ public class HotelsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new HotelAdapter(listaHotelesFiltrada, getContext());
         recyclerView.setAdapter(adapter);
-
-        // 🔥 SINCRONIZAR estado inicial si ya se validó
-        if (validacionCompletada && tieneReservaActiva) {
-            adapter.actualizarEstadoReserva(true);
-            Log.d(TAG, "Adapter configurado con estado de reserva activa");
-        }
-
         Log.d(TAG, "RecyclerView configurado");
     }
 

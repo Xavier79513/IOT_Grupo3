@@ -9,7 +9,7 @@
         android:icon="@drawable/ic_log"
         android:title="Logs" />
     <item
-        android:id="@+id/nav_stats"
+        android:id="@+id/nav_registrar"
         android:icon="@drawable/registrar_usuario"
         android:title="Registrar admin" />
     <item
@@ -17,7 +17,7 @@
         android:icon="@drawable/ic_car"
         android:title="Habilitar taxista" />
     <item
-        android:id="@+id/nav_profile"
+        android:id="@+id/nav_reportes"
         android:icon="@drawable/reportes"
         android:title="Reportes" />
 </menu>

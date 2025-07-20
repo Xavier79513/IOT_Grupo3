@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import com.example.telehotel.R;
 import com.example.telehotel.features.superadmin.Fragments.HabilitarTaxistaFragment;
 import com.example.telehotel.features.superadmin.Fragments.LogsFragment;
+import com.example.telehotel.features.superadmin.Fragments.ReporteReservasFragment;
 import com.example.telehotel.features.superadmin.Fragments.UserListFragment;
 import com.example.telehotel.features.superadmin.Fragments.StatisticsFragment;
 import com.example.telehotel.features.superadmin.Fragments.SettingsFragment;
@@ -30,10 +31,10 @@ public class SuperAdminActivity extends AppCompatActivity {
 
             if (id == R.id.nav_home) {
                 fragment = new UserListFragment();
-            } else if (id == R.id.nav_stats) {
+            } else if (id == R.id.nav_registrar) {
                 fragment = new StatisticsFragment();
-            } else if (id == R.id.nav_profile) {
-                fragment = new SettingsFragment();
+            } else if (id == R.id.nav_reportes) {
+                fragment = new ReporteReservasFragment();
             } else if (id == R.id.nav_taxista) {
                 fragment = new HabilitarTaxistaFragment();
             } else if (id == R.id.nav_logs) {

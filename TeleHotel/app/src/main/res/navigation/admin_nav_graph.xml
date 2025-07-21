@@ -57,7 +57,7 @@
 
     <fragment
         android:id="@+id/nav_admin_reportes"
-        android:name="com.example.telehotel.features.admin.fragments.ReportesFragment"
+        android:name="com.example.telehotel.features.admin.fragments.AdminReportesVentasFragment"
         android:label="Reportes" />
 
     <!--fragment

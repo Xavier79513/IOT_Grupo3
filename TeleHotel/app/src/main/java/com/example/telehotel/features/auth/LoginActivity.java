@@ -172,7 +172,7 @@ public class LoginActivity extends AppCompatActivity {
                 "Solicitud de recuperación de contraseña para: " + email
         );
     }
-    private void goToMain(FirebaseUser user) {
+    /*private void goToMain(FirebaseUser user) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("usuarios")
@@ -255,6 +255,107 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(this, "Error al obtener datos: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     loginButton.setEnabled(true);
                     loginButton.setText("Iniciar Sesión");
+                });
+    }*/
+    private void goToMain(FirebaseUser user) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("usuarios")
+                .document(user.getUid())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Obtener datos del documento
+                        String role = documentSnapshot.getString("role");
+                        if (role == null || role.isEmpty()) {
+                            role = "cliente"; // Valor por defecto
+                        }
+
+                        String nombre = documentSnapshot.getString("nombres");
+                        if (nombre == null || nombre.isEmpty()) {
+                            nombre = "Usuario"; // Valor por defecto
+                        }
+
+                        String estado = documentSnapshot.getString("estado");
+                        if (estado != null && !"activo".equals(estado)) {
+                            // ✅ AGREGAR: Restablecer botón ANTES del return
+                            runOnUiThread(() -> {
+                                loginButton.setEnabled(true);
+                                loginButton.setText("Iniciar Sesión");
+                                Toast.makeText(this, "Tu cuenta está deshabilitada. Contacta al administrador.", Toast.LENGTH_LONG).show();
+                            });
+
+                            FirebaseAuth.getInstance().signOut();
+                            LogUtils.logError("Intento de acceso con cuenta deshabilitada: " + user.getEmail(), user.getUid());
+                            return;
+                        }
+
+                        // ✅ AGREGAR ESTO: Guardar datos en PrefsManager
+                        PrefsManager prefsManager = new PrefsManager(this);
+                        prefsManager.saveUserSession(
+                                user.getUid(),           // userId
+                                null,                    // token (si no usas tokens, dejar null)
+                                role,                    // role
+                                user.getEmail(),        // email
+                                nombre                   // name
+                        );
+
+                        Log.d("LoginDebug", "✅ Datos guardados en PrefsManager:");
+                        Log.d("LoginDebug", "- UserID: " + user.getUid());
+                        Log.d("LoginDebug", "- Email: " + user.getEmail());
+                        Log.d("LoginDebug", "- Nombre: " + nombre);
+                        Log.d("LoginDebug", "- Role: " + role);
+
+                        Log.d("LoginDebug", "Usuario: " + user.getEmail() + ", Rol: " + role + ", Estado: " + estado);
+
+                        Toast.makeText(this, "Bienvenido " + nombre, Toast.LENGTH_SHORT).show();
+                        /*LogUtils.registrarActividad(
+                                LogUtils.ActionType.LOGIN,
+                                user.getUid(),
+                                "Acceso exitoso al sistema como " + role + " - " + nombre + " (" + user.getEmail() + ")"
+                        );*/
+                        LogUtils.logLoginCompleto(user.getUid(), user.getEmail(), nombre, role);
+                        Intent intent = null;
+                        switch (role) {
+                            case "taxista":
+                                intent = new Intent(this, TaxistaActivity.class);
+                                break;
+                            case "admin":
+                                intent = new Intent(this, AdminMainActivity.class);
+                                break;
+                            case "superadmin":
+                                intent = new Intent(this, SuperAdminActivity.class);
+                                break;
+                            default: // cliente o cualquier otro
+                                intent = new Intent(this, ClientePaginaPrincipal.class);
+                                break;
+                        }
+
+                        if (intent != null) {
+                            startActivity(intent);
+                            finish();
+                        }
+                    } else {
+                        // ✅ AGREGAR: Restablecer botón cuando usuario no existe
+                        runOnUiThread(() -> {
+                            loginButton.setEnabled(true);
+                            loginButton.setText("Iniciar Sesión");
+                        });
+
+                        Log.w("LoginDebug", "Documento del usuario no existe en Firestore");
+                        Toast.makeText(this, "Usuario no registrado en la base de datos", Toast.LENGTH_SHORT).show();
+                        FirebaseAuth.getInstance().signOut();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // ✅ AGREGAR: Restablecer botón en caso de error
+                    runOnUiThread(() -> {
+                        loginButton.setEnabled(true);
+                        loginButton.setText("Iniciar Sesión");
+                    });
+
+                    Log.e("LoginDebug", "Error al consultar Firestore: " + e.getMessage());
+                    Toast.makeText(this, "Error al obtener datos: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
 }

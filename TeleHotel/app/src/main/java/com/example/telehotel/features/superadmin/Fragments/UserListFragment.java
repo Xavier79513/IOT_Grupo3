@@ -1,6 +1,7 @@
 package com.example.telehotel.features.superadmin.Fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.telehotel.R;
 import com.example.telehotel.core.FirebaseUtil;
+import com.example.telehotel.core.utils.LogUtils;
 import com.example.telehotel.data.model.Usuario;
 import com.example.telehotel.features.auth.LoginActivity;
 import com.example.telehotel.features.superadmin.ui.UserAdapter;
@@ -93,7 +96,7 @@ public class UserListFragment extends Fragment implements UserAdapter.OnUserActi
         requireActivity().finish();
     }
 
-    private void loadUsersFromFirestore() {
+    /*private void loadUsersFromFirestore() {
         FirebaseUtil.getFirestore().collection("usuarios")
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
@@ -143,6 +146,67 @@ public class UserListFragment extends Fragment implements UserAdapter.OnUserActi
 
         adapter = new UserAdapter(filtrados, this);
         recyclerView.setAdapter(adapter);
+    }*/
+    private void loadUsersFromFirestore() {
+        FirebaseUtil.getFirestore().collection("usuarios")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    usuarioList.clear();
+
+                    for (DocumentSnapshot doc : querySnapshot) {
+                        Usuario usuario = doc.toObject(Usuario.class);
+                        if (usuario != null && usuario.getUid() == null) {
+                            usuario.setUid(doc.getId());
+                        }
+
+                        // ✅ AGREGADO: Excluir usuarios superadmin
+                        if (usuario != null && !"superadmin".equalsIgnoreCase(usuario.getRole())) {
+                            usuarioList.add(usuario);
+                        }
+                    }
+
+                    Log.d("UserListDebug", "Total usuarios cargados (sin superadmin): " + usuarioList.size());
+                    for (Usuario u : usuarioList) {
+                        Log.d("UserListDebug", "Usuario: " + u.getCorreo() + ", Rol: " + u.getRole() + ", Estado: " + u.getEstado());
+                    }
+
+                    // Filtrar con "todos" por defecto
+                    filtrarUsuarios("todos");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("UserListDebug", "Error al cargar usuarios: " + e.getMessage());
+                    Toast.makeText(getContext(), "Error al cargar usuarios: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+    }
+
+    private void filtrarUsuarios(String rolFiltro) {
+        List<Usuario> filtrados = new ArrayList<>();
+
+        Log.d("UserListDebug", "Filtrando por rol: " + rolFiltro);
+
+        if (rolFiltro.equals("todos")) {
+            // ✅ MEJORADO: Agregar todos EXCEPTO superadmin (doble verificación)
+            for (Usuario usuario : usuarioList) {
+                if (!"superadmin".equalsIgnoreCase(usuario.getRole())) {
+                    filtrados.add(usuario);
+                }
+            }
+        } else {
+            for (Usuario usuario : usuarioList) {
+                String userRole = usuario.getRole();
+                // ✅ MEJORADO: Comparación más robusta y excluir superadmin
+                if (userRole != null &&
+                        userRole.equalsIgnoreCase(rolFiltro) &&
+                        !"superadmin".equalsIgnoreCase(userRole)) {
+                    filtrados.add(usuario);
+                }
+            }
+        }
+
+        Log.d("UserListDebug", "Usuarios filtrados: " + filtrados.size());
+
+        adapter = new UserAdapter(filtrados, this);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -152,15 +216,16 @@ public class UserListFragment extends Fragment implements UserAdapter.OnUserActi
     }
 
     private void mostrarDialogoConfirmacion(Usuario usuario, boolean activar) {
+        String accion = activar ? "Activó" : "Desactivó";
         String nuevoEstado = activar ? "activo" : "inactivo";
         String mensaje = activar
                 ? "¿Estás seguro de que deseas ACTIVAR este usuario?"
                 : "¿Estás seguro de que deseas DESACTIVAR este usuario?";
 
-        new AlertDialog.Builder(requireContext())
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
                 .setTitle(activar ? "Activar Usuario" : "Desactivar Usuario")
                 .setMessage(mensaje)
-                .setPositiveButton("Sí", (dialog, which) -> {
+                .setPositiveButton("Sí", (dialogInterface, which) -> {
                     FirebaseUtil.getFirestore().collection("usuarios")
                             .document(usuario.getUid())
                             .update("estado", nuevoEstado)
@@ -168,12 +233,27 @@ public class UserListFragment extends Fragment implements UserAdapter.OnUserActi
                                 usuario.setEstado(nuevoEstado);
                                 adapter.notifyDataSetChanged();
                                 Toast.makeText(getContext(), "Estado actualizado", Toast.LENGTH_SHORT).show();
+                                // ✅ AGREGAR ESTAS LÍNEAS:
+                                String nombreUsuario = usuario.getNombres();
+                                if (nombreUsuario == null || nombreUsuario.isEmpty()) {
+                                    nombreUsuario = usuario.getEmail();
+                                }
+                                LogUtils.logUserManagement(accion, usuario.getEmail(), nombreUsuario);
                             })
                             .addOnFailureListener(e -> {
                                 Toast.makeText(getContext(), "Error al actualizar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             });
                 })
                 .setNegativeButton("Cancelar", null)
-                .show();
+                .create();
+
+        dialog.show();
+
+        // ✅ Cambiar colores de forma más concisa
+        TextView titleView = dialog.findViewById(androidx.appcompat.R.id.alertTitle);
+        TextView messageView = dialog.findViewById(android.R.id.message);
+
+        if (titleView != null) titleView.setTextColor(Color.BLACK);
+        if (messageView != null) messageView.setTextColor(Color.BLACK);
     }
 }

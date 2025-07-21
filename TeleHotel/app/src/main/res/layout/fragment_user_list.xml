@@ -51,119 +51,6 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Card de Estadísticas Rápidas -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardEstadisticas"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="8dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="2dp"
-        android:backgroundTint="#FFFFFF"
-        app:layout_constraintTop_toBottomOf="@id/cardBienvenida"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:weightSum="3">
-
-            <!-- Total Usuarios -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/txtTotalUsuarios"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="18"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Usuarios totales"
-                    android:textSize="12sp"
-                    android:textColor="#666666" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="40dp"
-                android:background="#E0E0E0" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/txtUsuariosActivos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="8"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="#4CAF50" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Habilitados"
-                    android:textSize="12sp"
-                    android:textColor="#666666" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="40dp"
-                android:background="#E0E0E0" />
-
-            <!-- Usuarios Bloqueados -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/txtUsuariosBloqueados"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="10"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="#F44336" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Deshabilitados"
-                    android:textSize="12sp"
-                    android:textColor="#666666" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <!-- Card de Gestión de Usuarios -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardGestion"
         android:layout_width="0dp"
@@ -175,7 +62,7 @@
         app:cardCornerRadius="12dp"
         app:cardElevation="2dp"
         android:backgroundTint="#FFFFFF"
-        app:layout_constraintTop_toBottomOf="@id/cardEstadisticas"
+        app:layout_constraintTop_toBottomOf="@id/cardBienvenida"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">

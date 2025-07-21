@@ -39,6 +39,10 @@
         <activity
             android:name=".features.admin.ServiciosActivity"
             android:exported="false" />
+        <activity android:name="com.example.telehotel.features.taxista.CaptureActivityPortrait"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <activity
             android:name=".features.admin.HabitacionesActivity"
             android:exported="false" />

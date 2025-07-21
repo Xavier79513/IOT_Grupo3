@@ -53,6 +53,7 @@
                 android:layout_gravity="center"
                 android:background="#CCC" />
 
+            <!-- Sección HOY -->
             <LinearLayout
                 android:id="@+id/statsContainer"
                 android:layout_width="match_parent"
@@ -62,30 +63,7 @@
                 android:padding="12dp"
                 android:gravity="center">
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
-
-                    <TextView
-                        android:id="@+id/textKilometers"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="40"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:textColor="#000000" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="km"
-                        android:textSize="13sp"
-                        android:textColor="#888888" />
-                </LinearLayout>
-
+                <!-- VIAJES -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -110,6 +88,7 @@
                         android:textColor="#888888" />
                 </LinearLayout>
 
+                <!-- ESTRELLAS -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -138,21 +117,21 @@
                 android:id="@+id/titleEsteMes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="8dp"
-                android:elevation="4dp"
-                android:padding="4dp"
                 android:text="Este mes"
                 android:textColor="#000000"
                 android:textSize="25sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:padding="4dp"
+                android:elevation="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_gravity="center" />
 
             <View
                 android:layout_width="200dp"
                 android:layout_height="1dp"
                 android:layout_gravity="center"
                 android:background="#CCC" />
-
+            <!-- Sección ESTE MES -->
             <LinearLayout
                 android:id="@+id/statsContainerEsteMes"
                 android:layout_width="match_parent"
@@ -162,30 +141,8 @@
                 android:orientation="horizontal"
                 android:padding="12dp">
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/textKilometersEsteMes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="200"
-                        android:textColor="#000000"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="km"
-                        android:textColor="#888888"
-                        android:textSize="13sp" />
-                </LinearLayout>
-
+                <!-- VIAJES -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -210,6 +167,7 @@
                         android:textSize="13sp" />
                 </LinearLayout>
 
+                <!-- ESTRELLAS -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -234,6 +192,7 @@
                         android:textSize="13sp" />
                 </LinearLayout>
             </LinearLayout>
+
 
             <TextView
                 android:id="@+id/titleHistorial"

@@ -52,6 +52,9 @@ public class SolicitudRepository {
                     List<ServicioTaxi> solicitudTaxiList = new ArrayList<>();
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                         ServicioTaxi solicitudTaxi = doc.toObject(ServicioTaxi.class);
+                        assert solicitudTaxi != null;
+                        solicitudTaxi.setId(doc.getId());  // SETEAR EL ID DEL DOCUMENTO
+
                         solicitudTaxiList.add(solicitudTaxi);
                     }
                     listener.onViajesLoaded(solicitudTaxiList);
@@ -151,6 +154,31 @@ public class SolicitudRepository {
                 .whereEqualTo("estado", "Buscando")
                 .addSnapshotListener(listener);
     }
+    public void getById(String id, final OnViajeLoadedListener listener) {
+        viajesRef.document(id)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        ServicioTaxi servicioTaxi = documentSnapshot.toObject(ServicioTaxi.class);
+                        assert servicioTaxi != null;
+                        servicioTaxi.setId(documentSnapshot.getId());  // SETEAR EL ID DEL DOCUMENTO
+
+                        listener.onViajeLoaded(servicioTaxi);
+                    } else {
+                        listener.onViajeLoaded(null); // No existe documento
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    listener.onError(e.getMessage());
+                });
+    }
+
+    // Interfaz para un solo objeto
+    public interface OnViajeLoadedListener {
+        void onViajeLoaded(ServicioTaxi viaje);
+        void onError(String errorMessage);
+    }
+
 
 
     public interface OnViajesLoadedListener {

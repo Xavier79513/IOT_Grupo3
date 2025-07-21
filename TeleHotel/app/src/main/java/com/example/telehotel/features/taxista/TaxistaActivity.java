@@ -255,6 +255,7 @@ public class TaxistaActivity extends AppCompatActivity {
             } else {
                 String qrContenido = result.getContents(); // Este es el taxista_uid escaneado
                 Toast.makeText(this, "Código QR: " + qrContenido, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Código QR: " + qrContenido, Toast.LENGTH_LONG).show();
 
                 finalizarViaje(qrContenido);
             }
@@ -492,7 +493,7 @@ public class TaxistaActivity extends AppCompatActivity {
         FirebaseUtil.getFirestore().collection("solicitudTaxi")
                 .document(solicitud.getId())
                 .update(
-                        "estado", "Aceptada",
+                        "estado", "En Camino",
                         "taxistaId", taxistaUid
                 );
 

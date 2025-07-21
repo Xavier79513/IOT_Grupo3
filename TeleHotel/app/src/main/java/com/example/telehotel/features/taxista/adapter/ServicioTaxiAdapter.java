@@ -109,8 +109,11 @@ public class ServicioTaxiAdapter extends RecyclerView.Adapter<ServicioTaxiAdapte
 */
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(holder.itemView.getContext(), TaxistaDetalleViaje.class);
+            intent.putExtra("solicitudTaxiId", solicitud.getId()); // solo el id
             holder.itemView.getContext().startActivity(intent);
         });
+
+
     }
 
     @Override

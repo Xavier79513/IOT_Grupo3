@@ -1,8 +1,9 @@
 package com.example.telehotel.data.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Ubicacion {
+public class Ubicacion implements Serializable {
     private String direccion;
     private String ciudad;
     private String pais;

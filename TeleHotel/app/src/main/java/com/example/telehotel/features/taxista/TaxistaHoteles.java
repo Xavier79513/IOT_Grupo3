@@ -3,6 +3,7 @@ package com.example.telehotel.features.taxista;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -83,23 +84,32 @@ public class TaxistaHoteles extends AppCompatActivity {
         cargarHotelesDesdeFirestore();
     }
 
+    private static final String TAG = "TaxistaHoteles";
+
     private void cargarHotelesDesdeFirestore() {
         HotelRepository.getAllHotels(
                 hoteles -> {
+                    Log.d(TAG, "Hoteles recibidos: " + (hoteles == null ? "null" : hoteles.size()));
+                    if (hoteles == null || hoteles.isEmpty()) {
+                        Toast.makeText(this, "No se encontraron hoteles", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     listaOriginal.clear();
                     listaOriginal.addAll(hoteles);
 
                     listaHoteles.clear();
                     listaHoteles.addAll(hoteles);
 
-                    adapter.notifyDataSetChanged();
+                    adapter.setHoteles(listaHoteles);
                 },
                 error -> {
+                    Log.e(TAG, "Error al cargar hoteles", error);
                     Toast.makeText(this, "Error al cargar hoteles", Toast.LENGTH_SHORT).show();
                     error.printStackTrace();
                 }
         );
     }
+
 
     private void filtrarHotelesPorNombre(String texto) {
         listaHoteles.clear();

@@ -143,15 +143,20 @@ public class SolicitudTaxiAdapter extends RecyclerView.Adapter<SolicitudTaxiAdap
             if (actionListener != null) {
                 actionListener.onRechazar(solicitud);
             }
+            // Eliminar localmente la solicitud y actualizar RecyclerView
+
         });
 
-        // Click para abrir detalle (opcional)
-        holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(holder.itemView.getContext(), TaxistaDetalleViaje.class);
-            // Aquí puedes pasar extras si necesitas detalles del viaje
-            holder.itemView.getContext().startActivity(intent);
-        });
+
     }
+    public void removeSolicitud(ServicioTaxi solicitud) {
+        int position = solicitudes.indexOf(solicitud);
+        if (position != -1) {
+            solicitudes.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
 
 
     @Override

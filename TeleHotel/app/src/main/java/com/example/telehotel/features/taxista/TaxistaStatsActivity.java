@@ -101,6 +101,11 @@ public class TaxistaStatsActivity extends AppCompatActivity {
             }
         });
     }
+    @SuppressWarnings("MissingSuperCall")
+    @Override
+    public void onBackPressed() {
+        // No llamar a super.onBackPressed() para bloquear atrás
+    }
 
 
 

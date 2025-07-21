@@ -4,7 +4,9 @@ import com.example.telehotel.data.model.ServicioTaxi;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +68,13 @@ public class SolicitudRepository {
                 });
     }
 
+
+    public void listenSolicitudesBuscando(EventListener<QuerySnapshot> listener) {
+        FirebaseFirestore.getInstance()
+                .collection("solicitudTaxi")
+                .whereEqualTo("estado", "Buscando")
+                .addSnapshotListener(listener);
+    }
 
 
     public interface OnViajesLoadedListener {

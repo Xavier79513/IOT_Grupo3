@@ -5,6 +5,7 @@ import static org.maplibre.android.style.layers.PropertyFactory.iconIgnorePlacem
 import static org.maplibre.android.style.layers.PropertyFactory.iconImage;
 import static org.maplibre.android.style.layers.PropertyFactory.iconSize;
 
+import com.example.telehotel.data.repository.EstadoViajeRepository;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -16,6 +17,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -63,6 +65,7 @@ import org.maplibre.geojson.Feature;
 import org.maplibre.geojson.Point;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class TaxistaActivity extends AppCompatActivity {
@@ -139,20 +142,53 @@ public class TaxistaActivity extends AppCompatActivity {
 
 
         // Mostrar estado de vista según viaje activo o no
-        String uidActual = FirebaseUtil.getAuth().getCurrentUser().getUid();
 
-        UserRepository.escucharEstadoUsuario(uidActual, new UserRepository.UserEstadoListener() {
-            @Override
-            public void onEstadoChanged(String estado) {
-                boolean viajeEnCurso = "en_curso".equalsIgnoreCase(estado);
-                mostrarVistaSegunEstado(viajeEnCurso);
-            }
+        // Escuchar viajes activos para este taxista
+        EstadoViajeRepository estadoViajeRepository = new EstadoViajeRepository();
+        String uidFirebase = FirebaseUtil.getAuth().getCurrentUser().getUid();
+        Log.d("LOG_UID", "Campo uid obtenido de Firestore: " + uidFirebase);
 
-            @Override
-            public void onError(String error) {
-                Toast.makeText(TaxistaActivity.this, error, Toast.LENGTH_SHORT).show();
-            }
-        });
+        FirebaseUtil.getFirestore()
+                .collection("usuarios")
+                .document(uidFirebase)
+                .get()
+                .addOnSuccessListener(document -> {
+                    if (document.exists()) {
+                        String campoUid = document.getString("uid");  // Aquí está el campo "uid"
+                        Log.d("LOG_UID", "Campo uid obtenido de Firestore: " + campoUid);
+
+                        if (campoUid != null && !campoUid.isEmpty()) {
+                            // Ahora que tienes campoUid, usalo aquí:
+                            estadoViajeRepository.escucharViajePorUid(campoUid, (documentViaje, error) -> {
+                                if (error != null) {
+                                    Toast.makeText(TaxistaActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+
+
+                                boolean viajeActivo = false;
+                                if (documentViaje != null && documentViaje.exists()) {
+                                    Boolean estado = documentViaje.getBoolean("estaViajando");
+                                    viajeActivo = estado != null && estado;
+                                }
+                                Log.d("ESTADO_VIAJE", "Viaje activo: " + viajeActivo);
+                                Log.d("ESTADO_VIAJE", "UID actual taxista: " + campoUid);
+
+                                mostrarVistaSegunEstado(viajeActivo);
+                            });
+                        } else {
+                            Toast.makeText(this, "Campo uid no encontrado en documento usuario", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(this, "Documento de usuario no existe", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al obtener usuario: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+
+
+
 
         setupBottomNavigation();
         setupSolicitudes();
@@ -263,14 +299,15 @@ public class TaxistaActivity extends AppCompatActivity {
                     UserRepository.getUserByUid(clienteId,
                             usuario -> {
                                 String nombreCompleto = usuario.getNombres() + " " + usuario.getApellidos();
-                                mostrarConfirmacion(nombreCompleto);
+                                mostrarConfirmacion(nombreCompleto, solicitud);
                             },
                             error -> {
-                                mostrarConfirmacion("(Nombre no disponible)");
+                                mostrarConfirmacion("(Nombre no disponible)", solicitud
+                                );
                             }
                     );
                 } else {
-                    mostrarConfirmacion("(ID de cliente no disponible)");
+                    mostrarConfirmacion("(ID de cliente no disponible)", solicitud);
                 }
             }
             @Override
@@ -316,7 +353,7 @@ public class TaxistaActivity extends AppCompatActivity {
 
 
 
-    private void mostrarConfirmacion(String nombre) {
+    private void mostrarConfirmacion(String nombre, ServicioTaxi solicitud) {
         BottomSheetDialog dialog = new BottomSheetDialog(this);
         View view = LayoutInflater.from(this).inflate(R.layout.taxista_bottom_sheet_confirmacion, null);
         dialog.setContentView(view);
@@ -329,9 +366,7 @@ public class TaxistaActivity extends AppCompatActivity {
 
         btnAceptar.setOnClickListener(v -> {
             dialog.dismiss();
-            guardarEstadoViaje(true);
-            mostrarVistaSegunEstado(true);
-            Toast.makeText(this, "Solicitud aceptada", Toast.LENGTH_SHORT).show();
+            iniciarViajeFirestore(solicitud.getClienteId());
         });
 
         btnDenegar.setOnClickListener(v -> dialog.dismiss());
@@ -432,6 +467,26 @@ public class TaxistaActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 3001);
         }
     }
+    private void iniciarViajeFirestore(String clienteUid) {
+        String taxistaUid = FirebaseUtil.getAuth().getCurrentUser().getUid();
+
+        FirebaseUtil.getFirestore().collection("viajes")
+                .add(new HashMap<String, Object>() {{
+                    put("cliente_uid", clienteUid);
+                    put("taxista_uid", taxistaUid);
+                    put("estaViajando", true);
+                    put("inicio", System.currentTimeMillis()); // opcional
+                }})
+                .addOnSuccessListener(docRef -> {
+                    guardarEstadoViaje(true);
+                    mostrarVistaSegunEstado(true);
+                    Toast.makeText(TaxistaActivity.this, "Viaje iniciado", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(TaxistaActivity.this, "Error al iniciar viaje", Toast.LENGTH_SHORT).show();
+                });
+    }
+
 
 
 }

@@ -130,7 +130,7 @@
                             android:layout_height="match_parent"
                             android:orientation="horizontal"
                             android:gravity="center_vertical"
-                            android:padding="20dp">
+                            android:padding="12dp">
 
                             <ImageView
                                 android:layout_width="28dp"
@@ -139,6 +139,7 @@
                                 app:tint="@color/primaryColor"
                                 android:layout_marginEnd="16dp" />
 
+                            <!-- ✅ CAMBIO AQUÍ: 0dp en lugar de match_parent -->
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -153,12 +154,13 @@
                                     android:textColor="@color/primaryColor"
                                     android:textStyle="bold" />
 
+                                <!-- ✅ OPCIONAL: También puedes usar match_parent aquí -->
                                 <TextView
                                     android:id="@+id/tvDate"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="Seleccionar fechas"
-                                    android:textSize="16sp"
+                                    android:textSize="12sp"
                                     android:textColor="@color/gray" />
 
                             </LinearLayout>
@@ -190,7 +192,7 @@
                             android:layout_height="match_parent"
                             android:orientation="horizontal"
                             android:gravity="center_vertical"
-                            android:padding="20dp">
+                            android:padding="12dp">
 
                             <ImageView
                                 android:layout_width="28dp"
@@ -200,7 +202,7 @@
                                 android:layout_marginEnd="16dp" />
 
                             <LinearLayout
-                                android:layout_width="0dp"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:orientation="vertical">
@@ -218,7 +220,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="1 habitación · 2 adultos · 0 niños"
-                                    android:textSize="16sp"
+                                    android:textSize="12sp"
                                     android:textColor="@color/gray" />
 
                             </LinearLayout>

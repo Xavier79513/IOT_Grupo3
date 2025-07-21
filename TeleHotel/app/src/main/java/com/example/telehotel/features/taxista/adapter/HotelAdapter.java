@@ -2,34 +2,37 @@ package com.example.telehotel.features.taxista.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.telehotel.R;
 import com.example.telehotel.data.model.Hotel;
 import com.example.telehotel.features.taxista.TaxistaHotelDetalle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHolder> {
 
-    private final List<Hotel> hoteles;
+    private List<Hotel> hoteles;
     private final Context context;
 
     public HotelAdapter(List<Hotel> hoteles, Context context) {
-        this.hoteles = hoteles;
+        this.hoteles = hoteles != null ? hoteles : new ArrayList<>();
         this.context = context;
     }
 
     @NonNull
     @Override
     public HotelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Infla el layout del item del hotel
         View itemView = LayoutInflater.from(context).inflate(R.layout.taxista_item_hotel, parent, false);
         return new HotelViewHolder(itemView);
     }
@@ -38,16 +41,41 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
     public void onBindViewHolder(@NonNull HotelViewHolder holder, int position) {
         Hotel hotel = hoteles.get(position);
         holder.hotelName.setText(hotel.getNombre());
-        holder.hotelLocation.setText(hotel.getUbicacion().getDireccion());
 
-        // Al hacer clic en el hotel, navegamos a la actividad de detalles
+        // Dirección
+        if (hotel.getUbicacion() != null && hotel.getUbicacion().getDireccion() != null) {
+            holder.hotelLocation.setText(hotel.getUbicacion().getDireccion());
+        } else {
+            holder.hotelLocation.setText("Dirección no disponible");
+        }
+
+        // Imagen del hotel (usamos la primera si hay)
+        List<String> imagenes = hotel.getImagenes();
+        if (imagenes != null && !imagenes.isEmpty()) {
+            Glide.with(context)
+                    .load(imagenes.get(0))
+                    .placeholder(R.drawable.sample_hotel) // imagen por defecto mientras carga
+                    .error(R.drawable.sample_hotel)      // si falla la carga
+                    .into(holder.hotelImage);
+        } else {
+            holder.hotelImage.setImageResource(R.drawable.sample_hotel); // por defecto si no hay imagen
+        }
+
+        // Listener para ver detalles del hotel
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, TaxistaHotelDetalle.class);
-            intent.putExtra("hotel_id", hotel.getId()); // Pasamos el ID del hotel
-            intent.putExtra("hotel_nombre", hotel.getNombre()); // Pasamos el nombre del hotel
-            intent.putExtra("hotel_direccion", hotel.getUbicacion().getDireccion()); // Pasamos la dirección
+            intent.putExtra("hotel_id", hotel.getId());
+            intent.putExtra("hotel_nombre", hotel.getNombre());
+            intent.putExtra("hotel_direccion", hotel.getUbicacion() != null ? hotel.getUbicacion().getDireccion() : "");
             context.startActivity(intent);
         });
+    }
+
+    public void setHoteles(List<Hotel> nuevosHoteles) {
+        Log.d("TaxistaHoteles", "Cantidad hoteles en adapter antes: " + getItemCount());
+        this.hoteles = nuevosHoteles != null ? nuevosHoteles : new ArrayList<>();
+        notifyDataSetChanged();
+        Log.d("TaxistaHoteles", "Cantidad hoteles en adapter después: " + getItemCount());
     }
 
     @Override
@@ -57,12 +85,14 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
 
     public static class HotelViewHolder extends RecyclerView.ViewHolder {
 
-        TextView hotelName, hotelLocation;  // hotelLocation se cambia a textViewDescripcion
+        TextView hotelName, hotelLocation;
+        ImageView hotelImage;
 
         public HotelViewHolder(View itemView) {
             super(itemView);
-            hotelName = itemView.findViewById(R.id.hotelName);  // Este es el ID para el nombre del hotel
-            hotelLocation = itemView.findViewById(R.id.textViewDescripcion);  // Cambiado a textViewDescripcion
+            hotelName = itemView.findViewById(R.id.hotelName);
+            hotelLocation = itemView.findViewById(R.id.textViewDescripcion);
+            hotelImage = itemView.findViewById(R.id.imageView); // ← Asegúrate de tener este ID en tu layout
         }
     }
 }

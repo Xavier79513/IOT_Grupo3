@@ -3,6 +3,7 @@ package com.example.telehotel.features.taxista;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,11 +15,17 @@ import com.example.telehotel.data.model.ServicioTaxi;
 import com.example.telehotel.data.repository.SolicitudRepository;
 import com.example.telehotel.features.taxista.adapter.ServicioTaxiAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class TaxistaStatsActivity extends AppCompatActivity {
+    private TextView textViajes, textViajesEsteMes;
 
     private RecyclerView recyclerHistorial;
     private ServicioTaxiAdapter adapter;
@@ -27,7 +34,11 @@ public class TaxistaStatsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        cargarEstadisticas();
+
         setContentView(R.layout.taxista_actividad);
+        textViajes = findViewById(R.id.textViajes);
+        textViajesEsteMes = findViewById(R.id.textViajesEsteMes);
 
         // Navegación inferior
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
@@ -39,8 +50,7 @@ public class TaxistaStatsActivity extends AppCompatActivity {
 
         setupViewSolicitudesButton();
         setupRecyclerHistorial();
-        cargarHistorialReciente(); // 👈 Ahora usando datos reales
-    }
+        cargarHistorialReciente();   }
 
     private void setupViewSolicitudesButton() {
         Button viewSolicitudes = findViewById(R.id.btnVerMas);
@@ -77,5 +87,24 @@ public class TaxistaStatsActivity extends AppCompatActivity {
                 }
         );
     }
+    private void cargarEstadisticas() {
+        new SolicitudRepository().getEstadisticasViajes("uid_12", new SolicitudRepository.OnEstadisticasLoadedListener() {
+            @Override
+            public void onEstadisticasLoaded(int viajesHoy, int viajesMes) {
+                textViajes.setText(String.valueOf(viajesHoy));
+                textViajesEsteMes.setText(String.valueOf(viajesMes));
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                Toast.makeText(TaxistaStatsActivity.this, "Error al obtener estadísticas", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+
+
+
 
 }

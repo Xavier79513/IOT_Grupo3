@@ -30,7 +30,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TeleHotel"
         tools:targetApi="31">
+        <activity
+            android:name=".features.admin.PerfilActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin.ReportesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin.ServiciosActivity"
+            android:exported="false" />
+        <activity android:name="com.example.telehotel.features.taxista.CaptureActivityPortrait"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
+        <activity
+            android:name=".features.admin.HabitacionesActivity"
+            android:exported="false" />
         <activity
             android:name=".features.auth.LoginActivity"
             android:exported="true"
@@ -115,6 +130,7 @@
             android:name=".features.auth.RegisterTaxiActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
+
         <!--activity
             android:name=".features.cliente.PerfilActivity"
             android:label="Cliente" />

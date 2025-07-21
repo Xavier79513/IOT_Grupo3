@@ -57,23 +57,6 @@ public class AdminMainActivity extends AppCompatActivity {
         }
     }
 
-    /*@Override
-    public void onBackPressed() {
-        // Obtener NavController para manejar navegación hacia atrás
-        NavHostFragment navHostFragment =
-                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-
-        if (navHostFragment != null) {
-            NavController navController = navHostFragment.getNavController();
-
-            // Si no puede navegar hacia atrás, cerrar actividad
-            if (!navController.popBackStack()) {
-                super.onBackPressed();
-            }
-        } else {
-            super.onBackPressed();
-        }
-    }*/
     @Override
     public void onBackPressed() {
         // Manejar navegación hacia atrás de forma simple

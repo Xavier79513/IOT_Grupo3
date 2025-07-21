@@ -13,7 +13,7 @@
         android:layout_height="?attr/actionBarSize"
         android:backgroundTint="@color/primaryColor"
         app:title="Lugares Cercanos"
-        app:titleTextColor="@android:color/white"
+        app:titleTextColor="@color/colorPrimary"
         app:navigationIcon="@drawable/ic_arrow_back" />
 
     <!-- Contenedor scrollable -->
@@ -27,63 +27,102 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- Nombre del lugar -->
+            <!-- Card para agregar nuevo lugar -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="?attr/colorSurface">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📍 Agregar Nuevo Lugar"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="?attr/colorPrimary"
+                        android:layout_marginBottom="16dp"/>
+
+                    <!-- Nombre del lugar -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etNombreLugar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Nombre del lugar"
+                            android:inputType="textPersonName" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Descripción -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDescripcionLugar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Descripción del lugar"
+                            android:inputType="textMultiLine"
+                            android:lines="3"
+                            android:gravity="top" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Distancia -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        app:suffixText="km">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDistanciaLugar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Distancia desde el hotel"
+                            android:inputType="numberDecimal" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Botón Agregar -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnAgregarLugar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Agregar Lugar"
+                        android:textColor="@android:color/white"
+                        app:backgroundTint="@color/primaryColor"
+                        app:cornerRadius="8dp"
+                        app:icon="@drawable/ic_add"
+                        app:iconGravity="textStart" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Título de la lista -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nombre del lugar"
-                android:textStyle="bold"
-                android:layout_marginTop="8dp"/>
-
-            <EditText
-                android:id="@+id/etNombreLugar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Ej: Museo de la ciudad"
-                android:inputType="textPersonName"
-                android:layout_marginBottom="16dp"/>
-
-            <!-- Descripción -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Descripción"
-                android:textStyle="bold"/>
-
-            <EditText
-                android:id="@+id/etDescripcionLugar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Breve descripción del lugar"
-                android:inputType="textMultiLine"
-                android:lines="3"
-                android:gravity="top"
-                android:layout_marginBottom="24dp"/>
-
-            <!-- Botón Agregar -->
-            <Button
-                android:id="@+id/btnAgregarLugar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Agregar Lugar"
-                android:backgroundTint="@color/primaryColor"
-                android:textColor="@android:color/white"/>
-
-            <!-- Separador y título de la lista -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/divider"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="8dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Lugares Agregados"
+                android:text="🏛️ Lugares Agregados"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:textColor="?attr/colorOnSurface"
+                android:layout_marginBottom="12dp"/>
 
             <!-- Contenedor donde se inflarán los ítems -->
             <LinearLayout
@@ -91,6 +130,42 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+
+            <!-- Mensaje cuando no hay lugares -->
+            <LinearLayout
+                android:id="@+id/emptyStateLugares"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="32dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🗺️"
+                    android:textSize="48sp"
+                    android:layout_marginBottom="16dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No hay lugares cercanos agregados"
+                    android:textSize="16sp"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:gravity="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Agrega lugares de interés cerca de tu hotel"
+                    android:textSize="14sp"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:gravity="center"
+                    android:layout_marginTop="4dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

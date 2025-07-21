@@ -21,97 +21,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- ScrollView con lista de hoteles -->
-    <ScrollView
-        android:id="@+id/scrollView"
+    <!-- Buscador -->
+    <EditText
+        android:id="@+id/searchBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Buscar hotel"
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:padding="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/search_background"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:singleLine="true"
+        app:layout_constraintTop_toBottomOf="@id/greetingBox"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- RecyclerView para lista de hoteles -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewHoteles"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/greetingBox"
+        android:paddingHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/searchBox"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <LinearLayout
-            android:id="@+id/contentLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <!-- Buscador -->
-            <EditText
-                android:id="@+id/searchBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Buscar hotel"
-                android:drawableStart="@android:drawable/ic_menu_search"
-                android:padding="12dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginHorizontal="16dp"
-                android:background="@drawable/search_background"
-                android:imeOptions="actionSearch"
-                android:inputType="text"
-                android:singleLine="true"
-            />
-
-            <!-- Filtros -->
-            <LinearLayout
-                android:id="@+id/filterContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="12dp"
-                android:gravity="center"
-                android:weightSum="3">
-
-                <!-- Spinner 1 -->
-                <Spinner
-                    android:id="@+id/spinner1"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="48dp"
-                    android:entries="@array/amenities_options"
-                    android:minWidth="120dp"
-                    android:layout_marginEnd="8dp"
-                    android:gravity="center" />
-
-                <!-- Spinner 2 -->
-                <Spinner
-                    android:id="@+id/spinner2"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="48dp"
-                    android:entries="@array/filter_options"
-                    android:minWidth="120dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:gravity="center" />
-
-                <!-- Spinner 3 -->
-                <Spinner
-                    android:id="@+id/spinner3"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="48dp"
-                    android:entries="@array/filter_options"
-                    android:minWidth="120dp"
-                    android:layout_marginStart="8dp"
-                    android:gravity="center" />
-            </LinearLayout>
-
-            <!-- Lista dinámica de hoteles -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewHoteles"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="16dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@id/filterContainer"
-                tools:listitem="@layout/taxista_item_hotel" />
-
-        </LinearLayout>
-    </ScrollView>
-
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/taxista_item_hotel" />
 
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -126,6 +65,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 package com.example.telehotel.features.cliente;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -358,6 +359,17 @@ public class ClientePaginaPrincipal extends AppCompatActivity {
 
             androidx.appcompat.app.AlertDialog dialog = builder.create();
             dialog.show();
+
+            // ✅ Cambiar colores a negro
+            try {
+                TextView titleView = dialog.findViewById(androidx.appcompat.R.id.alertTitle);
+                TextView messageView = dialog.findViewById(android.R.id.message);
+
+                if (titleView != null) titleView.setTextColor(Color.BLACK);
+                if (messageView != null) messageView.setTextColor(Color.BLACK);
+            } catch (Exception colorException) {
+                Log.w(TAG, "No se pudo cambiar color del diálogo", colorException);
+            }
 
         } catch (Exception e) {
             Log.e(TAG, "Error mostrando diálogo de confirmación", e);

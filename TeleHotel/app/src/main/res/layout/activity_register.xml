@@ -76,6 +76,60 @@
                 android:orientation="vertical"
                 android:padding="24dp">
 
+                <!-- ✅ SECCIÓN DE FOTO DE PERFIL -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginBottom="24dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Foto de Perfil"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="?attr/colorOnSurface"
+                        android:layout_marginBottom="12dp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        app:cardCornerRadius="60dp"
+                        app:cardElevation="4dp"
+                        android:layout_marginBottom="16dp">
+
+                        <ImageView
+                            android:id="@+id/ivFotoPerfil"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_person"
+                            android:background="@color/colorBackground" />
+                    </androidx.cardview.widget.CardView>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnSeleccionarFoto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Seleccionar Foto"
+                        android:textColor="?attr/colorOnSecondary"
+                        app:icon="@drawable/ic_camera"
+                        app:iconTint="?attr/colorOnSecondary"
+                        app:backgroundTint="?attr/colorSecondary"
+                        app:cornerRadius="20dp"
+                        style="@style/Widget.Material3.Button.OutlinedButton" />
+                </LinearLayout>
+
+                <!-- LÍNEA DIVISORIA -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/colorOutline"
+                    android:alpha="0.3"
+                    android:layout_marginVertical="16dp" />
+
                 <!-- Nombre -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -134,7 +188,8 @@
                         android:textColor="?attr/colorOnSurface"
                         android:textSize="16sp" />
                 </com.google.android.material.textfield.TextInputLayout>
-                <!-- Fecha de Nacimieno -->
+
+                <!-- Fecha de Nacimiento -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -171,6 +226,7 @@
                         android:textColor="?attr/colorOnSurface"
                         android:textSize="16sp" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <!-- Telefono -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -192,11 +248,13 @@
                         android:textColor="?attr/colorOnSurface"
                         android:textSize="16sp" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <!-- Domicilio -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Domicilio"
+                    android:layout_marginTop="16dp"
                     app:startIconDrawable="@drawable/ic_direccioncasa"
                     app:startIconTint="?attr/colorPrimary"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
@@ -231,7 +289,7 @@
                         android:textSize="16sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Indicador -->
+                <!-- Indicador de fuerza de contraseña -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -287,7 +345,7 @@
                         android:textSize="16sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Check -->
+                <!-- Checkbox términos y condiciones -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -310,7 +368,7 @@
                         android:textColor="?attr/colorOnSurface" />
                 </LinearLayout>
 
-                <!-- Botón -->
+                <!-- Botón de registro -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnRegister"
                     android:layout_width="match_parent"

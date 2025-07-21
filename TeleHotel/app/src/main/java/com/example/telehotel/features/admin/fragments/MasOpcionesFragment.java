@@ -307,27 +307,25 @@ public class MasOpcionesFragment extends Fragment {
     }
 
     private void initViews(View view) {
-        layoutTaxista = view.findViewById(R.id.layoutTaxista);
+        //layoutTaxista = view.findViewById(R.id.layoutTaxista);
         layoutCheckout = view.findViewById(R.id.layoutCheckout);
-        layoutPerfil = view.findViewById(R.id.layoutPerfil);
+        //layoutPerfil = view.findViewById(R.id.layoutPerfil);
         layoutCerrarSesion = view.findViewById(R.id.layoutCerrarSesion);
     }
 
     private void setupClickListeners() {
-        layoutTaxista.setOnClickListener(v -> {
-            // TODO: Navegar a TaxistaEstadoFragment
+        /*layoutTaxista.setOnClickListener(v -> {
             Toast.makeText(getContext(), "Función en desarrollo", Toast.LENGTH_SHORT).show();
-        });
+        });*/
 
         layoutCheckout.setOnClickListener(v -> {
             // ✅ NAVEGAR A CHECKOUT ADMIN
             navegarACheckoutAdmin();
         });
 
-        layoutPerfil.setOnClickListener(v -> {
-            // TODO: Navegar a ConfiguracionFragment
+        /*layoutPerfil.setOnClickListener(v -> {
             Toast.makeText(getContext(), "Función en desarrollo", Toast.LENGTH_SHORT).show();
-        });
+        });*/
 
         layoutCerrarSesion.setOnClickListener(v -> {
             cerrarSesion();

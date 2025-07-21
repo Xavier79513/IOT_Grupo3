@@ -34,6 +34,9 @@ public class HotelDetailActivity extends AppCompatActivity {
     private ProgressBar imageLoadingSpinner;
     private FrameLayout loadingOverlay;
 
+    // ✅ AGREGADO: Variable para almacenar el hotelId
+    private String hotelId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +46,8 @@ public class HotelDetailActivity extends AppCompatActivity {
         setupToolbar();
         setupButtonListeners();
 
-        String hotelId = getIntent().getStringExtra("hotelId");
+        // ✅ MODIFICADO: Guardar hotelId como variable de instancia
+        hotelId = getIntent().getStringExtra("hotelId");
 
         if (hotelId != null) {
             cargarDatosDelHotel(hotelId);
@@ -51,7 +55,8 @@ public class HotelDetailActivity extends AppCompatActivity {
             ocultarLoadingOverlay();
         }
 
-        loadFragment(new HotelDetailReservaFragment());
+        // ✅ MODIFICADO: Pasar hotelId al fragmento inicial
+        loadFragment(createReservaFragment());
         setSelectedButton(bookingButton);
     }
 
@@ -79,24 +84,51 @@ public class HotelDetailActivity extends AppCompatActivity {
 
     private void setupButtonListeners() {
         bookingButton.setOnClickListener(v -> {
-            loadFragment(new HotelDetailReservaFragment());
+            loadFragment(createReservaFragment());
             setSelectedButton(bookingButton);
         });
 
         reviewButton.setOnClickListener(v -> {
-            loadFragment(new HotelDetailResenaFragment());
+            loadFragment(createResenaFragment());
             setSelectedButton(reviewButton);
         });
 
         photosButton.setOnClickListener(v -> {
-            loadFragment(new HotelDetailFotosFragment());
+            loadFragment(createFotosFragment());
             setSelectedButton(photosButton);
         });
 
         nearbyButton.setOnClickListener(v -> {
-            loadFragment(new HotelDetailCercaFragment());
+            // ✅ MODIFICADO: Usar el nuevo método que pasa hotelId
+            loadFragment(createCercaFragment());
             setSelectedButton(nearbyButton);
         });
+    }
+
+    // ✅ AGREGADO: Métodos factory para crear fragmentos con hotelId
+    private Fragment createReservaFragment() {
+        // Si HotelDetailReservaFragment necesita hotelId, actualizarlo también
+        return new HotelDetailReservaFragment();
+    }
+
+    private Fragment createResenaFragment() {
+        // Si HotelDetailResenaFragment necesita hotelId, actualizarlo también
+        return new HotelDetailResenaFragment();
+    }
+
+    private Fragment createFotosFragment() {
+        // Si HotelDetailFotosFragment necesita hotelId, actualizarlo también
+        return new HotelDetailFotosFragment();
+    }
+
+    private Fragment createCercaFragment() {
+        // ✅ CLAVE: Usar el factory method con hotelId
+        if (hotelId != null) {
+            return HotelDetailCercaFragment.newInstance(hotelId);
+        } else {
+            Log.w("HotelDetailActivity", "hotelId es null, creando fragmento sin datos");
+            return new HotelDetailCercaFragment();
+        }
     }
 
     private void loadFragment(Fragment fragment) {
@@ -174,6 +206,23 @@ public class HotelDetailActivity extends AppCompatActivity {
             loadingOverlay.startAnimation(fadeOut);
         }
         imageLoadingSpinner.setVisibility(View.GONE);
+    }
+
+    // ✅ AGREGADO: Método público para obtener el hotelId (útil para fragmentos)
+    public String getHotelId() {
+        return hotelId;
+    }
+
+    // ✅ AGREGADO: Método para actualizar fragmentos si cambia el hotel
+    public void updateHotelId(String newHotelId) {
+        this.hotelId = newHotelId;
+
+        // Si tienes un fragmento activo que necesita actualización
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if (currentFragment instanceof HotelDetailCercaFragment) {
+            ((HotelDetailCercaFragment) currentFragment).updateHotelId(newHotelId);
+        }
+        // Agregar más fragmentos aquí si necesitan actualización
     }
 
     @Override

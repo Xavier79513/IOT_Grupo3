@@ -1564,6 +1564,7 @@ public class ReporteReservasFragment extends Fragment {
         dialog.show();
     }
 
+
     private void configurarDialogoDetalles(View dialogView, ReporteHotel reporte, AlertDialog dialog) {
         // Referencias a las vistas
         TextView tvNombreHotel = dialogView.findViewById(R.id.tvNombreHotelDetalle);
@@ -1577,11 +1578,11 @@ public class ReporteReservasFragment extends Fragment {
         TextView tvServiciosHotel = dialogView.findViewById(R.id.tvServiciosHotel);
         MaterialButton btnCerrar = dialogView.findViewById(R.id.btnCerrarDetalle);
 
-        // TabLayout y contenido
+        // TabLayout y contenido - CAMBIO: usar View en lugar de LinearLayout
         TabLayout tabLayout = dialogView.findViewById(R.id.tabLayoutDetalles);
-        LinearLayout tabResumen = dialogView.findViewById(R.id.tabResumen);
-        LinearLayout tabReservas = dialogView.findViewById(R.id.tabReservas);
-        LinearLayout tabTendencias = dialogView.findViewById(R.id.tabTendencias);
+        View tabResumen = dialogView.findViewById(R.id.tabResumen);           // ✅ View
+        View tabReservas = dialogView.findViewById(R.id.tabReservas);         // ✅ View
+        View tabTendencias = dialogView.findViewById(R.id.tabTendencias);     // ✅ View
         RecyclerView recyclerReservas = dialogView.findViewById(R.id.recyclerViewReservasDetalle);
         LinearLayout emptyStateReservas = dialogView.findViewById(R.id.emptyStateReservas);
         TextView tvMensajeEmpty = dialogView.findViewById(R.id.tvMensajeEmptyReservas);
@@ -1604,7 +1605,7 @@ public class ReporteReservasFragment extends Fragment {
         tvDescripcionHotel.setText("Hotel ubicado en " + reporte.getUbicacionHotel() + " con excelentes servicios.");
         tvServiciosHotel.setText("Servicios: WiFi, Restaurante, Recepción 24h, Limpieza diaria");
 
-        // Configurar tabs
+        // Configurar tabs - CAMBIO: pasar View en lugar de LinearLayout
         configurarTabsDetalles(tabLayout, tabResumen, tabReservas, tabTendencias);
 
         // Cargar reservas específicas del hotel
@@ -1746,11 +1747,16 @@ public class ReporteReservasFragment extends Fragment {
                 });
     }
 
-    private void configurarTabsDetalles(TabLayout tabLayout, LinearLayout tabResumen,
-                                        LinearLayout tabReservas, LinearLayout tabTendencias) {
+    // TAMBIÉN ACTUALIZA EL MÉTODO configurarTabsDetalles:
+    private void configurarTabsDetalles(TabLayout tabLayout, View tabResumen,
+                                        View tabReservas, View tabTendencias) {
+        Log.d(TAG, "=== CONFIGURANDO TABS ===");
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                Log.d(TAG, "Tab seleccionado: " + tab.getPosition());
+
                 // Ocultar todos los tabs
                 tabResumen.setVisibility(View.GONE);
                 tabReservas.setVisibility(View.GONE);
@@ -1760,22 +1766,42 @@ public class ReporteReservasFragment extends Fragment {
                 switch (tab.getPosition()) {
                     case 0:
                         tabResumen.setVisibility(View.VISIBLE);
+                        Log.d(TAG, "✅ Tab Resumen visible");
                         break;
                     case 1:
                         tabReservas.setVisibility(View.VISIBLE);
+                        Log.d(TAG, "✅ Tab Reservas visible");
+
+                        // IMPORTANTE: Cuando se muestra el tab de reservas,
+                        // forzar un refresh del RecyclerView
+                        tabReservas.post(() -> {
+                            RecyclerView recyclerView = tabReservas.findViewById(R.id.recyclerViewReservasDetalle);
+                            if (recyclerView != null && recyclerView.getAdapter() != null) {
+                                Log.d(TAG, "🔄 Refrescando RecyclerView en tab change");
+                                recyclerView.getAdapter().notifyDataSetChanged();
+                                recyclerView.requestLayout();
+                            }
+                        });
                         break;
                     case 2:
                         tabTendencias.setVisibility(View.VISIBLE);
+                        Log.d(TAG, "✅ Tab Tendencias visible");
                         break;
                 }
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {}
+            public void onTabUnselected(TabLayout.Tab tab) {
+                Log.d(TAG, "Tab deseleccionado: " + tab.getPosition());
+            }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
+            public void onTabReselected(TabLayout.Tab tab) {
+                Log.d(TAG, "Tab reseleccionado: " + tab.getPosition());
+            }
         });
+
+        Log.d(TAG, "✅ Tabs configurados correctamente");
     }
 
     private void cargarReservasHotel(String hotelId, RecyclerView recyclerView) {

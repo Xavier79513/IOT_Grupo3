@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:layout_marginBottom="12dp"
+    android:background="@drawable/feature_item_background"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/tvLugarIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:text="📍"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:layout_marginEnd="12dp" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvLugarNombre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre del Lugar"
+            android:textSize="15sp"
+            android:textColor="#1A1A1A"
+            android:textStyle="bold"
+            android:maxLines="2"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/tvLugarInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2.5 km • Descripción del lugar"
+            android:textSize="13sp"
+            android:textColor="#666666"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_marginTop="2dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

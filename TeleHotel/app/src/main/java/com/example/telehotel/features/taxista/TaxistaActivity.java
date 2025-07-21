@@ -755,6 +755,12 @@
                         Toast.makeText(this, "Error al buscar estado de viaje", Toast.LENGTH_SHORT).show();
                     });
 
+
+        }
+        @SuppressWarnings("MissingSuperCall")
+        @Override
+        public void onBackPressed() {
+            // No llamar a super.onBackPressed() para bloquear atrás
         }
 
 

@@ -127,4 +127,9 @@ public class TaxistaHoteles extends AppCompatActivity {
 
         adapter.notifyDataSetChanged();
     }
+    @SuppressWarnings("MissingSuperCall")
+    @Override
+    public void onBackPressed() {
+        // No llamar a super.onBackPressed() para bloquear atrás
+    }
 }

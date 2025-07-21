@@ -134,4 +134,9 @@ public class TaxistaPerfil extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+    @SuppressWarnings("MissingSuperCall")
+    @Override
+    public void onBackPressed() {
+        // No llamar a super.onBackPressed() para bloquear atrás
+    }
 }

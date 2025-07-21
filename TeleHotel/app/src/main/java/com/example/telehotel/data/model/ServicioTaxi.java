@@ -1,6 +1,8 @@
 package com.example.telehotel.data.model;
 
-public class ServicioTaxi {
+import java.io.Serializable;
+
+public class ServicioTaxi implements Serializable {
     private String id;
     private String clienteId;
     private String taxistaId;

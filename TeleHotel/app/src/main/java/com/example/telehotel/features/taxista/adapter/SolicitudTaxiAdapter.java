@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.telehotel.R;
 import com.example.telehotel.data.model.ServicioTaxi;
 import com.example.telehotel.data.repository.AeropuertoRepository;
@@ -26,6 +28,7 @@ public class SolicitudTaxiAdapter extends RecyclerView.Adapter<SolicitudTaxiAdap
     private final List<ServicioTaxi> solicitudes;
     private OnSolicitudActionListener actionListener;
 
+
     public SolicitudTaxiAdapter(List<ServicioTaxi> solicitudes) {
         this.solicitudes = new ArrayList<>(solicitudes);
     }
@@ -38,8 +41,10 @@ public class SolicitudTaxiAdapter extends RecyclerView.Adapter<SolicitudTaxiAdap
     @NonNull
     @Override
     public SolicitudViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.taxista_item_solicitud_usuario, parent, false);
+
         return new SolicitudViewHolder(itemView);
     }
 
@@ -63,10 +68,32 @@ public class SolicitudTaxiAdapter extends RecyclerView.Adapter<SolicitudTaxiAdap
                         double reputacion = usuario.getReputacion();
                         String reputacionStr = String.format("%.1f", reputacion);
                         holder.textViewRating.setText("⭐ " + reputacionStr + " estrellas");
+
+                        // 👉 Glide para la foto del cliente
+                        String fotoUrl = usuario.getFotoUrl(); // o getFotoUrl()
+                        if (fotoUrl != null && !fotoUrl.isEmpty()) {
+                            Glide.with(holder.itemView.getContext())
+                                    .load(fotoUrl)
+                                    .placeholder(R.drawable.user1)
+                                    .error(R.drawable.user1)
+                                    .circleCrop()
+                                    .into(holder.profileImage);
+                        } else {
+                            Glide.with(holder.itemView.getContext())
+                                    .load(R.drawable.user1)
+                                    .circleCrop()
+                                    .into(holder.profileImage);
+                        }
+
                     },
                     error -> {
                         holder.userName.setText("Cliente: (Nombre no disponible)");
                         holder.textViewRating.setText("⭐ Reputación no disponible");
+
+                        Glide.with(holder.itemView.getContext())
+                                .load(R.drawable.user1)
+                                .circleCrop()
+                                .into(holder.profileImage);
                     }
             );
         } else {
@@ -141,7 +168,8 @@ public class SolicitudTaxiAdapter extends RecyclerView.Adapter<SolicitudTaxiAdap
 
     static class SolicitudViewHolder extends RecyclerView.ViewHolder {
         TextView userName, textViewRating, textDestino, textRecojo;
-        MaterialButton btnAceptar, btnRechazar; // Importa MaterialButton
+        MaterialButton btnAceptar, btnRechazar;
+        ImageView profileImage;// Importa MaterialButton
 
         public SolicitudViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -149,7 +177,7 @@ public class SolicitudTaxiAdapter extends RecyclerView.Adapter<SolicitudTaxiAdap
             textViewRating = itemView.findViewById(R.id.textViewRating);
             textDestino = itemView.findViewById(R.id.textDestino);
             textRecojo = itemView.findViewById(R.id.textRecojo);
-
+            profileImage = itemView.findViewById(R.id.profileImage);
 
             btnAceptar = itemView.findViewById(R.id.btnAceptar);
             btnRechazar = itemView.findViewById(R.id.btnRechazar);

@@ -38,7 +38,7 @@ public class UserRepository {
                 })
                 .addOnFailureListener(e -> onFailure.onFailure("Error al consultar: " + e.getMessage()));
     }
-    public static ListenerRegistration escucharEstadoUsuario(String uid, UserEstadoListener listener) {
+    public static ListenerRegistration  escucharEstadoUsuario(String uid, UserEstadoListener listener) {
         return FirebaseUtil.getFirestore()
                 .collection("usuarios")
                 .document(uid)

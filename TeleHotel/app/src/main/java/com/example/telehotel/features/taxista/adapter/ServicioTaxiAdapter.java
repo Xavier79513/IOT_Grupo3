@@ -106,11 +106,11 @@ public class ServicioTaxiAdapter extends RecyclerView.Adapter<ServicioTaxiAdapte
         } else {
             holder.textRecojo.setText("Recojo: (ID de hotel no disponible)");
         }
-
+*/
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(holder.itemView.getContext(), TaxistaDetalleViaje.class);
             holder.itemView.getContext().startActivity(intent);
-        });*/
+        });
     }
 
     @Override

@@ -5,6 +5,7 @@ import static org.maplibre.android.style.layers.PropertyFactory.iconIgnorePlacem
 import static org.maplibre.android.style.layers.PropertyFactory.iconImage;
 import static org.maplibre.android.style.layers.PropertyFactory.iconSize;
 
+import com.example.telehotel.data.repository.EstadoViajeRepository;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -16,6 +17,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -63,6 +65,7 @@ import org.maplibre.geojson.Feature;
 import org.maplibre.geojson.Point;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class TaxistaActivity extends AppCompatActivity {
@@ -70,6 +73,8 @@ public class TaxistaActivity extends AppCompatActivity {
     private static final String PREFS_NAME = "estado_app";
     private static final String KEY_VIAJE_EN_CURSO = "viajeEnCurso";
     private FusedLocationProviderClient fusedLocationClient;
+    private TextView txtNombreViaje;
+    private String uidTaxista;
     private GeoJsonSource carSource;  // fuente para mover el ícono
     private LocationCallback locationCallback;
     private LocationRequest locationRequest;
@@ -97,6 +102,8 @@ public class TaxistaActivity extends AppCompatActivity {
         mapView = findViewById(R.id.mapView);
         recyclerSolicitudes = findViewById(R.id.solicitudesRecyclerView);
         layoutViajeActivo = findViewById(R.id.viajeActivoLayout);
+        txtNombreViaje = findViewById(R.id.txtNombreViaje);
+
         btnMostrarQR = findViewById(R.id.btnMostrarQR);
         btnViewSolicitudes = findViewById(R.id.viewSolicitudes);
         btnViewSolicitudes.setOnClickListener(v -> {
@@ -139,20 +146,56 @@ public class TaxistaActivity extends AppCompatActivity {
 
 
         // Mostrar estado de vista según viaje activo o no
-        String uidActual = FirebaseUtil.getAuth().getCurrentUser().getUid();
 
-        UserRepository.escucharEstadoUsuario(uidActual, new UserRepository.UserEstadoListener() {
-            @Override
-            public void onEstadoChanged(String estado) {
-                boolean viajeEnCurso = "en_curso".equalsIgnoreCase(estado);
-                mostrarVistaSegunEstado(viajeEnCurso);
-            }
+        // Escuchar viajes activos para este taxista
+        EstadoViajeRepository estadoViajeRepository = new EstadoViajeRepository();
+        String uidFirebase = FirebaseUtil.getAuth().getCurrentUser().getUid();
+        Log.d("LOG_UID", "Campo uid obtenido de Firestore: " + uidFirebase);
 
-            @Override
-            public void onError(String error) {
-                Toast.makeText(TaxistaActivity.this, error, Toast.LENGTH_SHORT).show();
-            }
-        });
+        FirebaseUtil.getFirestore()
+                .collection("usuarios")
+                .document(uidFirebase)
+                .get()
+                .addOnSuccessListener(document -> {
+                    if (document.exists()) {
+                        String campoUid = document.getString("uid");  // Aquí está el campo "uid"
+                        Log.d("LOG_UID", "Campo uid obtenido de Firestore: " + campoUid);
+
+                        if (campoUid != null && !campoUid.isEmpty()) {
+                            // Ahora que tienes campoUid, usalo aquí:
+                            uidTaxista = campoUid; // Guarda el uid para usar luego en todo el activity
+
+                            estadoViajeRepository.escucharViajePorUid(campoUid, (documentViaje, error) -> {
+                                if (error != null) {
+                                    Toast.makeText(TaxistaActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+
+
+                                boolean viajeActivo = false;
+                                if (documentViaje != null && documentViaje.exists()) {
+                                    Boolean estado = documentViaje.getBoolean("estaViajando");
+                                    viajeActivo = estado != null && estado;
+                                }
+                                Log.d("ESTADO_VIAJE", "Viaje activo: " + viajeActivo);
+                                Log.d("ESTADO_VIAJE", "UID actual taxista: " + campoUid);
+
+                                mostrarVistaSegunEstado(viajeActivo);
+                            });
+                        } else {
+                            Toast.makeText(this, "Campo uid no encontrado en documento usuario", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(this, "Documento de usuario no existe", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al obtener usuario: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+
+
+
+
 
         setupBottomNavigation();
         setupSolicitudes();
@@ -210,15 +253,16 @@ public class TaxistaActivity extends AppCompatActivity {
             if(result.getContents() == null) {
                 Toast.makeText(this, "Escaneo cancelado", Toast.LENGTH_SHORT).show();
             } else {
-                String qrContenido = result.getContents();
-                // Aquí procesas el texto leído del QR
+                String qrContenido = result.getContents(); // Este es el taxista_uid escaneado
                 Toast.makeText(this, "Código QR: " + qrContenido, Toast.LENGTH_LONG).show();
-                // Por ejemplo, puedes abrir otra pantalla, hacer consulta, etc.
+
+                finalizarViaje(qrContenido);
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
 
 
     // Configuración navegación inferior
@@ -263,14 +307,15 @@ public class TaxistaActivity extends AppCompatActivity {
                     UserRepository.getUserByUid(clienteId,
                             usuario -> {
                                 String nombreCompleto = usuario.getNombres() + " " + usuario.getApellidos();
-                                mostrarConfirmacion(nombreCompleto);
+                                mostrarConfirmacion(nombreCompleto, solicitud, uidTaxista);  // Aquí falta el uidTaxista
                             },
                             error -> {
-                                mostrarConfirmacion("(Nombre no disponible)");
+                                mostrarConfirmacion("(Nombre no disponible)", solicitud, uidTaxista);
                             }
                     );
+
                 } else {
-                    mostrarConfirmacion("(ID de cliente no disponible)");
+                    mostrarConfirmacion("(ID de cliente no disponible)", solicitud, uidTaxista);
                 }
             }
             @Override
@@ -305,6 +350,9 @@ public class TaxistaActivity extends AppCompatActivity {
                 List<ServicioTaxi> solicitudes = new ArrayList<>();
                 for (DocumentSnapshot doc : value.getDocuments()) {
                     ServicioTaxi servicio = doc.toObject(ServicioTaxi.class);
+                    assert servicio != null;
+                    servicio.setId(doc.getId());
+
                     solicitudes.add(servicio);
                 }
                 runOnUiThread(() -> adapter.updateSolicitudes(solicitudes));
@@ -316,7 +364,7 @@ public class TaxistaActivity extends AppCompatActivity {
 
 
 
-    private void mostrarConfirmacion(String nombre) {
+    private void mostrarConfirmacion(String nombre, ServicioTaxi solicitud, String uidTaxista) {
         BottomSheetDialog dialog = new BottomSheetDialog(this);
         View view = LayoutInflater.from(this).inflate(R.layout.taxista_bottom_sheet_confirmacion, null);
         dialog.setContentView(view);
@@ -329,15 +377,14 @@ public class TaxistaActivity extends AppCompatActivity {
 
         btnAceptar.setOnClickListener(v -> {
             dialog.dismiss();
-            guardarEstadoViaje(true);
-            mostrarVistaSegunEstado(true);
-            Toast.makeText(this, "Solicitud aceptada", Toast.LENGTH_SHORT).show();
+            iniciarViajeFirestore(solicitud, uidTaxista);
         });
 
         btnDenegar.setOnClickListener(v -> dialog.dismiss());
 
         dialog.show();
     }
+
 
     // Mostrar diálogo para rechazar solicitud
     private void mostrarRechazo(String nombre) {
@@ -432,6 +479,108 @@ public class TaxistaActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 3001);
         }
     }
+    private void iniciarViajeFirestore(ServicioTaxi solicitud, String taxistaUid) {
+        Log.d("DEBUG_VIAJE", "Solicitud: " + solicitud);
+        Log.d("DEBUG_VIAJE", "ID Solicitud: " + (solicitud != null ? solicitud.getId() : "null"));
+        Log.d("DEBUG_VIAJE", "UID Taxista: " + taxistaUid);
+
+        if (solicitud == null || solicitud.getId() == null || taxistaUid == null) {
+            Toast.makeText(this, "Datos inválidos para iniciar viaje", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        FirebaseUtil.getFirestore().collection("solicitudTaxi")
+                .document(solicitud.getId())
+                .update(
+                        "estado", "Aceptada",
+                        "taxistaId", taxistaUid
+                );
+
+        FirebaseUtil.getFirestore().collection("estadoViaje")
+                .document(taxistaUid)
+                .set(new HashMap<String, Object>() {{
+                    put("cliente_uid", solicitud.getClienteId());
+                    put("taxista_uid", taxistaUid);
+                    put("estaViajando", true);
+                }})
+                .addOnSuccessListener(unused -> {
+                    guardarEstadoViaje(true);
+                    mostrarVistaSegunEstado(true);
+                    Toast.makeText(TaxistaActivity.this, "Viaje iniciado", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(TaxistaActivity.this, "Error al iniciar viaje", Toast.LENGTH_SHORT).show();
+                });
+    }
+    private void finalizarViaje(String clienteUidEscaneado) {
+        FirebaseUtil.getFirestore().collection("estadoViaje")
+                .document(clienteUidEscaneado)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String taxista_uid = documentSnapshot.getString("taxista_uid");
+
+                        // Buscar solicitud activa con taxista_uid y cliente_uid
+                        FirebaseUtil.getFirestore().collection("solicitudTaxi")
+                                .whereEqualTo("taxistaId", taxista_uid)
+                                .whereEqualTo("clienteId", clienteUidEscaneado)
+                                .whereEqualTo("estado", "Aceptada")
+                                .get()
+                                .addOnSuccessListener(queryDocumentSnapshots -> {
+                                    if (!queryDocumentSnapshots.isEmpty()) {
+                                        DocumentSnapshot solicitudDoc = queryDocumentSnapshots.getDocuments().get(0);
+
+                                        String solicitudId = solicitudDoc.getId();
+
+                                        // Obtener fecha y hora actual
+                                        String fechaFin = java.time.LocalDate.now().toString();
+                                        String horaFin = java.time.LocalTime.now().withNano(0).toString();
+
+                                        // Actualizar solicitudTaxi
+                                        FirebaseUtil.getFirestore().collection("solicitudTaxi")
+                                                .document(solicitudId)
+                                                .update(
+                                                        "estado", "Terminado",
+                                                        "fechaFin", fechaFin,
+                                                        "horaFin", horaFin
+                                                )
+                                                .addOnSuccessListener(aVoid -> {
+                                                    // Eliminar estadoViaje
+                                                    assert taxista_uid != null;
+                                                    FirebaseUtil.getFirestore().collection("estadoViaje")
+                                                            .document(taxista_uid)
+                                                            .delete()
+                                                            .addOnSuccessListener(unused -> {
+                                                                Toast.makeText(this, "Viaje finalizado", Toast.LENGTH_SHORT).show();
+                                                                mostrarVistaSegunEstado(false);  // Ocultar layout de viaje
+                                                                guardarEstadoViaje(false);       // Actualizar en SharedPreferences
+                                                            })
+                                                            .addOnFailureListener(e -> {
+                                                                Toast.makeText(this, "Error al eliminar estadoViaje", Toast.LENGTH_SHORT).show();
+                                                            });
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Toast.makeText(this, "Error al actualizar solicitud", Toast.LENGTH_SHORT).show();
+                                                });
+
+                                    } else {
+                                        Toast.makeText(this, "No se encontró solicitud activa", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                    } else {
+                        Toast.makeText(this, "No existe estado de viaje para este taxista", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al buscar estado de viaje", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+
+
+
+
 
 
 }

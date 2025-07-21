@@ -15,6 +15,7 @@ import com.example.telehotel.features.taxista.adapter.SolicitudTaxiAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -80,19 +81,66 @@ public class TaxistaHotelDetalle extends AppCompatActivity {
                 }
             }
         });
+        String authUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        FirebaseFirestore.getInstance().collection("usuarios")
+                .document(authUserId)  // asumimos que el id del doc es el mismo que el de Authentication
+                .get()
+                .addOnSuccessListener(userDoc -> {
+                    if (userDoc.exists()) {
+                        String uid = userDoc.getString("uid");
+                        if (uid != null) {
+                            // Ahora sí busca en estadoViaje por ese UID
+                            FirebaseFirestore.getInstance().collection("estadoViaje")
+                                    .whereEqualTo("taxista_uid", uid)
+                                    .get()
+                                    .addOnSuccessListener(querySnapshot -> {
+                                        if (!querySnapshot.isEmpty()) {
+                                            DocumentSnapshot estadoDoc = querySnapshot.getDocuments().get(0);
+                                            Boolean estaViajando = estadoDoc.getBoolean("estaViajando");
+                                            Log.d("EstadoViaje", "estaViajando: " + estaViajando);
+
+                                            if (Boolean.TRUE.equals(estaViajando)) {
+                                                TextView emptyTextView = findViewById(R.id.textViewEmpty);
+                                                recyclerView.setVisibility(View.GONE);
+                                                emptyTextView.setText("No puedes buscar más, actualmente estás en un viaje");
+                                                emptyTextView.setVisibility(View.VISIBLE);
+                                            } else {
+                                                escucharSolicitudes(hotelId);
+                                            }
+                                        } else {
+                                            escucharSolicitudes(hotelId);
+                                        }
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e("EstadoViaje", "Error al consultar estadoViaje", e);
+                                        escucharSolicitudes(hotelId);
+                                    });
+                        } else {
+                            Log.e("Usuario", "Campo uid es null");
+                            escucharSolicitudes(hotelId);
+                        }
+                    } else {
+                        Log.e("Usuario", "No se encontró el usuario en la colección");
+                        escucharSolicitudes(hotelId);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Usuario", "Error al obtener documento del usuario", e);
+                    escucharSolicitudes(hotelId);
+                });
 
         recyclerView.setAdapter(solicitudAdapter);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             Log.d("AuthCheck", "Usuario autenticado: " + user.getUid());
-            escucharSolicitudes(hotelId);
+
         } else {
             Log.e("AuthCheck", "Usuario NO autenticado, no se puede consultar Firestore");
             // Opcional: mostrar mensaje o redirigir a login
         }
 
         // Obtener solicitudes en tiempo real
-        escucharSolicitudes(hotelId);
 
         // Bottom Navigation
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);

@@ -141,7 +141,7 @@
                     SymbolLayer carLayer = new SymbolLayer("car-layer", "car-source")
                             .withProperties(
                                     iconImage("car-icon"),
-                                    iconSize(0.05f),
+                                    iconSize(0.08f),
                                     iconAllowOverlap(true),
                                     iconIgnorePlacement(true)
                             );
@@ -262,7 +262,7 @@
                 if(result.getContents() == null) {
                     Toast.makeText(this, "Escaneo cancelado", Toast.LENGTH_SHORT).show();
                 } else {
-                    String qrContenido = result.getContents().trim();
+                    String qrContenido = "TH1753134910109570"; // cualquier código válido, puede ser ficticio
                     Toast.makeText(this, "Código QR: " + qrContenido, Toast.LENGTH_LONG).show();
 
                     // Buscar documento en "reservas" donde codigoReserva == qrContenido
@@ -285,7 +285,7 @@
                                                 .addOnSuccessListener(solicitudDoc -> {
                                                     if (solicitudDoc.exists()) {
                                                         String estado = solicitudDoc.getString("estado");
-                                                        if ("Aceptada".equals(estado)) {
+                                                        if ("En Camino".equals(estado)) {
                                                             // Aquí puedes llamar finalizarViaje pasando el clienteUid o solicitudId según tu lógica
                                                             String clienteId = solicitudDoc.getString("clienteId");
                                                             finalizarViaje(clienteId); // o ajustar según tu función

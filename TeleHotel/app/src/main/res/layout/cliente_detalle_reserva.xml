@@ -787,7 +787,7 @@
                 android:orientation="vertical"
                 android:layout_marginTop="8dp">
 
-                <!-- Botón Book Again -->
+                <!-- Botón Book Again
                 <Button
                     android:id="@+id/btnBookAgain"
                     android:layout_width="match_parent"
@@ -798,7 +798,7 @@
                     android:textAllCaps="false"
                     android:textColor="#FFFFFF"
                     android:textSize="16sp"
-                    android:layout_marginBottom="12dp" />
+                    android:layout_marginBottom="12dp" /> -->
 
             </LinearLayout>
 

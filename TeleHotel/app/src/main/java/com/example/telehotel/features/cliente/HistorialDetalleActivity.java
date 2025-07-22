@@ -160,7 +160,7 @@ public class HistorialDetalleActivity extends AppCompatActivity {
     private void initViews() {
         // === BOTONES ===
         btnBack = findViewById(R.id.btnBack);
-        btnBookAgain = findViewById(R.id.btnBookAgain);
+        //btnBookAgain = findViewById(R.id.btnBookAgain);
 
         // === INFORMACIÓN GENERAL ===
         tvCodigoReserva = findViewById(R.id.tvCodigoReserva);
@@ -220,14 +220,14 @@ public class HistorialDetalleActivity extends AppCompatActivity {
         // Configurar el botón de regreso
         btnBack.setOnClickListener(v -> onBackPressed());
 
-        // Configurar el botón "Book again"
+        /* Configurar el botón "Book again"
         btnBookAgain.setOnClickListener(v -> {
             if (reservaActual != null) {
                 hacerNuevaReserva();
             } else {
                 Toast.makeText(this, "No se pueden cargar los datos para reservar nuevamente", Toast.LENGTH_SHORT).show();
             }
-        });
+        }); */
     }
 
     private void cargarDatosReserva(String reservaId) {

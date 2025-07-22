@@ -72,11 +72,13 @@ public class HistorialDetalleActivity extends AppCompatActivity {
 package com.example.telehotel.features.cliente;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -88,6 +90,8 @@ import com.example.telehotel.R;
 import com.example.telehotel.data.model.Reserva;
 import com.example.telehotel.data.model.SolicitudTaxi;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.zxing.BarcodeFormat;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -99,6 +103,7 @@ public class HistorialDetalleActivity extends AppCompatActivity {
 
     // === VIEWS INFORMACIÓN GENERAL ===
     private TextView tvCodigoReserva, tvFechaReserva;
+    private ImageView ivCodigoQR;
 
     // === VIEWS INFORMACIÓN DEL HOTEL ===
     private TextView tvHotelNombre, tvHotelUbicacion;
@@ -161,7 +166,7 @@ public class HistorialDetalleActivity extends AppCompatActivity {
         // === BOTONES ===
         btnBack = findViewById(R.id.btnBack);
         //btnBookAgain = findViewById(R.id.btnBookAgain);
-
+        ivCodigoQR = findViewById(R.id.ivCodigoQR);
         // === INFORMACIÓN GENERAL ===
         tvCodigoReserva = findViewById(R.id.tvCodigoReserva);
         tvFechaReserva = findViewById(R.id.tvFechaReserva);
@@ -268,7 +273,21 @@ public class HistorialDetalleActivity extends AppCompatActivity {
             // === INFORMACIÓN GENERAL DE LA RESERVA ===
             if (tvCodigoReserva != null && reserva.getCodigoReserva() != null) {
                 tvCodigoReserva.setText(reserva.getCodigoReserva());
+                try {
+                    BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                    Bitmap bitmap = barcodeEncoder.encodeBitmap(
+                            reserva.getCodigoReserva(),
+                            BarcodeFormat.QR_CODE,
+                            400,
+                            400
+                    );
+                    ivCodigoQR.setImageBitmap(bitmap);
+                } catch (Exception e) {
+                    Log.e(TAG, "Error generando código QR", e);
+                }
+
             }
+
 
             if (tvFechaReserva != null && reserva.getFechaReservaTimestamp() != null) {
                 String fechaReserva = formatearFechaSolo(reserva.getFechaReservaTimestamp());
